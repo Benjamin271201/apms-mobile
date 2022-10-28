@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:apms_mobile/models/qr_model.dart';
+import 'package:apms_mobile/result.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
@@ -17,6 +18,7 @@ class _QRScan extends State<QRScan> {
   Barcode? result;
   QRViewController? controller;
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
+  String? code;
   Qr? qr;
 
   // In order to get hot reload to work we need to pause the camera if the platform
@@ -83,9 +85,14 @@ class _QRScan extends State<QRScan> {
       this.controller = controller;
     });
     controller.scannedDataStream.listen((scanData) {
+      controller.pauseCamera();
       setState(() {
         result = scanData;
-        qr = qrModelFromJson(result!.code!);
+        code = result!.code!.replaceAll("True", "true");
+        qr = qrModelFromJson(code!.replaceAll("False", "false"));
+        Navigator.pushReplacement(context, MaterialPageRoute(
+          builder: (context) => Result(qr: qr!),
+        ));
       });
     });
   }
