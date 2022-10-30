@@ -1,6 +1,8 @@
-import 'package:apms_mobile/home.dart';
-import 'package:apms_mobile/profile.dart';
-import 'package:apms_mobile/qr_scan.dart';
+import 'package:apms_mobile/presentation/screens/booking.dart';
+import 'package:apms_mobile/presentation/screens/history.dart';
+import 'package:apms_mobile/presentation/screens/home.dart';
+import 'package:apms_mobile/presentation/screens/profile.dart';
+import 'package:apms_mobile/presentation/screens/qr_scan.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
@@ -34,6 +36,8 @@ class MyHome extends StatelessWidget {
   List<Widget> screens() {
     return [
       Home(),
+      Booking(),
+      History(),
       Profile(),
     ];
   }
@@ -44,6 +48,16 @@ class MyHome extends StatelessWidget {
       title: "Home",
       activeColorPrimary: Colors.blueAccent,
       inactiveColorPrimary: CupertinoColors.systemGrey
+      ),
+      PersistentBottomNavBarItem(icon: const Icon(CupertinoIcons.plus_circle),
+      title: "Booking",
+      activeColorPrimary: Colors.blueAccent,
+      inactiveColorPrimary: CupertinoColors.systemGrey,
+      ),
+      PersistentBottomNavBarItem(icon: const Icon(CupertinoIcons.square_list),
+      title: "History",
+      activeColorPrimary: Colors.blueAccent,
+      inactiveColorPrimary: CupertinoColors.systemGrey,
       ),
       PersistentBottomNavBarItem(icon: const Icon(CupertinoIcons.person),
       title: "Profile",

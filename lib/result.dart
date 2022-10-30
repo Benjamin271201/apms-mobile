@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 
 import 'package:http/http.dart';
 
-import 'models/qr_model.dart';
+import 'data/models/qr_model.dart';
 
 class Result extends StatefulWidget {
   const Result({Key? key, required this.qr}) : super(key: key);
