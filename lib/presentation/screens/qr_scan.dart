@@ -1,7 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:apms_mobile/data/models/qr_model.dart';
+import 'package:apms_mobile/models/qr_model.dart';
 import 'package:apms_mobile/result.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
