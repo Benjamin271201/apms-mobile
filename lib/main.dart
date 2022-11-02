@@ -1,9 +1,9 @@
 
 import 'package:apms_mobile/bloc/repositories/login_repo.dart';
-import 'package:apms_mobile/home.dart';
-import 'package:apms_mobile/login.dart';
-import 'package:apms_mobile/profile.dart';
-import 'package:apms_mobile/qr_scan.dart';
+import 'package:apms_mobile/presentation/screens/home.dart';
+import 'package:apms_mobile/presentation/screens/login.dart';
+import 'package:apms_mobile/presentation/screens/profile.dart';
+import 'package:apms_mobile/presentation/screens/qr_scan.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
