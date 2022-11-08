@@ -1,4 +1,4 @@
-import 'package:apms_mobile/presentation/screens/history/booking.dart';
+import 'package:apms_mobile/presentation/screens/history/bookingHistory.dart';
 import 'package:apms_mobile/presentation/screens/history/cancel.dart';
 import 'package:apms_mobile/presentation/screens/history/done.dart';
 import 'package:apms_mobile/presentation/screens/history/parking.dart';
@@ -24,7 +24,7 @@ class _HistoryState extends State<History> {
               child: TabBar(
                 isScrollable: true,
                 unselectedLabelColor: Colors.white.withOpacity(0.4),
-                labelColor: const Color.fromARGB(255, 190, 179, 15),
+                labelColor: Colors.white,
                 labelPadding: const EdgeInsets.symmetric(horizontal: 30),
                 indicator: const UnderlineTabIndicator(
                   borderSide: BorderSide(
@@ -43,7 +43,7 @@ class _HistoryState extends State<History> {
 
   List<Widget> tabBarItems() {
     return const [
-      Booking(),
+      BookingHistory(),
       Parking(),
       Done(),
       Cancel(),

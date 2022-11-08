@@ -10,6 +10,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 
 void main() => runApp(MaterialApp(
+        debugShowCheckedModeBanner: false,
         home: RepositoryProvider(
       create: (context) => LoginRepo(),
       child: const LoginScreen(),

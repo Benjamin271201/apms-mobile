@@ -11,15 +11,22 @@ class LoginRepo {
     HttpHeaders.contentTypeHeader: 'application/json',
   };
 
-  Future<void> login(LoginModel loginModel) async {
-    print('Loging in----');
-    await Future.delayed(const Duration(seconds: 2));
-    Response res = await post(Uri.parse(_baseUrl + '/Authentication'),
-        headers: headers, body: jsonEncode(loginModel));
-    Map body = json.decode(res.body);
-    print(body['statusCode']);
+  Future<bool> login(LoginModel loginModel) async {
     SharedPreferences pref = await SharedPreferences.getInstance();
-    await pref.setString('user-info', 'Hello');
-    print('Loged In');
+    try {
+      // Authenticate
+      Response res = await post(Uri.parse(_baseUrl + '/Authentication'),
+          headers: headers, body: jsonEncode(loginModel));
+      if (res.statusCode == 200) {
+        Map body = json.decode(res.body);
+        String token = body['data'];
+        await pref.setString('token', token);
+        return true;
+      }
+    } catch (error) {
+      print(error);
+      return false;
+    }
+    return false;
   }
 }

@@ -15,7 +15,11 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   _submitLogin(LoginSumitting event, Emitter<LoginState> emit) async {
     emit(Logingin());
     LoginModel loginModel = LoginModel(event.phoneNumber, event.password);
-    await repo.login(loginModel);
-    emit(LogedIn());
+    bool result = await repo.login(loginModel);
+    if (result) {
+      emit(LogedIn());
+    } else {
+      emit(LoginError());
+    }
   }
 }

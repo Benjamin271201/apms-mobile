@@ -20,7 +20,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void checkLogin() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
-    String? info = pref.getString('user-info');
+    String? info = pref.getString('token');
     if (info != null) {
       Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (context) => const MyHome()),
@@ -95,7 +95,7 @@ class _LoginScreenState extends State<LoginScreen> {
         hintText: 'Password',
       ),
       validator: (value) {
-        if (value!.length < 4) {
+        if (value!.length < 3) {
           return 'Not enought length';
         }
         return null;
