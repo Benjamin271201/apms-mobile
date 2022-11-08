@@ -11,7 +11,7 @@ import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 void main() => runApp(MaterialApp(
         home: RepositoryProvider(
       create: (context) => LoginRepo(),
-      child: LoginScreen(),
+      child: MyHome(),
     )));
 
 class MyHome extends StatelessWidget {

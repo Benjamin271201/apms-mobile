@@ -58,8 +58,8 @@ class LoginScreen extends StatelessWidget {
         hintText: 'Password',
       ),
       validator: (value) {
-        if (value!.length < 9) {
-          return 'Not enought length';
+        if (value!.length < 5) {
+          return 'Not enough length';
         }
       },
     );
