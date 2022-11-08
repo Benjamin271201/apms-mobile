@@ -38,7 +38,9 @@ dependencies:
   flutter_bloc:
   qr_code_scanner: ^1.0.0
   persistent_bottom_nav_bar:
+  shared_preferences: 
   http: 
+  jwt_decode:
 
 dev_dependencies:
   flutter_test:

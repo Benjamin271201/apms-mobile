@@ -1,4 +1,5 @@
 import 'package:apms_mobile/bloc/repositories/login_repo.dart';
+import 'package:apms_mobile/presentation/screens/history/history.dart';
 import 'package:apms_mobile/presentation/screens/home.dart';
 import 'package:apms_mobile/presentation/screens/login.dart';
 import 'package:apms_mobile/presentation/screens/profile.dart';
@@ -9,14 +10,20 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 
 void main() => runApp(MaterialApp(
+        debugShowCheckedModeBanner: false,
         home: RepositoryProvider(
       create: (context) => LoginRepo(),
-      child: MyHome(),
+      child: const LoginScreen(),
     )));
 
-class MyHome extends StatelessWidget {
+class MyHome extends StatefulWidget {
   const MyHome({Key? key}) : super(key: key);
 
+  @override
+  _MyHomeState createState() => _MyHomeState();
+}
+
+class _MyHomeState extends State<MyHome> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,8 +47,9 @@ class MyHome extends StatelessWidget {
 
   List<Widget> screens() {
     return [
-      Home(),
-      Profile(),
+      const Home(),
+      const History(),
+      const Profile(),
     ];
   }
 
@@ -53,11 +61,17 @@ class MyHome extends StatelessWidget {
           activeColorPrimary: Colors.blueAccent,
           inactiveColorPrimary: CupertinoColors.systemGrey),
       PersistentBottomNavBarItem(
+        icon: const Icon(CupertinoIcons.news),
+        title: "History",
+        activeColorPrimary: Colors.blueAccent,
+        inactiveColorPrimary: CupertinoColors.systemGrey,
+      ),
+      PersistentBottomNavBarItem(
         icon: const Icon(CupertinoIcons.person),
         title: "Profile",
         activeColorPrimary: Colors.blueAccent,
         inactiveColorPrimary: CupertinoColors.systemGrey,
-      )
+      ),
     ];
   }
 }
