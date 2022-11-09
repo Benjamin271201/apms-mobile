@@ -48,10 +48,10 @@ class _CurrentLocationBarState extends State<CurrentLocationBar> {
             child: BlocBuilder<UserLocationBloc, UserLocationState>(
               builder: ((context, state) => AppBar(
                     title: state is UserLocationFetchedSuccessfully
-                        ? Text(state.userLocation.latitude.toString() +
-                            "," +
-                            state.userLocation.longitude.toString())
-                        : Text("Failed Lul"),
+                        ? Text(state.userPlacemark[0].street! +
+                            ", " +
+                            state.userPlacemark[0].country!)
+                        : Text(""),
                   )),
             )));
   }

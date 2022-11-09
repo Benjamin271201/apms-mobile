@@ -1,6 +1,7 @@
 import 'package:apms_mobile/bloc/repositories/user_location_repo.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 
 part 'events/user_location_event.dart';
@@ -15,11 +16,13 @@ class UserLocationBloc extends Bloc<UserLocationEvent, UserLocationState> {
   _fetchUserLocation(
       GetUserLocation event, Emitter<UserLocationState> emit) async {
     Position _userLocation;
+    List<Placemark> _userPlacemark;
 
     emit(UserLocationFetching());
     _userLocation = await repo.fetchUserLocation();
-    print(_userLocation);
+    _userPlacemark = await placemarkFromCoordinates(
+        _userLocation.latitude, _userLocation.longitude);
 
-    emit(UserLocationFetchedSuccessfully(_userLocation));
+    emit(UserLocationFetchedSuccessfully(_userLocation, _userPlacemark));
   }
 }

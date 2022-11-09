@@ -17,7 +17,6 @@ class UserLocationProvider {
       // App to enable the location services.
       return Future.error('Location services are disabled.');
     }
-
     permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
@@ -30,13 +29,11 @@ class UserLocationProvider {
         return Future.error('Location permissions are denied');
       }
     }
-
     if (permission == LocationPermission.deniedForever) {
       // Permissions are denied forever, handle appropriately.
       return Future.error(
           'Location permissions are permanently denied, we cannot request permissions.');
     }
-
     // When we reach here, permissions are granted and we can
     // continue accessing the position of the device.
     return await Geolocator.getCurrentPosition();

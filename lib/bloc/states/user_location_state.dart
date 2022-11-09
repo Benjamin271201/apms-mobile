@@ -13,7 +13,9 @@ class UserLocationFetching extends UserLocationState {}
 
 class UserLocationFetchedSuccessfully extends UserLocationState {
   final Position userLocation;
-  const UserLocationFetchedSuccessfully(this.userLocation);
+  final List<Placemark> userPlacemark;
+
+  const UserLocationFetchedSuccessfully(this.userLocation, this.userPlacemark);
 }
 
 class UserLocationFetchedFailed extends UserLocationState {}

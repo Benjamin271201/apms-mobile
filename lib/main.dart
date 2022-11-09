@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:apms_mobile/bloc/repositories/login_repo.dart';
 import 'package:apms_mobile/presentation/screens/history/history.dart';
 import 'package:apms_mobile/presentation/screens/home.dart';
@@ -17,7 +19,7 @@ void main() => runApp(MaterialApp(
     )));
 
 class MyHome extends StatefulWidget {
-  const MyHome({Key? key}) : super(key: key);
+  const MyHome({Key key}) : super(key: key);
 
   @override
   _MyHomeState createState() => _MyHomeState();
