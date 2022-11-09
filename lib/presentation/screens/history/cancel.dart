@@ -1,3 +1,4 @@
+import 'package:apms_mobile/components/build_car.dart';
 import 'package:flutter/material.dart';
 
 class Cancel extends StatefulWidget {
@@ -10,6 +11,6 @@ class Cancel extends StatefulWidget {
 class _CancelState extends State<Cancel> {
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return const BuildCard();
   }
 }

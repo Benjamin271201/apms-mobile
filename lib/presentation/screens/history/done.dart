@@ -1,3 +1,4 @@
+import 'package:apms_mobile/components/build_car.dart';
 import 'package:flutter/material.dart';
 
 class Done extends StatefulWidget {
@@ -10,6 +11,6 @@ class Done extends StatefulWidget {
 class _DoneState extends State<Done> {
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return const BuildCard();
   }
 }

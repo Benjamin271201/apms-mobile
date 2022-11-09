@@ -1,3 +1,4 @@
+import 'package:apms_mobile/components/build_car.dart';
 import 'package:flutter/material.dart';
 
 class Parking extends StatefulWidget {
@@ -10,6 +11,6 @@ class Parking extends StatefulWidget {
 class _ParkingState extends State<Parking> {
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return const BuildCard();
   }
 }

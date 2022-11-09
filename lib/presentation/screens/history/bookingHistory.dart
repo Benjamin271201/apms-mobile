@@ -1,3 +1,4 @@
+import 'package:apms_mobile/components/build_car.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -11,6 +12,9 @@ class BookingHistory extends StatefulWidget {
 class _BookingHistoryState extends State<BookingHistory> {
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return const Scaffold(
+      backgroundColor: Color.fromARGB(96, 64, 165, 248),
+      body: BuildCard(),
+    );
   }
 }
