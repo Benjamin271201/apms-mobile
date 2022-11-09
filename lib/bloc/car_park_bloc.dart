@@ -1,4 +1,5 @@
 import 'package:apms_mobile/bloc/repositories/car_park_repo.dart';
+import 'package:apms_mobile/models/car_park.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 
@@ -6,12 +7,15 @@ part 'events/car_park_event.dart';
 part 'states/car_park_state.dart';
 
 class CarParkBloc extends Bloc<CarParkEvent, CarParkState> {
-  CarParkBloc() : super(CarParkInitial()) {
-    on<GetCarParkList>(fetchCarParkList());
+  final CarParkRepo repo;
+  CarParkBloc(this.repo) : super(CarParkInitial()) {
+    on<GetCarParkList>(_fetchCarParkList);
   }
 
-  fetchCarParkList() async {
+  _fetchCarParkList(GetCarParkList event, Emitter<CarParkState> emit) async {
+    emit(CarParkFetching());
     final CarParkRepo repo = CarParkRepo();
-    return await repo.fetchCarParkList();
+    List<CarPark> result = await repo.fetchCarParkList();
+    emit((CarParkFetchedSuccessfully(result)));
   }
 }
