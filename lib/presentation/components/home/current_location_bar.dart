@@ -1,3 +1,4 @@
+import 'package:apms_mobile/bloc/repositories/user_location_repo.dart';
 import 'package:apms_mobile/bloc/user_location_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
@@ -17,7 +18,8 @@ class CurrentLocationBar extends StatefulWidget implements PreferredSizeWidget {
 }
 
 class _CurrentLocationBarState extends State<CurrentLocationBar> {
-  final UserLocationBloc _userLocationBloc = UserLocationBloc();
+  final UserLocationBloc _userLocationBloc =
+      UserLocationBloc(UserLocationProvider());
 
   @override
   void initState() {
@@ -27,17 +29,30 @@ class _CurrentLocationBarState extends State<CurrentLocationBar> {
 
   @override
   Widget build(BuildContext context) {
-    return _buildUserLocation();
+    return _buildUserLocation(context);
   }
 
-  Widget _buildUserLocation() {
-    return BlocBuilder<UserLocationBloc, UserLocationState>(
-        builder: ((context, state) => Scaffold(
-              appBar: AppBar(
-                title: state is UserLocationFetchedSuccessfully
-                    ? Text(state.userLocation.longitude.toString())
-                    : Text("Failed"),
-              ),
+  Widget _buildUserLocation(context) {
+    return BlocProvider(
+        create: (_) => _userLocationBloc,
+        child: BlocListener<UserLocationBloc, UserLocationState>(
+            listener: (context, state) {
+              if (state is UserLocationFetchedFailed) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text("Failed"),
+                  ),
+                );
+              }
+            },
+            child: BlocBuilder<UserLocationBloc, UserLocationState>(
+              builder: ((context, state) => AppBar(
+                    title: state is UserLocationFetchedSuccessfully
+                        ? Text(state.userLocation.latitude.toString() +
+                            "," +
+                            state.userLocation.longitude.toString())
+                        : Text("Failed Lul"),
+                  )),
             )));
   }
 }
