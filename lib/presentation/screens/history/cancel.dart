@@ -1,4 +1,4 @@
-import 'package:apms_mobile/presentation/components/history/build_car.dart';
+import 'package:apms_mobile/presentation/components/history/build_card.dart';
 import 'package:flutter/material.dart';
 
 class Cancel extends StatefulWidget {
