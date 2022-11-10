@@ -1,6 +1,7 @@
 import 'package:apms_mobile/bloc/car_park_bloc.dart';
 import 'package:apms_mobile/bloc/repositories/car_park_repo.dart';
 import 'package:apms_mobile/models/car_park.dart';
+import 'package:apms_mobile/presentation/screens/booking.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/container.dart';
@@ -71,41 +72,36 @@ class _CarParkListState extends State<CarParkList> {
     return ListView.builder(
       itemCount: carParkList.length,
       itemBuilder: (context, index) {
-        return Container(
-          margin: const EdgeInsets.all(8.0),
-          padding: const EdgeInsets.all(15),
-          decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(10),
-              border: Border.all(
-                  color: const Color.fromARGB(255, 196, 193, 193), width: 0.5)),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Text(
-                "Country: ${carParkList[index].name}".toUpperCase(),
+        return InkWell(
+            onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => Booking(carPark: carParkList[index]))),
+            child: Container(
+              margin: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(15),
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(
+                      color: const Color.fromARGB(255, 196, 193, 193),
+                      width: 0.5)),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    "Name: ${carParkList[index].name}".toUpperCase(),
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    "Address: ${carParkList[index].addressNumber}, ${carParkList[index].street}, ${carParkList[index].district},${carParkList[index].city} "
+                        .toUpperCase(),
+                  ),
+                  const SizedBox(height: 10),
+                ],
               ),
-              const SizedBox(height: 10),
-              Text(
-                "Country: ${carParkList[index].addressNumber}".toUpperCase(),
-              ),
-              const SizedBox(height: 10),
-              Text(
-                "Country: ${carParkList[index].city}".toUpperCase(),
-              ),
-              const SizedBox(height: 10),
-              Text(
-                "Country: ${carParkList[index].district}".toUpperCase(),
-              ),
-              const SizedBox(height: 10),
-              Text(
-                "Country: ${carParkList[index].street}".toUpperCase(),
-              ),
-              const SizedBox(height: 10),
-            ],
-          ),
-        );
+            ));
       },
     );
   }
