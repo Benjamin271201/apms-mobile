@@ -1,10 +1,18 @@
 import 'package:equatable/equatable.dart';
 
-class Login extends Equatable {
+class LoginModel extends Equatable {
   final String phoneNumber;
   final String password;
+  String? error;
 
-  const Login(this.phoneNumber, this.password);
+  LoginModel(this.phoneNumber, this.password);
+
+  LoginModel.withError(
+      {String errorMessage = '', this.phoneNumber = '', this.password = ''}) {
+    error = errorMessage;
+  }
+
+  Map toJson() => {"phoneNumber": phoneNumber, "password": password};
 
   @override
   List<Object?> get props => [];
