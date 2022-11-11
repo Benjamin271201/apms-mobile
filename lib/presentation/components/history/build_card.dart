@@ -18,9 +18,7 @@ class _BuildCardState extends State<BuildCard> {
           boxFit: BoxFit.cover,
           //image: Image.asset('your asset image'),
           title: GFListTile(
-            avatar: GFAvatar(
-                backgroundImage: loadImage(
-                    'https://firebasestorage.googleapis.com/v0/b/apms-48bd5/o/capture_51H-14532.png?alt=media&token=97cc1d20-3da1-4c68-a71')),
+            avatar: GFAvatar(backgroundImage: loadImage('')),
             title: const Text(
               '51H - 68329',
               style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
@@ -48,13 +46,19 @@ class _BuildCardState extends State<BuildCard> {
     );
   }
 
-  ImageProvider loadImage(String url) {
-    return FadeInImage(
-      image: NetworkImage(url),
-      placeholder: const AssetImage('assets/images/default.jpg'),
-      imageErrorBuilder: (context, error, stackTrace) {
-        return Image.asset('assets/images/default.jpg');
-      },
-    ).image;
+  ImageProvider loadImage(String? url) {
+    Image img = (url!.isEmpty )
+        ? Image.asset("assets/images/default.jpg")
+        : Image.network(
+            url,
+            loadingBuilder: (context, child, loadingProgress) =>
+                (loadingProgress == null)
+                    ? child
+                    : const CircularProgressIndicator(),
+            errorBuilder: (context, error, stackTrace) {
+              return Image.asset("assets/images/default.jpg");
+            },
+          );
+    return img.image;
   }
 }
