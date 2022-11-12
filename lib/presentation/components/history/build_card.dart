@@ -11,44 +11,96 @@ class BuildCard extends StatefulWidget {
 
 class _BuildCardState extends State<BuildCard> {
   @override
+  void initState() {
+    super.initState();
+    print('---First----');
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: 4,
-      itemBuilder: (context, index) {
-        return GFCard(
-          boxFit: BoxFit.cover,
-          //image: Image.asset('your asset image'),
-          title: GFListTile(
-            avatar: GFAvatar(backgroundImage: loadImage('')),
-            title: Text(
-              widget.type,
-              style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+    double width = MediaQuery.of(context).size.width;
+    return Column(
+      children: [
+        Row(
+          children: [
+            SizedBox(
+              width: width * 0.5,
+              height: 20,
+              child: const Text('From : 2022-01-01'),
             ),
-            subTitle: const Text('FPT car park'),
-          ),
-          content: const Text("Some quick example text to build on the card"),
-          buttonBar: GFButtonBar(
-            alignment: WrapAlignment.end,
-            crossAxisAlignment: WrapCrossAlignment.end,
-            runAlignment: WrapAlignment.end,
-            children: <Widget>[
-              GFButton(
-                onPressed: () {},
-                text: 'OK',
+            SizedBox(
+                width: width * 0.5,
+                height: 20,
+                child: const Text(
+                  "To: 2022-11-12",
+                  textAlign: TextAlign.end,
+                )),
+          ],
+        ),
+        Expanded(
+            child: ListView.builder(
+          itemCount: 4,
+          itemBuilder: (context, index) {
+            return GFCard(
+              boxFit: BoxFit.cover,
+              //image: Image.asset('your asset image'),
+              title: GFListTile(
+                avatar: GFAvatar(backgroundImage: loadImage('')),
+                title: Text(
+                  widget.type,
+                  style: const TextStyle(
+                      fontSize: 32, fontWeight: FontWeight.bold),
+                ),
+                subTitle: const Text('FPT car park'),
               ),
-              GFButton(
-                onPressed: () {},
-                text: 'Cancel',
+              content: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    width: width,
+                    child: const Text(
+                        "Some quick example text to build on the card\n"
+                        "11111"),
+                  ),
+                  const Divider(
+                    color: Colors.blue,
+                    //height: 25,
+                    thickness: 2,
+                  ),
+                  SizedBox(
+                    width: width,
+                    child: const Text('data', textAlign: TextAlign.right),
+                  )
+                ],
               ),
-            ],
-          ),
-        );
-      },
+              buttonBar: GFButtonBar(
+                children: <Widget>[
+                  GFButton(
+                    onPressed: () {
+                      print('$index');
+                    },
+                    text: 'OK',
+                    blockButton: true,
+                    enableFeedback: false,
+                  ),
+                  const GFButton(
+                    onPressed: null,
+                    text: 'Cancel',
+                  ),
+                ],
+              ),
+            );
+          },
+        )),
+      ],
     );
   }
 
-  ImageProvider loadImage(String? url) {
-    Image img = (url!.isEmpty)
+  ImageProvider loadImage(String url) {
+    var check = RegExp(r'^(https:\/\/firebasestorage\.googleapis\.com\/v0)')
+        .hasMatch(url);
+
+    Image img = (url.isEmpty)
         ? Image.asset("assets/images/default.jpg")
         : Image.network(
             url,

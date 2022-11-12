@@ -13,8 +13,7 @@ class _BookingHistoryState extends State<BookingHistory> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(96, 64, 165, 248),
-      body: BuildCard(type: widget.type),
-    );
+        backgroundColor: const Color.fromARGB(96, 64, 165, 248),
+        body: BuildCard(type: widget.type));
   }
 }
