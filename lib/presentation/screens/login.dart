@@ -1,3 +1,5 @@
+// ignore_for_file: import_of_legacy_library_into_null_safe
+
 import 'package:apms_mobile/bloc/login_bloc.dart';
 import 'package:apms_mobile/bloc/repositories/login_repo.dart';
 import 'package:apms_mobile/main.dart';
@@ -10,7 +12,7 @@ class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
 
   @override
-  _LoginScreenState createState() => _LoginScreenState();
+  State<LoginScreen> createState() => _LoginScreenState();
 }
 
 class _LoginScreenState extends State<LoginScreen> {
@@ -19,10 +21,11 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController passwordController = TextEditingController();
 
   void checkLogin() async {
+    final navigator = Navigator.of(context);
     SharedPreferences pref = await SharedPreferences.getInstance();
     String? info = pref.getString('token');
     if (info != null) {
-      Navigator.of(context).pushAndRemoveUntil(
+      navigator.pushAndRemoveUntil(
           MaterialPageRoute(builder: (context) => const MyHome()),
           (route) => false);
     }

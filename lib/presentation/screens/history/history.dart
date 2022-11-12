@@ -21,6 +21,7 @@ class _HistoryState extends State<History> {
         appBar: AppBar(
           centerTitle: true,
           bottom: PreferredSize(
+              preferredSize: const Size.fromHeight(10.0),
               child: TabBar(
                 isScrollable: true,
                 unselectedLabelColor: Colors.white.withOpacity(0.4),
@@ -33,8 +34,7 @@ class _HistoryState extends State<History> {
                   //insets: EdgeInsets.symmetric(horizontal: 48), // Indicator width
                 ),
                 tabs: tabs(),
-              ),
-              preferredSize: const Size.fromHeight(10.0)),
+              )),
         ),
         body: TabBarView(children: tabBarItems()),
       ),
