@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:getwidget/getwidget.dart';
 
 class BuildCard extends StatefulWidget {
-  const BuildCard({Key? key}) : super(key: key);
+  final String type;
+  const BuildCard({Key? key, required this.type}) : super(key: key);
 
   @override
   State<BuildCard> createState() => _BuildCardState();
@@ -19,9 +20,9 @@ class _BuildCardState extends State<BuildCard> {
           //image: Image.asset('your asset image'),
           title: GFListTile(
             avatar: GFAvatar(backgroundImage: loadImage('')),
-            title: const Text(
-              '51H - 68329',
-              style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+            title: Text(
+              widget.type,
+              style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
             ),
             subTitle: const Text('FPT car park'),
           ),
@@ -47,7 +48,7 @@ class _BuildCardState extends State<BuildCard> {
   }
 
   ImageProvider loadImage(String? url) {
-    Image img = (url!.isEmpty )
+    Image img = (url!.isEmpty)
         ? Image.asset("assets/images/default.jpg")
         : Image.network(
             url,
