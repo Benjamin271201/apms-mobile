@@ -55,10 +55,10 @@ class Ticket {
     final String id;
     final DateTime startTime;
     final DateTime endTime;
-    final int reservationFee;
+    final double reservationFee;
     final dynamic bookTime;
     final dynamic arriveTime;
-    final int totalFee;
+    final double totalFee;
     final String picInUrl;
     final String picOutUrl;
     final String carParkId;

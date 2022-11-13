@@ -15,7 +15,13 @@ class TicketLoaded extends TicketState {
   final TicketModel ticket;
 
   const TicketLoaded(this.ticket);
+}
+
+class TicketError extends TicketState {
+  final String? message;
+
+  const TicketError(this.message);
 
 }
 
-class TicketError extends TicketState {}
+

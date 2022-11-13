@@ -26,7 +26,10 @@ class _LoginScreenState extends State<LoginScreen> {
     String? info = pref.getString('token');
     if (info != null) {
       navigator.pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => const MyHome()),
+          MaterialPageRoute(
+              builder: (context) => const MyHome(
+                    tabIndex: 0,
+                  )),
           (route) => false);
     }
   }
@@ -44,8 +47,15 @@ class _LoginScreenState extends State<LoginScreen> {
         child: BlocListener<LoginBloc, LoginState>(
           listener: (context, state) {
             if (state is LogedIn) {
+              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                content: Text('Login successfully'),
+              ));
               Navigator.of(context).pushAndRemoveUntil(
-                  MaterialPageRoute(builder: (context) => const MyHome()),
+                  MaterialPageRoute(
+                    builder: (context) => const MyHome(
+                      tabIndex: 1,
+                    ),
+                  ),
                   (route) => false);
             }
           },

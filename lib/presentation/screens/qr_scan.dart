@@ -90,9 +90,11 @@ class _QRScan extends State<QRScan> {
         result = scanData;
         code = result!.code!.replaceAll("True", "true");
         qr = qrModelFromJson(code!.replaceAll("False", "false"));
-        Navigator.pushReplacement(context, MaterialPageRoute(
-          builder: (context) => Result(qr: qr!),
-        ));
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => Result(qr: qr!),
+            ));
       });
     });
   }
@@ -103,6 +105,8 @@ class _QRScan extends State<QRScan> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('no Permission')),
       );
+    } else {
+      controller!.resumeCamera();
     }
   }
 
