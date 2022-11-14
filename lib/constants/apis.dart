@@ -1,3 +1,4 @@
-const baseUrl = "http://18.136.151.97:6001/api";
+const baseUrl = "18.136.151.97:6001";
 
-const carPark = baseUrl + "/carparks";
+const carPark = "/api/carparks";
+const tickets = baseUrl + "/tickets";

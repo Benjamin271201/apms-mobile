@@ -8,3 +8,4 @@ abstract class UserLocationEvent extends Equatable {
 }
 
 class GetUserLocation extends UserLocationEvent {}
+

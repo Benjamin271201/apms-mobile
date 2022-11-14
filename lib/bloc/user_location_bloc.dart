@@ -8,8 +8,7 @@ part 'events/user_location_event.dart';
 part 'states/user_location_state.dart';
 
 class UserLocationBloc extends Bloc<UserLocationEvent, UserLocationState> {
-  final UserLocationProvider repo;
-  UserLocationBloc(this.repo) : super(UserLocationInitial()) {
+  UserLocationBloc() : super(UserLocationInitial()) {
     on<GetUserLocation>(_fetchUserLocation);
   }
 
@@ -17,6 +16,7 @@ class UserLocationBloc extends Bloc<UserLocationEvent, UserLocationState> {
       GetUserLocation event, Emitter<UserLocationState> emit) async {
     Position _userLocation;
     List<Placemark> _userPlacemark;
+    final UserLocationProvider repo = UserLocationProvider();
 
     emit(UserLocationFetching());
     _userLocation = await repo.fetchUserLocation();

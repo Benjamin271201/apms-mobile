@@ -14,8 +14,16 @@ class CarParkApiProvider {
   };
   final _carParkApi = Uri.parse(apis.carPark);
 
-  Future<List<CarPark>> fetchCarParkList() async {
-    final response = await http.get(_carParkApi, headers: headers);
+  Future<List<CarPark>> fetchCarParkList(
+      double? latitude, double? longitude) async {
+    var queryParameters = {
+      "latitude": latitude == null ? "" : latitude.toString(),
+      "longitude": longitude == null ? "" : longitude.toString()
+    };
+    final _getCarParksUri =
+        Uri.http(apis.baseUrl, apis.carPark, queryParameters);
+    print(_getCarParksUri);
+    final response = await http.get(_getCarParksUri, headers: headers);
     if (response.statusCode == 200) {
       // If the call to the server was successful, parse the JSON
       Map<String, dynamic> body = jsonDecode(response.body);
@@ -36,6 +44,6 @@ class CarParkApiProvider {
 class CarParkRepo {
   final carParkApiProvider = CarParkApiProvider();
 
-  Future<List<CarPark>> fetchCarParkList() =>
-      carParkApiProvider.fetchCarParkList();
+  Future<List<CarPark>> fetchCarParkList(double? latitude, double? longitude) =>
+      carParkApiProvider.fetchCarParkList(latitude, longitude);
 }

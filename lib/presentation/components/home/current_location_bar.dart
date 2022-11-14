@@ -1,3 +1,4 @@
+import 'package:apms_mobile/bloc/car_park_bloc.dart';
 import 'package:apms_mobile/bloc/repositories/user_location_repo.dart';
 import 'package:apms_mobile/bloc/user_location_bloc.dart';
 import 'package:flutter/material.dart';
@@ -8,8 +9,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
 
 class CurrentLocationBar extends StatefulWidget implements PreferredSizeWidget {
-  const CurrentLocationBar({Key? key}) : super(key: key);
-
+  const CurrentLocationBar({Key? key, required this.context}) : super(key: key);
+  final BuildContext context;
   @override
   Size get preferredSize => const Size.fromHeight(50);
 
@@ -18,8 +19,10 @@ class CurrentLocationBar extends StatefulWidget implements PreferredSizeWidget {
 }
 
 class _CurrentLocationBarState extends State<CurrentLocationBar> {
-  final UserLocationBloc _userLocationBloc =
-      UserLocationBloc(UserLocationProvider());
+  final UserLocationBloc _userLocationBloc = UserLocationBloc();
+  final CarParkBloc _carParkBloc = CarParkBloc();
+  @override
+  late BuildContext context;
 
   @override
   void initState() {
@@ -40,9 +43,13 @@ class _CurrentLocationBarState extends State<CurrentLocationBar> {
               if (state is UserLocationFetchedFailed) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
-                    content: Text("Failed"),
+                    content: Text(state.message),
                   ),
                 );
+              }
+              if (state is UserLocationFetchedSuccessfully) {
+                _carParkBloc.add(GetCarParkList(
+                    state.userLocation.latitude, state.userLocation.longitude));
               }
             },
             child: BlocBuilder<UserLocationBloc, UserLocationState>(
