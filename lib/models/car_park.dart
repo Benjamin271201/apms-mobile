@@ -1,6 +1,7 @@
 class CarPark {
   String id, name, addressNumber, phoneNumber, street, ward, district, city;
   int availableSlotsCount, provinceId;
+  double? distance;
   bool status;
 
   CarPark.fromJson(Map<String, dynamic> json)
@@ -14,7 +15,8 @@ class CarPark {
         street = json["street"],
         ward = json["ward"],
         district = json["district"],
-        city = json["city"];
+        city = json["city"],
+        distance = json["distance"];
 
   Map<String, dynamic> toJson() => {
         "id": id,
@@ -27,6 +29,7 @@ class CarPark {
         "stret": street,
         "ward": ward,
         "district": district,
-        "city": city
+        "city": city,
+        "distance": distance
       };
 }

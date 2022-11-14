@@ -9,20 +9,21 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CarParkList extends StatefulWidget {
-  const CarParkList({Key? key}) : super(key: key);
-
+  const CarParkList({Key? key, required this.context}) : super(key: key);
+  final BuildContext context;
   @override
   State<CarParkList> createState() => _CarParkListState();
 }
 
 class _CarParkListState extends State<CarParkList> {
-  final CarParkBloc _carParkBloc = CarParkBloc(CarParkRepo());
+  final CarParkBloc _carParkBloc = CarParkBloc();
   final List<CarPark> carParkList = [];
 
   @override
+  late BuildContext context = context;
+
+  @override
   void initState() {
-    // _carParkBloc.add(getUserLocation());
-    _carParkBloc.add(GetCarParkList());
     super.initState();
   }
 
@@ -76,7 +77,8 @@ class _CarParkListState extends State<CarParkList> {
             onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => Booking(carPark: carParkList[index]))),
+                    builder: (context) =>
+                        Booking(carPark: carParkList[index]))),
             child: Container(
               margin: const EdgeInsets.all(8.0),
               padding: const EdgeInsets.all(15),
@@ -99,6 +101,11 @@ class _CarParkListState extends State<CarParkList> {
                         .toUpperCase(),
                   ),
                   const SizedBox(height: 10),
+                  if (carParkList[index].distance != null)
+                    Text(
+                      "Distance: ${carParkList[index].distance!.toStringAsFixed(1)}"
+                          .toUpperCase(),
+                    )
                 ],
               ),
             ));

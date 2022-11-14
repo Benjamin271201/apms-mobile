@@ -7,15 +7,15 @@ part 'events/car_park_event.dart';
 part 'states/car_park_state.dart';
 
 class CarParkBloc extends Bloc<CarParkEvent, CarParkState> {
-  final CarParkRepo repo;
-  CarParkBloc(this.repo) : super(CarParkInitial()) {
+  CarParkBloc() : super(CarParkInitial()) {
     on<GetCarParkList>(_fetchCarParkList);
   }
 
   _fetchCarParkList(GetCarParkList event, Emitter<CarParkState> emit) async {
     emit(CarParkFetching());
     final CarParkRepo repo = CarParkRepo();
-    List<CarPark> result = await repo.fetchCarParkList();
+    List<CarPark> result =
+        await repo.fetchCarParkList(event.latitude, event.longitude);
     emit((CarParkFetchedSuccessfully(result)));
   }
 }
