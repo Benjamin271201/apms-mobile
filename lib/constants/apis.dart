@@ -1,4 +1,12 @@
-const baseUrl = "18.136.151.97:6001";
+import 'dart:io';
 
-const carPark = "/api/carparks";
-const tickets = baseUrl + "/tickets";
+const baseUrl = "http://18.136.151.97:6001/api";
+
+Map<String, String> headers = {
+  HttpHeaders.contentTypeHeader: 'application/json',
+};
+
+const carPark = "$baseUrl/carparks";
+const login = "$baseUrl/Authentication";
+const history = "$baseUrl/Tickets";
+const tickets = "$baseUrl/tickets";
