@@ -17,6 +17,20 @@ class BookingSubmitted extends BookingState {
   const BookingSubmitted(this.plateNumber, this.arrivalTime);
 }
 
-class BookingSubmittedSuccessfully extends BookingState {}
+class BookingSubmittedSuccessfully extends BookingState {
+  final Ticket ticket;
+  const BookingSubmittedSuccessfully(this.ticket);
+}
 
-class BookingSubmittedFailed extends BookingState {}
+class BookingSubmittedFailed extends BookingState {
+  final String message = "Unable to submit booking request! Please try again!";
+}
+
+class BookingPreviewFetching extends BookingState {}
+
+class BookingPreviewFetchedSuccessfully extends BookingState {
+  final TicketPreview ticketPreview;
+  const BookingPreviewFetchedSuccessfully(this.ticketPreview);
+}
+
+class BookingPreviewFetchedFailed extends BookingState {}

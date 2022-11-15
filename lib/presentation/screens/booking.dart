@@ -2,6 +2,7 @@ import 'package:apms_mobile/bloc/booking_bloc.dart';
 import 'package:apms_mobile/bloc/car_park_bloc.dart';
 import 'package:apms_mobile/constants/apis.dart';
 import 'package:apms_mobile/models/car_park.dart';
+import 'package:apms_mobile/presentation/screens/booking_confirmation.dart';
 import 'package:datetime_picker_formfield_new/datetime_picker_formfield_new.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -22,6 +23,8 @@ class Booking extends StatefulWidget {
 class _BookingState extends State<Booking> {
   late CarPark carPark = widget.carPark;
   final BookingBloc _bookingBloc = BookingBloc();
+  final TextEditingController plateNumberController = TextEditingController();
+  final TextEditingController arrivalTimeController = TextEditingController();
 
   @override
   void initState() {
@@ -44,7 +47,7 @@ class _BookingState extends State<Booking> {
           if (state is BookingSubmittedFailed) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text(""),
+                content: Text(state.message),
               ),
             );
           }
@@ -75,7 +78,15 @@ class _BookingState extends State<Booking> {
             _dateTimePickerField(),
             const SizedBox(height: 10),
             ElevatedButton(
-                onPressed: () => {}, child: Text("Go to confirmation page"))
+                onPressed: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => BookingConfirmation(
+                            carPark: widget.carPark,
+                            plateNumber: plateNumberController.text,
+                            arrivalTime:
+                                DateFormat("dd-MM-yyyy HH:mm").parse(arrivalTimeController.text)))),
+                child: Text("Go to confirmation page"))
           ]),
         ));
   }
@@ -85,6 +96,7 @@ class _BookingState extends State<Booking> {
       inputFormatters: [
         FilteringTextInputFormatter.allow(RegExp('[a-zA-Z0-9-]'))
       ],
+      controller: plateNumberController,
       decoration: InputDecoration(
         enabled: true,
         labelText: "Plate number",
@@ -94,8 +106,9 @@ class _BookingState extends State<Booking> {
   }
 
   Widget _dateTimePickerField() {
-    const String _dateTimeFormat = "HH:mm       dd-MM-yyyy";
+    const String _dateTimeFormat = "dd-MM-yyyy HH:mm";
     return DateTimeField(
+      controller: arrivalTimeController,
       decoration: InputDecoration(
         enabled: true,
         labelText: "Arrival time",
