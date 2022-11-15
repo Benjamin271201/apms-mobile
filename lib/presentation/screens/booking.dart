@@ -1,27 +1,22 @@
 import 'package:apms_mobile/bloc/booking_bloc.dart';
-import 'package:apms_mobile/bloc/car_park_bloc.dart';
-import 'package:apms_mobile/constants/apis.dart';
-import 'package:apms_mobile/models/car_park.dart';
+import 'package:apms_mobile/models/car_park_model.dart';
 import 'package:apms_mobile/presentation/screens/booking_confirmation.dart';
 import 'package:datetime_picker_formfield_new/datetime_picker_formfield_new.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
 class Booking extends StatefulWidget {
   const Booking({Key? key, required this.carPark}) : super(key: key);
-  final CarPark carPark;
+  final CarParkModel carPark;
 
   @override
   State<Booking> createState() => _BookingState();
 }
 
 class _BookingState extends State<Booking> {
-  late CarPark carPark = widget.carPark;
+  late CarParkModel carPark = widget.carPark;
   final BookingBloc _bookingBloc = BookingBloc();
   final TextEditingController plateNumberController = TextEditingController();
   final TextEditingController arrivalTimeController = TextEditingController();
@@ -84,8 +79,8 @@ class _BookingState extends State<Booking> {
                         builder: (context) => BookingConfirmation(
                             carPark: widget.carPark,
                             plateNumber: plateNumberController.text,
-                            arrivalTime:
-                                DateFormat("dd-MM-yyyy HH:mm").parse(arrivalTimeController.text)))),
+                            arrivalTime: DateFormat("dd-MM-yyyy HH:mm")
+                                .parse(arrivalTimeController.text)))),
                 child: Text("Go to confirmation page"))
           ]),
         ));

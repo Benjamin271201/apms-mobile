@@ -1,5 +1,5 @@
 import 'package:apms_mobile/bloc/repositories/car_park_repo.dart';
-import 'package:apms_mobile/models/car_park.dart';
+import 'package:apms_mobile/models/car_park_model.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 
@@ -14,7 +14,7 @@ class CarParkBloc extends Bloc<CarParkEvent, CarParkState> {
   _fetchCarParkList(GetCarParkList event, Emitter<CarParkState> emit) async {
     emit(CarParkFetching());
     final CarParkRepo repo = CarParkRepo();
-    List<CarPark> result =
+    List<CarParkModel> result =
         await repo.fetchCarParkList(event.latitude, event.longitude);
     emit((CarParkFetchedSuccessfully(result)));
   }

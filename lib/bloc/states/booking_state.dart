@@ -18,8 +18,7 @@ class BookingSubmitted extends BookingState {
 }
 
 class BookingSubmittedSuccessfully extends BookingState {
-  final Ticket ticket;
-  const BookingSubmittedSuccessfully(this.ticket);
+  final String message = "Booked successfully!";
 }
 
 class BookingSubmittedFailed extends BookingState {
@@ -33,4 +32,6 @@ class BookingPreviewFetchedSuccessfully extends BookingState {
   const BookingPreviewFetchedSuccessfully(this.ticketPreview);
 }
 
-class BookingPreviewFetchedFailed extends BookingState {}
+class BookingPreviewFetchedFailed extends BookingState {
+  final String message = "Unable to get booking preview! Please try again!";
+}
