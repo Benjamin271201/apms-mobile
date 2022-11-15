@@ -21,8 +21,7 @@ class CarParkApiProvider {
       "longitude": longitude == null ? "" : longitude.toString()
     };
     final _getCarParksUri =
-        Uri.http(apis.baseUrl, apis.carPark, queryParameters);
-    print(_getCarParksUri);
+        Uri.http(apis.authority, apis.carPark, queryParameters);
     final response = await http.get(_getCarParksUri, headers: headers);
     if (response.statusCode == 200) {
       // If the call to the server was successful, parse the JSON

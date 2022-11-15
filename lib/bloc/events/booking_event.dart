@@ -11,11 +11,21 @@ class ArrivalDateSelected extends BookingEvent {}
 
 class ArrivalTimeSelected extends BookingEvent {}
 
-class SubmitBookingForm extends BookingEvent {
+// At this step, only a confirmation screen will be shown
+class SubmitBookingFormStep1 extends BookingEvent {
   final String plateNumber;
   final DateTime arrivalTime;
 
-  const SubmitBookingForm(this.plateNumber, this.arrivalTime);
+  const SubmitBookingFormStep1(this.plateNumber, this.arrivalTime);
+  @override
+  List<Object> get props => [plateNumber, arrivalTime];
+}
+
+class SubmitBookingFormStep2 extends BookingEvent {
+  final String plateNumber;
+  final DateTime arrivalTime;
+
+  const SubmitBookingFormStep2(this.plateNumber, this.arrivalTime);
   @override
   List<Object> get props => [plateNumber, arrivalTime];
 }
