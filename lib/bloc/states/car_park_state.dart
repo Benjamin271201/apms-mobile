@@ -12,7 +12,7 @@ class CarParkInitial extends CarParkState {}
 class CarParkFetching extends CarParkState {}
 
 class CarParkFetchedSuccessfully extends CarParkState {
-  final List<CarPark> carParkList;
+  final List<CarParkModel> carParkList;
   const CarParkFetchedSuccessfully(this.carParkList);
 }
 

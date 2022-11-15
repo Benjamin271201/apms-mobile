@@ -1,10 +1,10 @@
-class CarPark {
+class CarParkModel {
   String id, name, addressNumber, phoneNumber, street, ward, district, city;
   int availableSlotsCount, provinceId;
   double? distance;
   bool status;
 
-  CarPark.fromJson(Map<String, dynamic> json)
+  CarParkModel.fromJson(Map<String, dynamic> json)
       : id = json["id"],
         name = json["name"],
         addressNumber = json["addressNumber"],

@@ -33,7 +33,12 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
       SubmitBookingFormStep2 event, Emitter<BookingState> emit) async {
     emit(BookingSubmitting());
     // TODO: validation goes here
-    // Ticket result = await repo.bookParkingSlot(event.plateNumber, event.arrivalTime, event.carParkId);
-    // emit(BookingSubmittedSuccessfully(result));
+    int result = await repo.bookingApiProvider
+        .bookParkingSlot(event.plateNumber, event.arrivalTime, event.carParkId);
+    if (result == 201) {
+      emit(BookingSubmittedSuccessfully());
+    } else {
+      emit(BookingSubmittedFailed());
+    }
   }
 }

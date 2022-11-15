@@ -26,7 +26,7 @@ class BookingApiProvider {
         Uri.http(paths.authority, "${paths.tickets}/preview");
     var body = json.encode({
       "plateNumber": plateNumber,
-      "arrivalTime": arrivalTime.toIso8601String(),
+      "arriveTime": arrivalTime.toIso8601String(),
       "carParkId": carParkId
     });
     final response =
@@ -34,19 +34,38 @@ class BookingApiProvider {
     if (response.statusCode == 201) {
       // If the call to the server was successful, parse the JSON
       Map<String, dynamic> body = jsonDecode(response.body);
-      TicketPreview ticketPreview = TicketPreview.fromJson(body);
+      TicketPreview ticketPreview = TicketPreview.fromJson(body["data"]);
       return ticketPreview;
     } else {
       // If that call was not successful, throw an error.
       throw Exception('Failed to load list');
     }
   }
+
+  Future<int> bookParkingSlot(
+      String plateNumber, DateTime arrivalTime, String carParkId) async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    String token = pref.getString('token')!;
+    final headers = {
+      HttpHeaders.contentTypeHeader: 'application/json',
+      HttpHeaders.authorizationHeader: 'Bearer ${token}'
+    };
+    final getTicketPreview = Uri.http(paths.authority, paths.tickets);
+    var body = json.encode({
+      "plateNumber": plateNumber,
+      "arriveTime": arrivalTime.toIso8601String(),
+      "carParkId": carParkId
+    });
+    final response =
+        await http.post(getTicketPreview, headers: headers, body: body);
+    return response.statusCode;
+  }
 }
 
 class BookingRepo {
   final bookingApiProvider = BookingApiProvider();
 
-  Future<TicketPreview> bookParkingSlot(
+  Future<TicketPreview> fetchTicketPreview(
           String plateNumber, DateTime arrivalTime, String carParkId) =>
       bookingApiProvider.fectchTicketPreview(
           plateNumber, arrivalTime, carParkId);

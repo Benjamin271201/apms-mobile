@@ -1,12 +1,7 @@
 import 'package:apms_mobile/bloc/car_park_bloc.dart';
-import 'package:apms_mobile/bloc/repositories/car_park_repo.dart';
-import 'package:apms_mobile/bloc/repositories/user_location_repo.dart';
 import 'package:apms_mobile/bloc/user_location_bloc.dart';
-import 'package:apms_mobile/models/car_park.dart';
-import 'package:apms_mobile/presentation/components/home/car_park_list.dart';
-import 'package:apms_mobile/presentation/components/home/current_location_bar.dart';
+import 'package:apms_mobile/models/car_park_model.dart';
 import 'package:apms_mobile/presentation/screens/booking.dart';
-import 'package:apms_mobile/presentation/screens/login.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -19,7 +14,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   final CarParkBloc _carParkBloc = CarParkBloc();
-  final List<CarPark> carParkList = [];
+  final List<CarParkModel> carParkList = [];
   final UserLocationBloc _userLocationBloc = UserLocationBloc();
 
   @override
@@ -101,7 +96,7 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Widget _buildCard(BuildContext context, List<CarPark> carParkList) {
+  Widget _buildCard(BuildContext context, List<CarParkModel> carParkList) {
     return ListView.builder(
       itemCount: carParkList.length,
       itemBuilder: (context, index) {
@@ -135,7 +130,7 @@ class _HomeState extends State<Home> {
                   const SizedBox(height: 10),
                   if (carParkList[index].distance != null)
                     Text(
-                      "Distance: ${carParkList[index].distance!.toStringAsFixed(1)}"
+                      "Distance: ${carParkList[index].distance!.toStringAsFixed(1)} km"
                           .toUpperCase(),
                     )
                 ],

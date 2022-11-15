@@ -5,6 +5,7 @@
 import 'dart:convert';
 
 import 'package:equatable/equatable.dart';
+import 'package:intl/intl.dart';
 
 TicketModel ticketModelFromJson(String str) =>
     TicketModel.fromJson(json.decode(str));
@@ -110,7 +111,7 @@ class Ticket {
 class TicketPreview {
   TicketPreview({
     required this.reservationFee,
-    required this.arrivalTime,
+    required this.arriveTime,
     required this.carParkName,
     required this.carParkAddress,
     required this.plateNumber,
@@ -119,7 +120,7 @@ class TicketPreview {
   });
 
   final double reservationFee;
-  final dynamic arrivalTime;
+  final dynamic arriveTime;
   final String plateNumber;
   final String phoneNumber;
   final String carParkName;
@@ -127,10 +128,11 @@ class TicketPreview {
   final List<dynamic> priceTable;
 
   factory TicketPreview.fromJson(Map<String, dynamic> json) => TicketPreview(
-      reservationFee: json["reservationFee"],
+      reservationFee: json["reservationFee"] + .0,
       plateNumber: json["plateNumber"],
       phoneNumber: json["phoneNumber"],
-      arrivalTime: json["arrivalTime"],
+      arriveTime: DateFormat("dd-MM-yyyy HH:mm")
+          .format(DateTime.parse(json["arriveTime"])),
       carParkAddress: json["carParkAddress"],
       carParkName: json["carParkName"],
       priceTable: json["priceTable"]);
@@ -139,7 +141,7 @@ class TicketPreview {
         "reservationFee": reservationFee,
         "plateNumber": plateNumber,
         "phoneNumber": phoneNumber,
-        "arrivalTime": arrivalTime,
+        "arriveTime": arriveTime,
         "carParkAdress": carParkAddress,
         "carParkName": carParkName,
         "priceTable": priceTable,

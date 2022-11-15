@@ -26,8 +26,10 @@ class SubmitBookingFormStep1 extends BookingEvent {
 class SubmitBookingFormStep2 extends BookingEvent {
   final String plateNumber;
   final DateTime arrivalTime;
+  final String carParkId;
 
-  const SubmitBookingFormStep2(this.plateNumber, this.arrivalTime);
+  const SubmitBookingFormStep2(
+      this.plateNumber, this.arrivalTime, this.carParkId);
   @override
-  List<Object> get props => [plateNumber, arrivalTime];
+  List<Object> get props => [plateNumber, arrivalTime, carParkId];
 }
