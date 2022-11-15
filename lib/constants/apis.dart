@@ -9,3 +9,4 @@ Map<String, String> headers = {
 const carPark = "$baseUrl/carparks";
 const login = "$baseUrl/Authentication";
 const history = "$baseUrl/Tickets";
+const tickets = "$baseUrl/tickets";

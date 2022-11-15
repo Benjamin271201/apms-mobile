@@ -6,7 +6,10 @@ import 'package:apms_mobile/models/ticket_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../constants/paths.dart' as paths;
+import '../../constants/apis.dart' as apis;
 import 'package:http/http.dart' as http;
+
+import '../../models/ticket_model.dart';
 
 class BookingApiProvider {
   final _bookingApi = Uri.parse(paths.tickets);
