@@ -2,10 +2,10 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:async';
 
-import 'package:apms_mobile/models/ticket.dart';
-
 import '../../constants/apis.dart' as apis;
 import 'package:http/http.dart' as http;
+
+import '../../models/ticket_model.dart';
 
 class BookingApiProvider {
   final headers = {
@@ -16,7 +16,8 @@ class BookingApiProvider {
   final _bookingApi = Uri.parse(apis.tickets);
 
   Future<Ticket> bookParkingSlot() async {
-    return Ticket();
+    CarPark carPark = CarPark(name: 'name', street: 'street', addressNumber: 'addressNumber', ward: 'ward', district: 'district', city: 'city');
+    return Ticket(arriveTime: null, bookTime: null, carPark: carPark, carParkId: '', endTime: DateTime.now(), fullName: '', id: '', phoneNumber: '', picInUrl: '', picOutUrl: '', plateNumber: '', reservationFee: 0.0, startTime: DateTime.now(), status: 0, totalFee: 0.0);
   }
 }
 
