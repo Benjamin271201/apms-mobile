@@ -1,5 +1,4 @@
 import 'package:apms_mobile/presentation/screens/login.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -25,11 +24,12 @@ class _ProfileState extends State<Profile> {
   }
 
   Widget _logOutButton() {
+    final navigator = Navigator.of(context, rootNavigator: true);
     return OutlinedButton.icon(
         onPressed: () async {
           SharedPreferences pref = await SharedPreferences.getInstance();
           await pref.clear();
-          Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
+          navigator.pushAndRemoveUntil(
               MaterialPageRoute(builder: (context) => const LoginScreen()),
               (route) => false);
         },

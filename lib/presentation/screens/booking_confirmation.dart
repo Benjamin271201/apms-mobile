@@ -28,6 +28,8 @@ class _BookingConfirmationState extends State<BookingConfirmation> {
 
   @override
   void initState() {
+    bookingBloc.add(SubmitBookingFormStep1(
+        widget.plateNumber, widget.arrivalTime, widget.carPark.id));
     super.initState();
   }
 

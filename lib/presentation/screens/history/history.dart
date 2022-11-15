@@ -1,7 +1,4 @@
 import 'package:apms_mobile/presentation/screens/history/booking_history.dart';
-import 'package:apms_mobile/presentation/screens/history/cancel.dart';
-import 'package:apms_mobile/presentation/screens/history/done.dart';
-import 'package:apms_mobile/presentation/screens/history/parking.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -21,6 +18,7 @@ class _HistoryState extends State<History> {
         appBar: AppBar(
           centerTitle: true,
           bottom: PreferredSize(
+              preferredSize: const Size.fromHeight(10.0),
               child: TabBar(
                 isScrollable: true,
                 unselectedLabelColor: Colors.white.withOpacity(0.4),
@@ -33,8 +31,7 @@ class _HistoryState extends State<History> {
                   //insets: EdgeInsets.symmetric(horizontal: 48), // Indicator width
                 ),
                 tabs: tabs(),
-              ),
-              preferredSize: const Size.fromHeight(10.0)),
+              )),
         ),
         body: TabBarView(children: tabBarItems()),
       ),
@@ -43,10 +40,10 @@ class _HistoryState extends State<History> {
 
   List<Widget> tabBarItems() {
     return const [
-      BookingHistory(),
-      Parking(),
-      Done(),
-      Cancel(),
+      BookingHistory(type: "Booking"),
+      BookingHistory(type: "Parking"),
+      BookingHistory(type: "Done"),
+      BookingHistory(type: "Cancel"),
     ];
   }
 

@@ -3,7 +3,7 @@ import 'dart:io';
 import 'dart:async';
 
 import 'package:apms_mobile/models/car_park.dart';
-import '../../constants/apis.dart' as apis;
+import '../../constants/paths.dart' as paths;
 import 'package:http/http.dart' as http;
 
 class CarParkApiProvider {
@@ -12,7 +12,6 @@ class CarParkApiProvider {
     HttpHeaders.authorizationHeader:
         'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiI3MTI0ZDM1ZS04MDc2LTRkYzQtYWEwNC0xZmE4NDQ5NjQ2OWYiLCJQaG9uZSI6IjA5MzI3ODE3NDUiLCJyb2xlIjoiQ3VzdG9tZXIiLCJDYXJQYXJrSWQiOiIiLCJuYmYiOjE2NjY3NzUwNjQsImV4cCI6MTY2OTM2NzA2NCwiaWF0IjoxNjY2Nzc1MDY0fQ.7EYE3FUYxmtXMY-WtYWbe6Oz14Nou-ch6JlakHV5Img'
   };
-  final _carParkApi = Uri.parse(apis.carPark);
 
   Future<List<CarPark>> fetchCarParkList(
       double? latitude, double? longitude) async {
@@ -21,7 +20,7 @@ class CarParkApiProvider {
       "longitude": longitude == null ? "" : longitude.toString()
     };
     final _getCarParksUri =
-        Uri.http(apis.authority, apis.carPark, queryParameters);
+        Uri.http(paths.authority, paths.carPark, queryParameters);
     final response = await http.get(_getCarParksUri, headers: headers);
     if (response.statusCode == 200) {
       // If the call to the server was successful, parse the JSON

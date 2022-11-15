@@ -2,26 +2,49 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:async';
 
-import 'package:apms_mobile/models/ticket.dart';
+import 'package:apms_mobile/models/ticket_model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../constants/apis.dart' as apis;
+import '../../constants/paths.dart' as paths;
 import 'package:http/http.dart' as http;
 
 class BookingApiProvider {
-  final headers = {
-    HttpHeaders.contentTypeHeader: 'application/json',
-    HttpHeaders.authorizationHeader:
-        'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiI3MTI0ZDM1ZS04MDc2LTRkYzQtYWEwNC0xZmE4NDQ5NjQ2OWYiLCJQaG9uZSI6IjA5MzI3ODE3NDUiLCJyb2xlIjoiQ3VzdG9tZXIiLCJDYXJQYXJrSWQiOiIiLCJuYmYiOjE2NjY3NzUwNjQsImV4cCI6MTY2OTM2NzA2NCwiaWF0IjoxNjY2Nzc1MDY0fQ.7EYE3FUYxmtXMY-WtYWbe6Oz14Nou-ch6JlakHV5Img'
-  };
-  final _bookingApi = Uri.parse(apis.tickets);
+  final _bookingApi = Uri.parse(paths.tickets);
 
-  Future<Ticket> bookParkingSlot() async {
-    return Ticket();
+  Future<TicketPreview> fectchTicketPreview(
+      String plateNumber, DateTime arrivalTime, String carParkId) async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    String token = pref.getString('token')!;
+    final headers = {
+      HttpHeaders.contentTypeHeader: 'application/json',
+      HttpHeaders.authorizationHeader: 'Bearer ${token}'
+    };
+    final getTicketPreview =
+        Uri.http(paths.authority, "${paths.tickets}/preview");
+    var body = json.encode({
+      "plateNumber": plateNumber,
+      "arrivalTime": arrivalTime.toIso8601String(),
+      "carParkId": carParkId
+    });
+    final response =
+        await http.post(getTicketPreview, headers: headers, body: body);
+    if (response.statusCode == 201) {
+      // If the call to the server was successful, parse the JSON
+      Map<String, dynamic> body = jsonDecode(response.body);
+      TicketPreview ticketPreview = TicketPreview.fromJson(body);
+      return ticketPreview;
+    } else {
+      // If that call was not successful, throw an error.
+      throw Exception('Failed to load list');
+    }
   }
 }
 
 class BookingRepo {
   final bookingApiProvider = BookingApiProvider();
 
-  Future<Ticket> bookParkingSlot() => bookingApiProvider.bookParkingSlot();
+  Future<TicketPreview> bookParkingSlot(
+          String plateNumber, DateTime arrivalTime, String carParkId) =>
+      bookingApiProvider.fectchTicketPreview(
+          plateNumber, arrivalTime, carParkId);
 }

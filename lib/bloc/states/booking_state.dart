@@ -29,7 +29,8 @@ class BookingSubmittedFailed extends BookingState {
 class BookingPreviewFetching extends BookingState {}
 
 class BookingPreviewFetchedSuccessfully extends BookingState {
-  
+  final TicketPreview ticketPreview;
+  const BookingPreviewFetchedSuccessfully(this.ticketPreview);
 }
 
 class BookingPreviewFetchedFailed extends BookingState {}
