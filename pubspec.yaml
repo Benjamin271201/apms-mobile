@@ -45,6 +45,7 @@ dependencies:
   getwidget: ^3.0.1
   jwt_decoder: 
   intl: ^0.17.0
+  easy_image_viewer:
   
 dev_dependencies:
   flutter_test:

@@ -53,8 +53,8 @@ class Ticket {
     });
 
     final String id;
-    final DateTime startTime;
-    final DateTime endTime;
+    final dynamic startTime;
+    final dynamic endTime;
     final double reservationFee;
     final dynamic bookTime;
     final dynamic arriveTime;
@@ -70,14 +70,14 @@ class Ticket {
 
     factory Ticket.fromJson(Map<String, dynamic> json) => Ticket(
         id: json["id"],
-        startTime: DateTime.parse(json["startTime"]),
-        endTime: DateTime.parse(json["endTime"]),
+        startTime: json["startTime"] != null ? DateTime.parse(json["startTime"])  : "",
+        endTime: json["endTime"] != null ? DateTime.parse(json["endTime"]) : "",
         reservationFee: json["reservationFee"],
-        bookTime: json["bookTime"],
-        arriveTime: json["arriveTime"],
+        bookTime: json["bookTime"] != null ? DateTime.parse(json["bookTime"]) : "",
+        arriveTime: json["arriveTime"] != null ? DateTime.parse(json["arriveTime"]) : "",
         totalFee: json["totalFee"],
-        picInUrl: json["picInUrl"],
-        picOutUrl: json["picOutUrl"],
+        picInUrl: json["picInUrl"] ?? "",
+        picOutUrl: json["picOutUrl"] ?? "",
         carParkId: json["carParkId"],
         plateNumber: json["plateNumber"],
         phoneNumber: json["phoneNumber"],
@@ -88,8 +88,8 @@ class Ticket {
 
     Map<String, dynamic> toJson() => {
         "id": id,
-        "startTime": startTime.toIso8601String(),
-        "endTime": endTime.toIso8601String(),
+        "startTime": startTime?.toIso8601String(),
+        "endTime": endTime?.toIso8601String(),
         "reservationFee": reservationFee,
         "bookTime": bookTime,
         "arriveTime": arriveTime,
