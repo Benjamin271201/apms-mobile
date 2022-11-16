@@ -53,7 +53,7 @@ class _LoginScreenState extends State<LoginScreen> {
               Navigator.of(context).pushAndRemoveUntil(
                   MaterialPageRoute(
                     builder: (context) => const MyHome(
-                      tabIndex: 1,
+                      tabIndex: 0,
                     ),
                   ),
                   (route) => false);

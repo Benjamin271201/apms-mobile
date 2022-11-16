@@ -7,10 +7,14 @@ import 'package:apms_mobile/presentation/screens/profile.dart';
 import 'package:apms_mobile/presentation/screens/qr_scan.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 
-void main() => runApp(
-    const MaterialApp(debugShowCheckedModeBanner: false, home: LoginScreen()));
+void main() {
+  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(statusBarColor: Colors.transparent));
+  runApp(const MaterialApp(
+      debugShowCheckedModeBanner: false, home: LoginScreen()));
+}
 
 class MyHome extends StatefulWidget {
   final int tabIndex;
