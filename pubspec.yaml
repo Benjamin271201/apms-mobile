@@ -47,6 +47,7 @@ dependencies:
   intl: ^0.17.0
   datetime_picker_formfield_new: ^2.0.0
   flutter_typeahead: ^4.1.1
+  easy_image_viewer:
   
 dev_dependencies:
   flutter_test:
