@@ -1,4 +1,5 @@
 import 'package:apms_mobile/bloc/repositories/booking_repo.dart';
+import 'package:apms_mobile/bloc/user_location_bloc.dart';
 import 'package:apms_mobile/models/ticket_model.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -12,6 +13,7 @@ final BookingRepo repo = BookingRepo();
 
 class BookingBloc extends Bloc<BookingEvent, BookingState> {
   BookingBloc() : super(BookingInitial()) {
+    on<BookingFieldInitial>(_fetchPreviouslyUsedPlateNumbersList);
     on<SubmitBookingFormStep1>(_fetchBookingConfirmationScreen);
     on<SubmitBookingFormStep2>(_submitBookingForm);
   }
@@ -40,5 +42,14 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
     } else {
       emit(BookingSubmittedFailed());
     }
+  }
+
+  _fetchPreviouslyUsedPlateNumbersList(
+      BookingFieldInitial event, Emitter<BookingState> emit) async {
+    emit(UsedPlateNumbersFetching());
+    List<String> plateNumbers =
+        await repo.bookingApiProvider.getPreviouslyUsedPlateNumbersList();
+    print(plateNumbers.toString());
+    emit(UsedPlateNumbersFetchedSuccessfully(plateNumbers));
   }
 }

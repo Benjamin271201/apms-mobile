@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:async';
 
+import 'package:apms_mobile/bloc/utils/utils.dart';
 import 'package:apms_mobile/models/ticket_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -16,12 +17,6 @@ class BookingApiProvider {
 
   Future<TicketPreview> fectchTicketPreview(
       String plateNumber, DateTime arrivalTime, String carParkId) async {
-    SharedPreferences pref = await SharedPreferences.getInstance();
-    String token = pref.getString('token')!;
-    final headers = {
-      HttpHeaders.contentTypeHeader: 'application/json',
-      HttpHeaders.authorizationHeader: 'Bearer ${token}'
-    };
     final getTicketPreview =
         Uri.http(paths.authority, "${paths.tickets}/preview");
     var body = json.encode({
@@ -29,36 +24,48 @@ class BookingApiProvider {
       "arriveTime": arrivalTime.toIso8601String(),
       "carParkId": carParkId
     });
+    final headers = await Utils().getHeaderValues();
+
     final response =
         await http.post(getTicketPreview, headers: headers, body: body);
     if (response.statusCode == 201) {
-      // If the call to the server was successful, parse the JSON
       Map<String, dynamic> body = jsonDecode(response.body);
       TicketPreview ticketPreview = TicketPreview.fromJson(body["data"]);
       return ticketPreview;
     } else {
-      // If that call was not successful, throw an error.
       throw Exception('Failed to load list');
     }
   }
 
   Future<int> bookParkingSlot(
       String plateNumber, DateTime arrivalTime, String carParkId) async {
-    SharedPreferences pref = await SharedPreferences.getInstance();
-    String token = pref.getString('token')!;
-    final headers = {
-      HttpHeaders.contentTypeHeader: 'application/json',
-      HttpHeaders.authorizationHeader: 'Bearer ${token}'
-    };
+    final headers = await Utils().getHeaderValues();
     final getTicketPreview = Uri.http(paths.authority, paths.tickets);
     var body = json.encode({
       "plateNumber": plateNumber,
       "arriveTime": arrivalTime.toIso8601String(),
       "carParkId": carParkId
     });
+
     final response =
         await http.post(getTicketPreview, headers: headers, body: body);
     return response.statusCode;
+  }
+
+  Future<List<String>> getPreviouslyUsedPlateNumbersList() async {
+    final headers = await Utils().getHeaderValues();
+    final getPlateNumbersList =
+        Uri.http(paths.authority, "${paths.licensePlates}/used-plate-numbers");
+
+    final response = await http.get(getPlateNumbersList, headers: headers);
+    if (response.statusCode == 200) {
+      Map<String, dynamic> body = jsonDecode(response.body);
+      List<String> plateNumbersList =
+          List<String>.from(body["data"]["plateNumbers"]);
+      return plateNumbersList;
+    } else {
+      throw Exception('Failed to load list');
+    }
   }
 }
 

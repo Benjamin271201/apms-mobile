@@ -11,6 +11,10 @@ class ArrivalDateSelected extends BookingEvent {}
 
 class ArrivalTimeSelected extends BookingEvent {}
 
+class BookingFieldInitial extends BookingEvent {}
+
+class PlateNumberFieldFocus extends BookingEvent {}
+
 // At this step, only a confirmation screen will be shown
 class SubmitBookingFormStep1 extends BookingEvent {
   final String plateNumber;

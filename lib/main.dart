@@ -31,24 +31,26 @@ class _MyHomeState extends State<MyHome> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: PersistentTabView(
-        context,
-        controller: _controller,
-        screens: screens(),
-        items: navBarItems(),
-        floatingActionButton: FloatingActionButton(
-          backgroundColor: const Color.fromARGB(255, 74, 136, 184),
-          heroTag: null,
-          onPressed: () {
-            Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => const QRScan(),
-            ));
-          },
-          child: const Icon(Icons.qr_code_2_sharp),
-        ),
-      ),
-    );
+    return MaterialApp(
+        theme: ThemeData(fontFamily: "Roboto"),
+        home: Scaffold(
+          body: PersistentTabView(
+            context,
+            controller: _controller,
+            screens: screens(),
+            items: navBarItems(),
+            floatingActionButton: FloatingActionButton(
+              backgroundColor: const Color.fromARGB(255, 74, 136, 184),
+              heroTag: null,
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => const QRScan(),
+                ));
+              },
+              child: const Icon(Icons.qr_code_2_sharp),
+            ),
+          ),
+        ));
   }
 
   List<Widget> screens() {

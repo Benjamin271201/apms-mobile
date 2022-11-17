@@ -5,6 +5,7 @@ import 'package:datetime_picker_formfield_new/datetime_picker_formfield_new.dart
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:intl/intl.dart';
 
 class Booking extends StatefulWidget {
@@ -23,6 +24,7 @@ class _BookingState extends State<Booking> {
 
   @override
   void initState() {
+    _bookingBloc.add(BookingFieldInitial());
     super.initState();
   }
 
@@ -85,6 +87,28 @@ class _BookingState extends State<Booking> {
           ]),
         ));
   }
+
+  // Widget _plateNumberField() {
+  //   return TypeAheadField(
+  //     textFieldConfiguration: TextFieldConfiguration(
+  //         autofocus: true,
+  //         style: DefaultTextStyle.of(context)
+  //             .style
+  //             .copyWith(fontStyle: FontStyle.italic),
+  //         decoration: InputDecoration(border: OutlineInputBorder())),
+  //     suggestionsCallback: (pattern) => {},
+  //     itemBuilder: (context, suggestion) {
+  //       return ListTile(
+  //         leading: Icon(Icons.shopping_cart),
+  //         title: Text(suggestion['name']),
+  //       );
+  //     },
+  //     onSuggestionSelected: (suggestion) {
+  //       Navigator.of(context).push(MaterialPageRoute(
+  //           builder: (context) => ProductPage(product: suggestion)));
+  //     },
+  //   );
+  // }
 
   Widget _plateNumberField() {
     return TextField(
