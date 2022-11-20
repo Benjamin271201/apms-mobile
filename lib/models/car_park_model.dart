@@ -33,3 +33,17 @@ class CarParkModel {
         "distance": distance
       };
 }
+
+class CarParkSearchQuery {
+  String? name;
+  double? latitude, longitude;
+
+  CarParkSearchQuery();
+
+  CarParkSearchQuery.fromJson(Map<String, dynamic> json)
+      : name = json["name"],
+        latitude = json["latitude"],
+        longitude = json["longitude"];
+  Map<String, dynamic> toJson() =>
+      {"name": name, "latitude": latitude, "longitude": longitude};
+}

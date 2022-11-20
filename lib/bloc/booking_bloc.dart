@@ -1,10 +1,7 @@
 import 'package:apms_mobile/bloc/repositories/booking_repo.dart';
-import 'package:apms_mobile/bloc/user_location_bloc.dart';
 import 'package:apms_mobile/models/ticket_model.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-
-import '../models/ticket_model.dart';
 
 part 'events/booking_event.dart';
 part 'states/booking_state.dart';

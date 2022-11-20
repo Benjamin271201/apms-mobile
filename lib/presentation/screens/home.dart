@@ -1,5 +1,4 @@
 import 'package:apms_mobile/bloc/car_park_bloc.dart';
-import 'package:apms_mobile/bloc/user_location_bloc.dart';
 import 'package:apms_mobile/models/car_park_model.dart';
 import 'package:apms_mobile/presentation/screens/booking.dart';
 import 'package:flutter/material.dart';
@@ -15,12 +14,11 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   final CarParkBloc _carParkBloc = CarParkBloc();
   final List<CarParkModel> carParkList = [];
-  final UserLocationBloc _userLocationBloc = UserLocationBloc();
 
   @override
   void initState() {
-    _userLocationBloc.add(GetUserLocation());
-    _carParkBloc.add(GetCarParkList(null, null));
+    _carParkBloc.add(GetUserLocation());
+    _carParkBloc.add(GetCarParkList(CarParkSearchQuery()));
     super.initState();
   }
 
@@ -35,22 +33,25 @@ class _HomeState extends State<Home> {
 
   Widget _buildUserLocation() {
     return BlocProvider(
-        create: (_) => _userLocationBloc,
-        child: BlocListener<UserLocationBloc, UserLocationState>(
+        create: (_) => _carParkBloc,
+        child: BlocListener<CarParkBloc, CarParkState>(
             listener: (context, state) {
-              if (state is UserLocationFetchedFailed) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(state.message),
-                  ),
-                );
+              if (state is CarParkSearchQueryUpdated) {
+                _carParkBloc.add(GetCarParkList(state.carParkSearchQuery));
               }
-              if (state is UserLocationFetchedSuccessfully) {
-                _carParkBloc.add(GetCarParkList(
-                    state.userLocation.latitude, state.userLocation.longitude));
-              }
+              // if (state is UserLocationFetchedFailed) {
+              //   ScaffoldMessenger.of(context).showSnackBar(
+              //     SnackBar(
+              //       content: Text(state.message),
+              //     ),
+              //   );
+              // }
+              // if (state is UserLocationFetchedSuccessfully) {
+              //   _carParkBloc.add(GetCarParkList(
+              //       state.userLocation.latitude, state.userLocation.longitude));
+              // }
             },
-            child: BlocBuilder<UserLocationBloc, UserLocationState>(
+            child: BlocBuilder<CarParkBloc, CarParkState>(
               builder: ((context, state) => AppBar(
                     title: state is UserLocationFetchedSuccessfully
                         ? Text(state.userPlacemark[0].street! +
