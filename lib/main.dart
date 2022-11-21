@@ -11,14 +11,16 @@ import 'package:flutter/services.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 
 void main() {
-  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(statusBarColor: Colors.transparent));
+  SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(statusBarColor: Colors.transparent));
   runApp(const MaterialApp(
       debugShowCheckedModeBanner: false, home: LoginScreen()));
 }
 
 class MyHome extends StatefulWidget {
   final int tabIndex;
-  const MyHome({Key key, this.tabIndex}) : super(key: key);
+  final int headerTabIndex;
+  const MyHome({Key key, this.tabIndex, this.headerTabIndex = 0}) : super(key: key);
 
   @override
   State<MyHome> createState() => _MyHomeState();
@@ -60,7 +62,7 @@ class _MyHomeState extends State<MyHome> {
   List<Widget> screens() {
     return [
       const Home(),
-      const History(),
+      History(selectedTab: widget.headerTabIndex,),
       const Profile(),
     ];
   }

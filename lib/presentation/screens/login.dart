@@ -47,9 +47,6 @@ class _LoginScreenState extends State<LoginScreen> {
         child: BlocListener<LoginBloc, LoginState>(
           listener: (context, state) {
             if (state is LogedIn) {
-              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                content: Text('Login successfully'),
-              ));
               Navigator.of(context).pushAndRemoveUntil(
                   MaterialPageRoute(
                     builder: (context) => const MyHome(
