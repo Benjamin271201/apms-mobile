@@ -1,6 +1,8 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:apms_mobile/bloc/repositories/qr_repo.dart';
+import 'package:apms_mobile/main.dart';
 import 'package:apms_mobile/models/qr_model.dart';
 import 'package:apms_mobile/result.dart';
 import 'package:flutter/foundation.dart';
@@ -84,18 +86,49 @@ class _QRScan extends State<QRScan> {
     setState(() {
       this.controller = controller;
     });
-    controller.scannedDataStream.listen((scanData) {
+    var navigate = Navigator.of(context);
+    var messenger = ScaffoldMessenger.of(context);
+    controller.scannedDataStream.listen((scanData) async {
       controller.pauseCamera();
-      setState(() {
-        result = scanData;
-        code = result!.code!.replaceAll("True", "true");
-        qr = qrModelFromJson(code!.replaceAll("False", "false"));
-        Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => Result(qr: qr!),
-            ));
-      });
+      result = scanData;
+      code = result!.code!.replaceAll("True", "true");
+      qr = qrModelFromJson(code!.replaceAll("False", "false"));
+      final QrRepo repo = QrRepo();
+      if (!qr!.checkin!) {
+        bool res = await repo.checkIn(qr!);
+        if (res) {
+          navigate.pushAndRemoveUntil(
+              MaterialPageRoute(
+                builder: (context) => const MyHome(
+                  tabIndex: 1,
+                  headerTabIndex: 1,
+                ),
+              ),
+              (route) => false);
+        } else {
+          messenger.showSnackBar(const SnackBar(
+            content: Text('Checkin failed!'),
+          ));
+          controller.resumeCamera();
+        }
+      } else {
+        bool res = await repo.checkOut(qr!);
+        if (res) {
+          navigate.pushAndRemoveUntil(
+              MaterialPageRoute(
+                builder: (context) => const MyHome(
+                  tabIndex: 1,
+                  headerTabIndex: 2,
+                ),
+              ),
+              (route) => false);
+        } else {
+          messenger.showSnackBar(const SnackBar(
+            content: Text('Checkout failed!'),
+          ));
+          controller.resumeCamera();
+        }
+      }
     });
   }
 

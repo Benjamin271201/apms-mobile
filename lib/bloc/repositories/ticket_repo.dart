@@ -9,7 +9,7 @@ import '../../constants/apis.dart' as apis;
 class TicketRepo {
   Future<TicketModel?> getHistory(String from, String to, String plateNumber,
       String statusValue, int pageIndex) async {
-    //Get acount id
+    //Get token
     SharedPreferences pref = await SharedPreferences.getInstance();
     String token = pref.getString('token')!;
     // Map of status

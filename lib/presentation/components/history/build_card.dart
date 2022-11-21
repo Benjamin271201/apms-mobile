@@ -113,7 +113,7 @@ class _BuildCardState extends State<BuildCard> {
 
   // Card Body
   List<Widget> _cardBody(Ticket ticket) {
-    var dateFormater = DateFormat("dd-MM-yyyy hh:mm:ss");
+    var dateFormater = DateFormat("dd-MM-yyyy HH:mm:ss");
     String checkinTime = ticket.startTime is DateTime
         ? dateFormater.format(ticket.startTime!)
         : "";

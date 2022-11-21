@@ -3,7 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class History extends StatefulWidget {
-  const History({Key? key}) : super(key: key);
+  final int selectedTab;
+  const History({Key? key, this.selectedTab = 0}) : super(key: key);
 
   @override
   State<History> createState() => _HistoryState();
@@ -13,6 +14,7 @@ class _HistoryState extends State<History> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
+      initialIndex: widget.selectedTab,
       length: 4,
       child: Scaffold(
         appBar: AppBar(
@@ -40,10 +42,10 @@ class _HistoryState extends State<History> {
 
   List<Widget> tabBarItems() {
     return const [
-      BookingHistory(type: "Booking"),
-      BookingHistory(type: "Parking"),
-      BookingHistory(type: "Done"),
-      BookingHistory(type: "Cancel"),
+      BookingHistory(type: "Booking"), // Index : 0
+      BookingHistory(type: "Parking"), // Index : 1
+      BookingHistory(type: "Done"), // Index : 2
+      BookingHistory(type: "Cancel"), // Index : 3
     ];
   }
 
@@ -58,27 +60,33 @@ class _HistoryState extends State<History> {
           ],
         ),
       ),
-      Tab(child: Row(
+      Tab(
+        child: Row(
           mainAxisSize: MainAxisSize.min,
           children: const [
             Icon(CupertinoIcons.clock),
             Text('PARKING'),
           ],
-        ),),
-      Tab(child: Row(
+        ),
+      ),
+      Tab(
+        child: Row(
           mainAxisSize: MainAxisSize.min,
           children: const [
             Icon(CupertinoIcons.check_mark),
             Text('DONE'),
           ],
-        ),),
-      Tab(child: Row(
+        ),
+      ),
+      Tab(
+        child: Row(
           mainAxisSize: MainAxisSize.min,
           children: const [
             Icon(CupertinoIcons.xmark_seal),
             Text('CANCEL'),
           ],
-        ),),
+        ),
+      ),
     ];
   }
 }
