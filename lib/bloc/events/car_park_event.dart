@@ -8,10 +8,26 @@ abstract class CarParkEvent extends Equatable {
 }
 
 class GetCarParkList extends CarParkEvent {
-  final double? latitude;
-  final double? longitude;
+  final CarParkSearchQuery searchQuery;
 
-  const GetCarParkList(this.latitude, this.longitude);
+  const GetCarParkList(this.searchQuery);
+
+  @override
+  List<Object> get props => [];
+}
+
+class UpdateCarParkSearchQuery extends CarParkEvent {
+  final CarParkSearchQuery searchQuery;
+  final Map<String, dynamic> updatedQueryData;
+
+  const UpdateCarParkSearchQuery(this.searchQuery, this.updatedQueryData);
+
+  @override
+  List<Object> get props => [searchQuery, updatedQueryData];
+}
+
+class GetUserLocation extends CarParkEvent {
+  const GetUserLocation();
 
   @override
   List<Object> get props => [];

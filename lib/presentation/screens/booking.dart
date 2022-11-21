@@ -23,6 +23,7 @@ class _BookingState extends State<Booking> {
 
   @override
   void initState() {
+    _bookingBloc.add(BookingFieldInitial());
     super.initState();
   }
 
@@ -85,6 +86,28 @@ class _BookingState extends State<Booking> {
           ]),
         ));
   }
+
+  // Widget _plateNumberField() {
+  //   return TypeAheadField(
+  //     textFieldConfiguration: TextFieldConfiguration(
+  //         autofocus: true,
+  //         style: DefaultTextStyle.of(context)
+  //             .style
+  //             .copyWith(fontStyle: FontStyle.italic),
+  //         decoration: InputDecoration(border: OutlineInputBorder())),
+  //     suggestionsCallback: (pattern) => {},
+  //     itemBuilder: (context, suggestion) {
+  //       return ListTile(
+  //         leading: Icon(Icons.shopping_cart),
+  //         title: Text(suggestion['name']),
+  //       );
+  //     },
+  //     onSuggestionSelected: (suggestion) {
+  //       Navigator.of(context).push(MaterialPageRoute(
+  //           builder: (context) => ProductPage(product: suggestion)));
+  //     },
+  //   );
+  // }
 
   Widget _plateNumberField() {
     return TextField(

@@ -1,9 +1,10 @@
 import 'package:apms_mobile/bloc/car_park_bloc.dart';
-import 'package:apms_mobile/bloc/user_location_bloc.dart';
+import 'package:apms_mobile/utils/utils.dart';
 import 'package:apms_mobile/models/car_park_model.dart';
 import 'package:apms_mobile/presentation/screens/booking.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:geocoding/geocoding.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -14,13 +15,15 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   final CarParkBloc _carParkBloc = CarParkBloc();
+  final _debouncer = Debouncer(milliseconds: 1000);
+  Placemark? placemark = Placemark();
+  CarParkSearchQuery searchQuery = CarParkSearchQuery();
   final List<CarParkModel> carParkList = [];
-  final UserLocationBloc _userLocationBloc = UserLocationBloc();
 
   @override
   void initState() {
-    _userLocationBloc.add(GetUserLocation());
-    _carParkBloc.add(GetCarParkList(null, null));
+    _carParkBloc.add(const GetUserLocation());
+    _carParkBloc.add(GetCarParkList(searchQuery));
     super.initState();
   }
 
@@ -28,37 +31,59 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: PreferredSize(
-            child: _buildUserLocation(),
-            preferredSize: const Size.fromHeight(50)),
-        body: _buildCarParkList());
+            preferredSize: const Size.fromHeight(50),
+            child: _buildUserLocation()),
+        body: Column(children: [_buildSearchBar(), _buildCarParkList()]));
   }
 
   Widget _buildUserLocation() {
     return BlocProvider(
-        create: (_) => _userLocationBloc,
-        child: BlocListener<UserLocationBloc, UserLocationState>(
+        create: (_) => _carParkBloc,
+        child: BlocListener<CarParkBloc, CarParkState>(
             listener: (context, state) {
+              if (state is CarParkSearchQueryUpdatedSuccessfully) {
+                _carParkBloc.add(GetCarParkList(searchQuery));
+              }
               if (state is UserLocationFetchedFailed) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: Text(state.message),
                   ),
                 );
+                _carParkBloc.add(GetCarParkList(searchQuery));
               }
               if (state is UserLocationFetchedSuccessfully) {
-                _carParkBloc.add(GetCarParkList(
-                    state.userLocation.latitude, state.userLocation.longitude));
+                var queryData = {
+                  "latitude": state.userLocation.latitude,
+                  "longitude": state.userLocation.longitude
+                };
+                placemark = state.userPlacemark[0];
+                _carParkBloc
+                    .add(UpdateCarParkSearchQuery(searchQuery, queryData));
               }
             },
-            child: BlocBuilder<UserLocationBloc, UserLocationState>(
+            child: BlocBuilder<CarParkBloc, CarParkState>(
               builder: ((context, state) => AppBar(
-                    title: state is UserLocationFetchedSuccessfully
-                        ? Text(state.userPlacemark[0].street! +
-                            ", " +
-                            state.userPlacemark[0].country!)
+                    title: placemark?.street != null
+                        ? Text("${placemark?.street}, ${placemark?.country}")
                         : Text(""),
                   )),
             )));
+  }
+
+  Widget _buildSearchBar() {
+    return SizedBox(
+      height: 40,
+      child: TextField(
+        onChanged: (value) => {
+          _debouncer.run(() {
+            // Search func
+            _carParkBloc
+                .add(UpdateCarParkSearchQuery(searchQuery, {"name": value}));
+          })
+        },
+      ),
+    );
   }
 
   Widget _buildCarParkList() {
@@ -98,6 +123,8 @@ class _HomeState extends State<Home> {
 
   Widget _buildCard(BuildContext context, List<CarParkModel> carParkList) {
     return ListView.builder(
+      shrinkWrap: true,
+      scrollDirection: Axis.vertical,
       itemCount: carParkList.length,
       itemBuilder: (context, index) {
         return InkWell(

@@ -3,3 +3,4 @@ const basePath = "/api";
 
 const carPark = "$basePath/carparks";
 const tickets = "$basePath/tickets";
+const licensePlates = "$basePath/licenseplates";

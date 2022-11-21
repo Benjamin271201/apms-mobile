@@ -9,6 +9,13 @@ abstract class BookingState extends Equatable {
 
 class BookingInitial extends BookingState {}
 
+class UsedPlateNumbersFetching extends BookingState {}
+
+class UsedPlateNumbersFetchedSuccessfully extends BookingState {
+  final List<String> plateNumbersList;
+  const UsedPlateNumbersFetchedSuccessfully(this.plateNumbersList);
+}
+
 class BookingSubmitting extends BookingState {}
 
 class BookingSubmitted extends BookingState {
@@ -22,7 +29,8 @@ class BookingSubmittedSuccessfully extends BookingState {
 }
 
 class BookingSubmittedFailed extends BookingState {
-  final String message = "Unable to submit booking request! Please try again!";
+  final String message;
+  const BookingSubmittedFailed(this.message);
 }
 
 class BookingPreviewFetching extends BookingState {}

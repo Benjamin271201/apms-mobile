@@ -33,3 +33,24 @@ class CarParkModel {
         "distance": distance
       };
 }
+
+class CarParkSearchQuery {
+  String? name;
+  double? latitude, longitude;
+
+  CarParkSearchQuery({name, latitude, longitude});
+
+  CarParkSearchQuery copyWith(Map<String, dynamic> json) {
+    return CarParkSearchQuery(
+        name: json["name"] ?? name,
+        latitude: json["latitude"] ?? latitude,
+        longitude: json["longitude"] ?? longitude);
+  }
+
+  CarParkSearchQuery.fromJson(Map<String, dynamic> json)
+      : name = json["name"],
+        latitude = json["latitude"],
+        longitude = json["longitude"];
+  Map<String, dynamic> toJson() =>
+      {"name": name, "latitude": latitude?.toString(), "longitude": longitude?.toString()};
+}
