@@ -1,10 +1,10 @@
 // @dart=2.9
 
 import 'package:apms_mobile/presentation/screens/history/history.dart';
-import 'package:apms_mobile/presentation/screens/home.dart';
-import 'package:apms_mobile/presentation/screens/login.dart';
-import 'package:apms_mobile/presentation/screens/profile.dart';
-import 'package:apms_mobile/presentation/screens/qr_scan.dart';
+import 'package:apms_mobile/presentation/screens/home/home.dart';
+import 'package:apms_mobile/presentation/screens/authen/sign_in.dart';
+import 'package:apms_mobile/presentation/screens/profile/profile.dart';
+import 'package:apms_mobile/presentation/screens/qr/qr_scan.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -14,7 +14,7 @@ void main() {
   SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(statusBarColor: Colors.transparent));
   runApp(const MaterialApp(
-      debugShowCheckedModeBanner: false, home: LoginScreen()));
+      debugShowCheckedModeBanner: false, home: Login()));
 }
 
 class MyHome extends StatefulWidget {

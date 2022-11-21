@@ -1,7 +1,7 @@
 import 'package:apms_mobile/bloc/car_park_bloc.dart';
 import 'package:apms_mobile/bloc/user_location_bloc.dart';
 import 'package:apms_mobile/models/car_park_model.dart';
-import 'package:apms_mobile/presentation/screens/booking.dart';
+import 'package:apms_mobile/presentation/screens/booking/booking.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

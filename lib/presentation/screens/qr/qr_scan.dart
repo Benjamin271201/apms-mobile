@@ -1,10 +1,11 @@
+// ignore_for_file: import_of_legacy_library_into_null_safe
+
 import 'dart:developer';
 import 'dart:io';
 
 import 'package:apms_mobile/bloc/repositories/qr_repo.dart';
 import 'package:apms_mobile/main.dart';
 import 'package:apms_mobile/models/qr_model.dart';
-import 'package:apms_mobile/result.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
