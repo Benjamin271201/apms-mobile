@@ -1,13 +1,14 @@
 import 'dart:convert';
 import 'dart:async';
 
-import 'package:apms_mobile/bloc/utils/utils.dart';
+import 'package:apms_mobile/exceptions/exception.dart';
+import 'package:apms_mobile/utils/utils.dart';
 import 'package:apms_mobile/models/ticket_model.dart';
 
 import '../../constants/paths.dart' as paths;
 import 'package:http/http.dart' as http;
 
-class BookingApiProvider {
+class BookingRepo {
   Future<TicketPreview> fectchTicketPreview(
       String plateNumber, DateTime arrivalTime, String carParkId) async {
     final getTicketPreview =
@@ -30,7 +31,7 @@ class BookingApiProvider {
     }
   }
 
-  Future<int> bookParkingSlot(
+  Future<Map<String, dynamic>> bookParkingSlot(
       String plateNumber, DateTime arrivalTime, String carParkId) async {
     final headers = await Utils().getHeaderValues();
     final getTicketPreview = Uri.http(paths.authority, paths.tickets);
@@ -42,7 +43,10 @@ class BookingApiProvider {
 
     final response =
         await http.post(getTicketPreview, headers: headers, body: body);
-    return response.statusCode;
+    if (response.statusCode != 201) {
+      throw HttpException(response.body);
+    }
+    return jsonDecode(response.body);
   }
 
   Future<List<String>> getPreviouslyUsedPlateNumbersList() async {
@@ -60,13 +64,4 @@ class BookingApiProvider {
       throw Exception('Failed to load list');
     }
   }
-}
-
-class BookingRepo {
-  final bookingApiProvider = BookingApiProvider();
-
-  Future<TicketPreview> fetchTicketPreview(
-          String plateNumber, DateTime arrivalTime, String carParkId) =>
-      bookingApiProvider.fectchTicketPreview(
-          plateNumber, arrivalTime, carParkId);
 }

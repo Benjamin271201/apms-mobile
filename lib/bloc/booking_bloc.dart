@@ -19,9 +19,8 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
       SubmitBookingFormStep1 event, Emitter<BookingState> emit) async {
     emit(BookingPreviewFetching());
     try {
-      TicketPreview ticketPreview = await repo.bookingApiProvider
-          .fectchTicketPreview(
-              event.plateNumber, event.arrivalTime, event.carParkId);
+      TicketPreview ticketPreview = await repo.fectchTicketPreview(
+          event.plateNumber, event.arrivalTime, event.carParkId);
       emit(BookingPreviewFetchedSuccessfully(ticketPreview));
     } catch (e) {
       emit(BookingPreviewFetchedFailed());
@@ -30,22 +29,21 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
 
   _submitBookingForm(
       SubmitBookingFormStep2 event, Emitter<BookingState> emit) async {
-    emit(BookingSubmitting());
-    // TODO: validation goes here
-    int result = await repo.bookingApiProvider
-        .bookParkingSlot(event.plateNumber, event.arrivalTime, event.carParkId);
-    if (result == 201) {
+    try {
+      emit(BookingSubmitting());
+      // TODO: validation goes here
+      Map<String, dynamic> result = await repo.bookParkingSlot(
+          event.plateNumber, event.arrivalTime, event.carParkId);
       emit(BookingSubmittedSuccessfully());
-    } else {
-      emit(BookingSubmittedFailed());
+    } catch (e) {
+      emit(BookingSubmittedFailed(e.toString()));
     }
   }
 
   _fetchPreviouslyUsedPlateNumbersList(
       BookingFieldInitial event, Emitter<BookingState> emit) async {
     emit(UsedPlateNumbersFetching());
-    List<String> plateNumbers =
-        await repo.bookingApiProvider.getPreviouslyUsedPlateNumbersList();
+    List<String> plateNumbers = await repo.getPreviouslyUsedPlateNumbersList();
     emit(UsedPlateNumbersFetchedSuccessfully(plateNumbers));
   }
 }

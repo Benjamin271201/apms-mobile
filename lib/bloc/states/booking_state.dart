@@ -29,7 +29,8 @@ class BookingSubmittedSuccessfully extends BookingState {
 }
 
 class BookingSubmittedFailed extends BookingState {
-  final String message = "Unable to submit booking request! Please try again!";
+  final String message;
+  const BookingSubmittedFailed(this.message);
 }
 
 class BookingPreviewFetching extends BookingState {}

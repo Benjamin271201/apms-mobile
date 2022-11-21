@@ -48,11 +48,9 @@ class _BookingConfirmationState extends State<BookingConfirmation> {
             listener: (context, state) => {
                   if (state is BookingPreviewFetchedFailed)
                     {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(state.message),
-                        ),
-                      )
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Text(state.message),
+                      )),
                     }
                   else if (state is BookingSubmittedSuccessfully)
                     {
@@ -62,7 +60,7 @@ class _BookingConfirmationState extends State<BookingConfirmation> {
                           content: Text(state.message),
                         ),
                       ),
-                      Navigator.push(context,
+                      Navigator.pushReplacement(context,
                           MaterialPageRoute(builder: (context) => const Home()))
                     }
                   else if (state is BookingSubmittedFailed)
@@ -71,7 +69,8 @@ class _BookingConfirmationState extends State<BookingConfirmation> {
                         SnackBar(
                           content: Text(state.message),
                         ),
-                      )
+                      ),
+                      Navigator.pop(context)
                     }
                 },
             child: BlocBuilder<BookingBloc, BookingState>(

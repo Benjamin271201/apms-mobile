@@ -1,5 +1,5 @@
 import 'package:apms_mobile/bloc/car_park_bloc.dart';
-import 'package:apms_mobile/bloc/utils/utils.dart';
+import 'package:apms_mobile/utils/utils.dart';
 import 'package:apms_mobile/models/car_park_model.dart';
 import 'package:apms_mobile/presentation/screens/booking.dart';
 import 'package:flutter/material.dart';
