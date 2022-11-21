@@ -18,11 +18,17 @@ class GetCarParkList extends CarParkEvent {
 
 class UpdateCarParkSearchQuery extends CarParkEvent {
   final CarParkSearchQuery searchQuery;
+  final Map<String, dynamic> updatedQueryData;
 
-  const UpdateCarParkSearchQuery(this.searchQuery);
+  const UpdateCarParkSearchQuery(this.searchQuery, this.updatedQueryData);
 
   @override
-  List<Object> get props => [searchQuery];
+  List<Object> get props => [searchQuery, updatedQueryData];
 }
 
-class GetUserLocation extends CarParkEvent {}
+class GetUserLocation extends CarParkEvent {
+  const GetUserLocation();
+
+  @override
+  List<Object> get props => [];
+}

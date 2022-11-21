@@ -21,10 +21,12 @@ class CarParkFetchedFailed extends CarParkState {
   const CarParkFetchedFailed(this.message);
 }
 
-class CarParkSearchQueryUpdated extends CarParkState {
-  final CarParkSearchQuery carParkSearchQuery;
-  const CarParkSearchQueryUpdated(this.carParkSearchQuery);
-}
+class CarParkSearchQueryUpdating extends CarParkState {}
+
+class CarParkSearchQueryUpdatedFailed extends CarParkState {}
+
+class CarParkSearchQueryUpdatedSuccessfully extends CarParkState {}
+
 class UserLocationInitial extends CarParkState {}
 
 class UserLocationFetching extends CarParkState {}

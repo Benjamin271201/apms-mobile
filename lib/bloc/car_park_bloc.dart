@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:apms_mobile/bloc/repositories/car_park_repo.dart';
+import 'package:apms_mobile/constants/apis.dart';
 import 'package:apms_mobile/models/car_park_model.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -14,6 +17,7 @@ class CarParkBloc extends Bloc<CarParkEvent, CarParkState> {
   CarParkBloc() : super(CarParkInitial()) {
     on<GetCarParkList>(_fetchCarParkList);
     on<GetUserLocation>(_fetchUserLocation);
+    on<UpdateCarParkSearchQuery>(_updateCarParkSearchQuery);
   }
 
   _fetchCarParkList(GetCarParkList event, Emitter<CarParkState> emit) async {
@@ -23,14 +27,30 @@ class CarParkBloc extends Bloc<CarParkEvent, CarParkState> {
   }
 
   _fetchUserLocation(GetUserLocation event, Emitter<CarParkState> emit) async {
-    Position _userLocation;
-    List<Placemark> _userPlacemark;
+    Position userLocation;
+    List<Placemark> userPlacemark;
+    try {
+      emit(UserLocationFetching());
+      userLocation = await repo.fetchUserLocation();
+      userPlacemark = await placemarkFromCoordinates(
+          userLocation.latitude, userLocation.longitude);
+      emit(UserLocationFetchedSuccessfully(userLocation, userPlacemark));
+    } catch (e) {
+      emit(UserLocationFetchedFailed());
+    }
+  }
 
-    emit(UserLocationFetching());
-    _userLocation = await repo.fetchUserLocation();
-    _userPlacemark = await placemarkFromCoordinates(
-        _userLocation.latitude, _userLocation.longitude);
-
-    emit(UserLocationFetchedSuccessfully(_userLocation, _userPlacemark));
+  _updateCarParkSearchQuery(
+      UpdateCarParkSearchQuery event, Emitter<CarParkState> emit) {
+    try {
+      emit(CarParkSearchQueryUpdating());
+      var additionalData = event.updatedQueryData;
+      event.searchQuery.name = additionalData["name"] ?? event.searchQuery.name;
+      event.searchQuery.latitude ??= additionalData["latitude"];
+      event.searchQuery.longitude ??= additionalData["longitude"];
+      emit(CarParkSearchQueryUpdatedSuccessfully());
+    } catch (e) {
+      emit(CarParkSearchQueryUpdatedFailed());
+    }
   }
 }

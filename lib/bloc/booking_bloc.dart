@@ -46,7 +46,6 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
     emit(UsedPlateNumbersFetching());
     List<String> plateNumbers =
         await repo.bookingApiProvider.getPreviouslyUsedPlateNumbersList();
-    print(plateNumbers.toString());
     emit(UsedPlateNumbersFetchedSuccessfully(plateNumbers));
   }
 }
