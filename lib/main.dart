@@ -20,7 +20,8 @@ void main() {
 class MyHome extends StatefulWidget {
   final int tabIndex;
   final int headerTabIndex;
-  const MyHome({Key key, this.tabIndex, this.headerTabIndex = 0}) : super(key: key);
+  const MyHome({Key key, this.tabIndex, this.headerTabIndex = 0})
+      : super(key: key);
 
   @override
   State<MyHome> createState() => _MyHomeState();
@@ -45,16 +46,6 @@ class _MyHomeState extends State<MyHome> {
             controller: _controller,
             screens: screens(),
             items: navBarItems(),
-            floatingActionButton: FloatingActionButton(
-              backgroundColor: const Color.fromARGB(255, 74, 136, 184),
-              heroTag: null,
-              onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => const QRScan(),
-                ));
-              },
-              child: const Icon(Icons.qr_code_2_sharp),
-            ),
           ),
         ));
   }
@@ -62,7 +53,9 @@ class _MyHomeState extends State<MyHome> {
   List<Widget> screens() {
     return [
       const Home(),
-      History(selectedTab: widget.headerTabIndex,),
+      History(
+        selectedTab: widget.headerTabIndex,
+      ),
       const Profile(),
     ];
   }

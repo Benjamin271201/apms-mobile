@@ -1,4 +1,7 @@
 import 'package:apms_mobile/bloc/car_park_bloc.dart';
+import 'package:apms_mobile/constants/icons.dart';
+import 'package:apms_mobile/models/qr_model.dart';
+import 'package:apms_mobile/presentation/screens/qr_scan.dart';
 import 'package:apms_mobile/utils/utils.dart';
 import 'package:apms_mobile/models/car_park_model.dart';
 import 'package:apms_mobile/presentation/screens/booking.dart';
@@ -33,7 +36,15 @@ class _HomeState extends State<Home> {
         appBar: PreferredSize(
             preferredSize: const Size.fromHeight(50),
             child: _buildUserLocation()),
-        body: Column(children: [_buildSearchBar(), _buildCarParkList()]));
+        body: Column(children: [
+          _buildLocationCard(),
+          _buildSearchBar(),
+          _buildCarParkList()
+        ]));
+  }
+
+  Widget _buildLocationCard() {
+    return Card();
   }
 
   Widget _buildUserLocation() {
@@ -63,12 +74,20 @@ class _HomeState extends State<Home> {
               }
             },
             child: BlocBuilder<CarParkBloc, CarParkState>(
-              builder: ((context, state) => AppBar(
-                    title: placemark?.street != null
-                        ? Text("${placemark?.street}, ${placemark?.country}")
-                        : Text(""),
-                  )),
-            )));
+                builder: ((context, state) => placemark?.street != null
+                    ? AppBar(
+                        title: Text(
+                          "${placemark?.street}, ${placemark?.country}",
+                          style: TextStyle(fontFamily: "Roboto", fontSize: 12),
+                        ),
+                        leading: locationOnIcon,
+                        actions: <Widget>[_buildQrButton(context)],
+                        titleSpacing: -12,
+                      )
+                    : AppBar(
+                        leading: locationOffIcon,
+                        actions: <Widget>[_buildQrButton(context)],
+                      )))));
   }
 
   Widget _buildSearchBar() {
@@ -87,38 +106,52 @@ class _HomeState extends State<Home> {
   }
 
   Widget _buildCarParkList() {
-    return Container(
-      margin: const EdgeInsets.all(8.0),
-      child: BlocProvider(
-        create: (_) => _carParkBloc,
-        child: BlocListener<CarParkBloc, CarParkState>(
-          listener: (context, state) {
-            if (state is CarParkFetchedFailed) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(state.message!),
+    return Padding(
+        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+        child: SizedBox(
+            height: 400,
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(15)),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.1),
+                    spreadRadius: 0.1,
+                    blurRadius: 1,
+                    offset: Offset(2, 2),
+                  ),
+                ],
+              ),
+              child: BlocProvider(
+                create: (_) => _carParkBloc,
+                child: BlocListener<CarParkBloc, CarParkState>(
+                  listener: (context, state) {
+                    if (state is CarParkFetchedFailed) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(state.message!),
+                        ),
+                      );
+                    }
+                  },
+                  child: BlocBuilder<CarParkBloc, CarParkState>(
+                    builder: (context, state) {
+                      if (state is CarParkInitial) {
+                        return _buildLoading();
+                      } else if (state is CarParkFetching) {
+                        return _buildLoading();
+                      } else if (state is CarParkFetchedSuccessfully) {
+                        return _buildCard(context, state.carParkList);
+                      } else if (state is CarParkFetchedFailed) {
+                        return Container();
+                      } else {
+                        return Container();
+                      }
+                    },
+                  ),
                 ),
-              );
-            }
-          },
-          child: BlocBuilder<CarParkBloc, CarParkState>(
-            builder: (context, state) {
-              if (state is CarParkInitial) {
-                return _buildLoading();
-              } else if (state is CarParkFetching) {
-                return _buildLoading();
-              } else if (state is CarParkFetchedSuccessfully) {
-                return _buildCard(context, state.carParkList);
-              } else if (state is CarParkFetchedFailed) {
-                return Container();
-              } else {
-                return Container();
-              }
-            },
-          ),
-        ),
-      ),
-    );
+              ),
+            )));
   }
 
   Widget _buildCard(BuildContext context, List<CarParkModel> carParkList) {
@@ -168,4 +201,17 @@ class _HomeState extends State<Home> {
   }
 
   Widget _buildLoading() => const Center(child: CircularProgressIndicator());
+
+  Widget _buildQrButton(BuildContext context) {
+    return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 30),
+        child:
+            IconButton(onPressed: () => navigateToQR(context), icon: qrIcon));
+  }
+
+  // Navigate to the QR sacanner
+  void navigateToQR(context) {
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (context) => const QRScan()));
+  }
 }
