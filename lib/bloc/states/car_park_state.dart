@@ -43,7 +43,7 @@ class UserLocationFetchedSuccessfully extends CarParkState {
 
 class UserLocationFetchedFailed extends CarParkState {
   final String message =
-      "Failed to get current location, please enable neccessay persmissions and try again!";
+      "Failed to get current location, please enable neccessary persmissions and try again!";
   @override
   List<Object> get props => [message];
 }

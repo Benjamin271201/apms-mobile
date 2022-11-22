@@ -39,7 +39,7 @@ class _MyHomeState extends State<MyHome> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        theme: ThemeData(fontFamily: "Roboto"),
+        theme: ThemeData(fontFamily: "Inter"),
         home: Scaffold(
           body: PersistentTabView(
             context,
@@ -63,18 +63,18 @@ class _MyHomeState extends State<MyHome> {
   List<PersistentBottomNavBarItem> navBarItems() {
     return [
       PersistentBottomNavBarItem(
-          icon: const Icon(CupertinoIcons.home),
+          icon: const Icon(Icons.home),
           title: "Home",
           activeColorPrimary: Colors.blueAccent,
           inactiveColorPrimary: CupertinoColors.systemGrey),
       PersistentBottomNavBarItem(
-        icon: const Icon(CupertinoIcons.news),
+        icon: const Icon(Icons.history),
         title: "History",
         activeColorPrimary: Colors.blueAccent,
         inactiveColorPrimary: CupertinoColors.systemGrey,
       ),
       PersistentBottomNavBarItem(
-        icon: const Icon(CupertinoIcons.person),
+        icon: const Icon(Icons.person),
         title: "Profile",
         activeColorPrimary: Colors.blueAccent,
         inactiveColorPrimary: CupertinoColors.systemGrey,
