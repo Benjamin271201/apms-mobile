@@ -91,7 +91,7 @@ class _LoginState extends State<Login> {
             height: 18,
           ),
           const Text(
-            'Welcome back',
+            'Welcome back!',
             textAlign: TextAlign.center,
             style: TextStyle(
               fontWeight: FontWeight.bold,
@@ -160,10 +160,11 @@ class _LoginState extends State<Login> {
     );
   }
 
-// Phone number input field
+// Paasword input field
   Widget _passwordField() {
     return TextFormField(
       obscureText: true,
+      obscuringCharacter: "*",
       controller: passwordController,
       decoration: InputDecoration(
         labelText: "Password",
@@ -253,7 +254,7 @@ class _LoginState extends State<Login> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Text(
-                "Don't have account? ",
+                "Don't have an account? ",
                 style: TextStyle(fontSize: 14),
               ),
               GestureDetector(
