@@ -1,6 +1,7 @@
 import 'package:apms_mobile/bloc/booking_bloc.dart';
 import 'package:apms_mobile/models/car_park_model.dart';
 import 'package:apms_mobile/presentation/screens/booking_confirmation.dart';
+import 'package:apms_mobile/themes/colors.dart';
 import 'package:datetime_picker_formfield_new/datetime_picker_formfield_new.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -30,7 +31,10 @@ class _BookingState extends State<Booking> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Booking")),
+      appBar: AppBar(
+          iconTheme: IconThemeData(color: deepBlue),
+          title: const Text("Booking", style: TextStyle(color: deepBlue)),
+          backgroundColor: lightBlue),
       body: _buildBookingScreen(),
     );
   }
@@ -74,14 +78,17 @@ class _BookingState extends State<Booking> {
             _dateTimePickerField(),
             const SizedBox(height: 10),
             ElevatedButton(
-                onPressed: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => BookingConfirmation(
-                            carPark: widget.carPark,
-                            plateNumber: plateNumberController.text,
-                            arrivalTime: DateFormat("dd-MM-yyyy HH:mm")
-                                .parse(arrivalTimeController.text)))),
+                onPressed: () => plateNumberController.text != "" &&
+                        arrivalTimeController.text != ""
+                    ? Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => BookingConfirmation(
+                                carPark: widget.carPark,
+                                plateNumber: plateNumberController.text,
+                                arrivalTime: DateFormat("dd-MM-yyyy HH:mm")
+                                    .parse(arrivalTimeController.text))))
+                    : {},
                 child: Text("Go to confirmation page"))
           ]),
         ));

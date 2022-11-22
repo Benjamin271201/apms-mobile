@@ -16,6 +16,8 @@ class GetCarParkList extends CarParkEvent {
   List<Object> get props => [];
 }
 
+class GetRecentlyVisitedCarParkList extends CarParkEvent {}
+
 class UpdateCarParkSearchQuery extends CarParkEvent {
   final CarParkSearchQuery searchQuery;
   final Map<String, dynamic> updatedQueryData;

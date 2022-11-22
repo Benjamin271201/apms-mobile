@@ -18,6 +18,7 @@ class CarParkBloc extends Bloc<CarParkEvent, CarParkState> {
     on<GetCarParkList>(_fetchCarParkList);
     on<GetUserLocation>(_fetchUserLocation);
     on<UpdateCarParkSearchQuery>(_updateCarParkSearchQuery);
+    on<GetRecentlyVisitedCarParkList>(_fetchRecentlyVisitedCarParkList);
   }
 
   _fetchCarParkList(GetCarParkList event, Emitter<CarParkState> emit) async {
@@ -51,6 +52,17 @@ class CarParkBloc extends Bloc<CarParkEvent, CarParkState> {
       emit(CarParkSearchQueryUpdatedSuccessfully());
     } catch (e) {
       emit(CarParkSearchQueryUpdatedFailed());
+    }
+  }
+
+  _fetchRecentlyVisitedCarParkList(
+      GetRecentlyVisitedCarParkList event, Emitter<CarParkState> emit) async {
+    try {
+      emit(RecentlyVisitedCarParkListFetching());
+      List<CarParkModel> result = await repo.fetchRecentlyVisitedCarParkList();
+      emit((RecentlyVisitedCarParkListFetchedSuccessfully(result)));
+    } catch (e) {
+      emit(RecentlyVisitedCarParkListFetchedFailed());
     }
   }
 }

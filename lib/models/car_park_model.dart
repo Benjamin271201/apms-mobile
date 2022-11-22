@@ -3,6 +3,7 @@ class CarParkModel {
   int availableSlotsCount, provinceId;
   double? distance;
   bool status;
+  int? visitCount;
 
   CarParkModel.fromJson(Map<String, dynamic> json)
       : id = json["id"],
@@ -16,7 +17,8 @@ class CarParkModel {
         ward = json["ward"],
         district = json["district"],
         city = json["city"],
-        distance = json["distance"];
+        distance = json["distance"],
+        visitCount = json["visitCount"];
 
   Map<String, dynamic> toJson() => {
         "id": id,
@@ -30,7 +32,8 @@ class CarParkModel {
         "ward": ward,
         "district": district,
         "city": city,
-        "distance": distance
+        "distance": distance,
+        "visitCount": visitCount
       };
 }
 
@@ -51,6 +54,9 @@ class CarParkSearchQuery {
       : name = json["name"],
         latitude = json["latitude"],
         longitude = json["longitude"];
-  Map<String, dynamic> toJson() =>
-      {"name": name, "latitude": latitude?.toString(), "longitude": longitude?.toString()};
+  Map<String, dynamic> toJson() => {
+        "name": name,
+        "latitude": latitude?.toString(),
+        "longitude": longitude?.toString()
+      };
 }
