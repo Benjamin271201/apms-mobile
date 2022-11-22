@@ -47,3 +47,13 @@ class UserLocationFetchedFailed extends CarParkState {
   @override
   List<Object> get props => [message];
 }
+
+class RecentlyVisitedCarParkListFetching extends CarParkState {}
+
+class RecentlyVisitedCarParkListFetchedSuccessfully extends CarParkState {
+  final List<CarParkModel> recentlyVisitedCarParkList;
+  const RecentlyVisitedCarParkListFetchedSuccessfully(
+      this.recentlyVisitedCarParkList);
+}
+
+class RecentlyVisitedCarParkListFetchedFailed extends CarParkState {}

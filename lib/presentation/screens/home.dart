@@ -21,14 +21,17 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   final CarParkBloc _carParkBloc = CarParkBloc();
+  final CarParkBloc _carParkBloc2 = CarParkBloc();
   final _debouncer = Debouncer(milliseconds: 1000);
   Placemark? placemark = Placemark();
   CarParkSearchQuery searchQuery = CarParkSearchQuery();
   final List<CarParkModel> carParkList = [];
+  List<CarParkModel> recentlyVisitedCarParkList = [];
 
   @override
   void initState() {
     _carParkBloc.add(const GetUserLocation());
+    _carParkBloc2.add(GetRecentlyVisitedCarParkList());
     _carParkBloc.add(GetCarParkList(searchQuery));
     super.initState();
   }
@@ -40,14 +43,9 @@ class _HomeState extends State<Home> {
             preferredSize: const Size.fromHeight(50),
             child: _buildUserLocation()),
         body: Column(children: [
-          _buildLocationCard(),
-          _buildSearchBar(),
+          _buildRecentlyVisitedCarParkList(),
           _buildCarParkList()
         ]));
-  }
-
-  Widget _buildLocationCard() {
-    return Card();
   }
 
   Widget _buildUserLocation() {
@@ -81,11 +79,8 @@ class _HomeState extends State<Home> {
                     ? AppBar(
                         backgroundColor: lightBlue,
                         title: Text(
-                          "${placemark?.street}, ${placemark?.country}",
-                          style: TextStyle(
-                              fontFamily: "Roboto",
-                              fontSize: 12,
-                              color: deepBlue),
+                          "${placemark?.street}",
+                          style: TextStyle(fontSize: 12, color: deepBlue),
                         ),
                         leading: locationOnIcon,
                         actions: <Widget>[_buildQrButton(context)],
@@ -100,24 +95,112 @@ class _HomeState extends State<Home> {
 
   Widget _buildSearchBar() {
     return SizedBox(
-      height: 40,
-      child: TextField(
-        onChanged: (value) => {
-          _debouncer.run(() {
-            // Search func
-            _carParkBloc
-                .add(UpdateCarParkSearchQuery(searchQuery, {"name": value}));
-          })
-        },
-      ),
-    );
+        height: 40,
+        // child: DecoratedBox(
+        //     decoration: BoxDecoration(
+        //         border: Border(bottom: BorderSide(color: grey)), color: white),
+        child: ListTile(
+            leading: searchIcon,
+            dense: true,
+            contentPadding:
+                const EdgeInsets.only(left: 10, bottom: 5, right: 40),
+            visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
+            horizontalTitleGap: 0,
+            title: TextField(
+              decoration: const InputDecoration(
+                  hintStyle:
+                      TextStyle(color: deepBlue, fontWeight: FontWeight.w700),
+                  border: InputBorder.none,
+                  hintText: "Search..."),
+              onChanged: (value) => {
+                _debouncer.run(() {
+                  // Search func
+                  _carParkBloc.add(
+                      UpdateCarParkSearchQuery(searchQuery, {"name": value}));
+                })
+              },
+            )));
+  }
+
+  Widget _buildRecentlyVisitedCarParkList() {
+    return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 30),
+        child: Column(children: [
+          Padding(
+              padding: const EdgeInsets.only(right: 215),
+              child: Text("Most Visited",
+                  style:
+                      TextStyle(color: deepBlue, fontWeight: FontWeight.w700))),
+          const SizedBox(
+            height: 10,
+          ),
+          SizedBox(
+              width: 400,
+              height: 55,
+              child: BlocProvider(
+                create: (_) => _carParkBloc2,
+                child: BlocBuilder<CarParkBloc, CarParkState>(
+                  builder: (context, state) {
+                    if (state is RecentlyVisitedCarParkListFetching) {
+                      return _buildLoading();
+                    } else if (state
+                        is RecentlyVisitedCarParkListFetchedSuccessfully) {
+                      return _buildRecentlyVisitedCarParkCard(
+                          context, state.recentlyVisitedCarParkList);
+                    } else if (state is CarParkFetchedFailed) {
+                      return Container();
+                    } else {
+                      return Container();
+                    }
+                  },
+                ),
+              ))
+        ]));
+  }
+
+  Widget _buildRecentlyVisitedCarParkCard(
+      BuildContext context, List<CarParkModel> recentlyVisitedCarParkList) {
+    return ListView.builder(
+        shrinkWrap: true,
+        scrollDirection: Axis.horizontal,
+        itemCount: recentlyVisitedCarParkList.length,
+        itemBuilder: (context, index) {
+          return InkWell(
+            onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        Booking(carPark: recentlyVisitedCarParkList[index]))),
+            child: Container(
+                margin: const EdgeInsets.only(right: 20),
+                padding: const EdgeInsets.only(
+                    left: 10, right: 20, top: 5, bottom: 5),
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    border: Border.all(color: lightGrey),
+                    borderRadius: const BorderRadius.all(Radius.circular(10))),
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        recentlyVisitedCarParkList[index].name.toUpperCase(),
+                        style: const TextStyle(
+                            fontSize: 12, fontWeight: FontWeight.w700),
+                      ),
+                      const SizedBox(height: 10),
+                      Text(
+                          "Visited: ${recentlyVisitedCarParkList[index].visitCount}")
+                    ])),
+          );
+        });
   }
 
   Widget _buildCarParkList() {
     return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 40),
+        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 0),
         child: SizedBox(
-            height: 450,
+            height: 455,
             child: DecoratedBox(
                 decoration: const BoxDecoration(
                     color: lightGrey,
@@ -131,22 +214,18 @@ class _HomeState extends State<Home> {
                       )
                     ]),
                 child: Column(children: [
-                  const SizedBox(
-                    height: 50,
-                    width: 400,
-                    child: DecoratedBox(
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(15),
-                                topRight: Radius.circular(15)),
-                            color: lightBlue),
-                        child: Padding(
-                            padding: EdgeInsets.fromLTRB(15, 15, 170, 5),
-                            child: Text("Available Locations",
-                                style: TextStyle(
-                                    color: deepBlue,
-                                    fontWeight: FontWeight.w700)))),
-                  ),
+                  SizedBox(
+                      height: 50,
+                      width: 400,
+                      child: DecoratedBox(
+                          decoration: const BoxDecoration(
+                              borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(15),
+                                  topRight: Radius.circular(15)),
+                              color: lightBlue),
+                          child: Padding(
+                              padding: EdgeInsets.fromLTRB(5, 5, 20, 5),
+                              child: _buildSearchBar()))),
                   Scrollbar(
                       child: SizedBox(
                     height: 400,
