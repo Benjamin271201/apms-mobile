@@ -128,7 +128,7 @@ class _HomeState extends State<Home> {
         child: Column(children: [
           Padding(
               padding: const EdgeInsets.only(right: 215),
-              child: Text("Recently Visited",
+              child: Text("Most Visited",
                   style:
                       TextStyle(color: deepBlue, fontWeight: FontWeight.w700))),
           const SizedBox(
