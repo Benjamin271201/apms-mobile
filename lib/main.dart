@@ -5,6 +5,7 @@ import 'package:apms_mobile/presentation/screens/home.dart';
 import 'package:apms_mobile/presentation/screens/login.dart';
 import 'package:apms_mobile/presentation/screens/profile.dart';
 import 'package:apms_mobile/presentation/screens/qr_scan.dart';
+import 'package:apms_mobile/themes/colors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -66,18 +67,18 @@ class _MyHomeState extends State<MyHome> {
           icon: const Icon(Icons.home),
           title: "Home",
           activeColorPrimary: Colors.blueAccent,
-          inactiveColorPrimary: CupertinoColors.systemGrey),
+          inactiveColorPrimary: systemGrey),
       PersistentBottomNavBarItem(
         icon: const Icon(Icons.history),
         title: "History",
         activeColorPrimary: Colors.blueAccent,
-        inactiveColorPrimary: CupertinoColors.systemGrey,
+        inactiveColorPrimary: systemGrey,
       ),
       PersistentBottomNavBarItem(
         icon: const Icon(Icons.person),
         title: "Profile",
         activeColorPrimary: Colors.blueAccent,
-        inactiveColorPrimary: CupertinoColors.systemGrey,
+        inactiveColorPrimary: systemGrey,
       ),
     ];
   }
