@@ -1,7 +1,12 @@
 import 'package:apms_mobile/bloc/booking_bloc.dart';
 import 'package:apms_mobile/models/car_park_model.dart';
 import 'package:apms_mobile/models/ticket_model.dart';
+import 'package:apms_mobile/presentation/screens/history/booking_history.dart';
+import 'package:apms_mobile/presentation/screens/history/history.dart';
 import 'package:apms_mobile/presentation/screens/home.dart';
+import 'package:apms_mobile/themes/colors.dart';
+import 'package:apms_mobile/themes/fonts.dart';
+import 'package:apms_mobile/utils/popup.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -22,6 +27,7 @@ class BookingConfirmation extends StatefulWidget {
 }
 
 class _BookingConfirmationState extends State<BookingConfirmation> {
+  final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
   final BookingBloc _bookingBloc = BookingBloc();
   late String plateNumber = plateNumber;
   late DateTime arrivalTime = arrivalTime;
@@ -47,30 +53,19 @@ class _BookingConfirmationState extends State<BookingConfirmation> {
         child: BlocListener<BookingBloc, BookingState>(
             listener: (context, state) => {
                   if (state is BookingPreviewFetchedFailed)
-                    {
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                        content: Text(state.message),
-                      )),
-                    }
+                    {errorSnackBar(context, state.message)}
                   else if (state is BookingSubmittedSuccessfully)
                     {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          backgroundColor: Colors.green,
-                          content: Text(state.message),
-                        ),
-                      ),
-                      Navigator.pushReplacement(context,
-                          MaterialPageRoute(builder: (context) => const Home()))
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const Home())),
+                      successfulSnackBar(context, state.message)
                     }
                   else if (state is BookingSubmittedFailed)
                     {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(state.message),
-                        ),
-                      ),
-                      Navigator.pop(context)
+                      Navigator.pop(context),
+                      errorSnackBar(this.context, state.message)
                     }
                 },
             child: BlocBuilder<BookingBloc, BookingState>(
@@ -94,37 +89,95 @@ class _BookingConfirmationState extends State<BookingConfirmation> {
       BuildContext context, TicketPreview ticketPreview) {
     return Card(
         child: SizedBox(
-            height: 300,
+            height: 500,
             child: Padding(
               padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("Name: ${ticketPreview.carParkName}"),
+                  Text(
+                    ticketPreview.carParkName.toUpperCase(),
+                    style: carParkNameTextStyle,
+                  ),
                   const SizedBox(height: 10),
                   Text("Address: ${ticketPreview.carParkAddress}"),
                   const SizedBox(height: 10),
                   Text("Plate number: ${ticketPreview.plateNumber}"),
                   const SizedBox(height: 10),
-                  Text("Arrival time: ${ticketPreview.arriveTime}"),
+                  Text("Expected arrival time: ${ticketPreview.arriveTime}"),
                   const SizedBox(height: 10),
-                  Text("Price: ${ticketPreview.priceTable.toString()}"),
+                  Text("Price: "),
+                  const SizedBox(height: 10),
+                  Table(
+                    border: TableBorder.all(),
+                    columnWidths: const <int, TableColumnWidth>{
+                      0: FlexColumnWidth(),
+                      1: FlexColumnWidth(),
+                      2: FlexColumnWidth()
+                    },
+                    defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+                    children: _buildPriceList(ticketPreview.priceTable),
+                  ),
                   const SizedBox(height: 30),
                   Row(children: [
                     Text("Reservation fee: ${ticketPreview.reservationFee}"),
                     const SizedBox(width: 50),
-                    ElevatedButton(
-                        onPressed: () => {
-                              _bookingBloc.add(SubmitBookingFormStep2(
-                                  widget.plateNumber,
-                                  widget.arrivalTime,
-                                  widget.carPark.id))
-                            },
-                        child: Text("Pay")),
-                  ])
+                    SizedBox(
+                      width: 120,
+                      child: ElevatedButton(
+                          onPressed: () => {
+                                _bookingBloc.add(SubmitBookingFormStep2(
+                                    widget.plateNumber,
+                                    widget.arrivalTime,
+                                    widget.carPark.id))
+                              },
+                          child: Text("Pay")),
+                    )
+                  ]),
+                  const SizedBox(height: 30),
+                  Text("* Booking information once submitted cannot be changed",
+                      style: cautionTextStyle),
+                  Text(
+                      "** Failed to arrive at booked time will result in booking cancellation",
+                      style: cautionTextStyle),
+                  Text(
+                      "*** The parking fee will be calculated separately, starting from your actual arrival time",
+                      style: cautionTextStyle),
                 ],
               ),
             )));
+  }
+
+  List<TableRow> _buildPriceList(List<dynamic> priceTable) {
+    List<TableRow> priceList = [];
+    priceList.add(TableRow(
+        children: _buildPriceTableCells([
+      Text("From", style: carParkNameTextStyle),
+      Text("To", style: carParkNameTextStyle),
+      Text("Price per hour", style: carParkNameTextStyle)
+    ])));
+    for (var priceRange in priceTable) {
+      {
+        priceList.add(TableRow(
+            children: _buildPriceTableCells([
+          Text(priceRange["fromTime"]),
+          Text(priceRange["toTime"]),
+          Text("${priceRange["fee"].toString()} VND"),
+        ])));
+      }
+    }
+    return priceList;
+  }
+
+  List<Container> _buildPriceTableCells(List<Text> data) {
+    List<Container> tableCells = [];
+    for (Text text in data) {
+      tableCells.add(Container(
+        padding: EdgeInsets.only(left: 10),
+        child: text,
+      ));
+    }
+    return tableCells;
   }
 
   Widget _buildLoading() => const Center(child: CircularProgressIndicator());

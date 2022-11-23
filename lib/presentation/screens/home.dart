@@ -40,7 +40,7 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: PreferredSize(
-            preferredSize: const Size.fromHeight(50),
+            preferredSize: const Size.fromHeight(56),
             child: _buildUserLocation()),
         body: Column(children: [
           _buildRecentlyVisitedCarParkList(),
@@ -127,7 +127,7 @@ class _HomeState extends State<Home> {
         padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 30),
         child: Column(children: [
           Padding(
-              padding: const EdgeInsets.only(right: 215),
+              padding: const EdgeInsets.only(right: 245),
               child: Text("Most Visited",
                   style:
                       TextStyle(color: deepBlue, fontWeight: FontWeight.w700))),
@@ -136,7 +136,7 @@ class _HomeState extends State<Home> {
           ),
           SizedBox(
               width: 400,
-              height: 55,
+              height: 75,
               child: BlocProvider(
                 create: (_) => _carParkBloc2,
                 child: BlocBuilder<CarParkBloc, CarParkState>(
@@ -174,7 +174,7 @@ class _HomeState extends State<Home> {
             child: Container(
                 margin: const EdgeInsets.only(right: 20),
                 padding: const EdgeInsets.only(
-                    left: 10, right: 20, top: 5, bottom: 5),
+                    left: 10, right: 20, top: 15, bottom: 15),
                 decoration: BoxDecoration(
                     color: Colors.white,
                     border: Border.all(color: lightGrey),
@@ -190,7 +190,7 @@ class _HomeState extends State<Home> {
                       ),
                       const SizedBox(height: 10),
                       Text(
-                          "Visited: ${recentlyVisitedCarParkList[index].visitCount}")
+                          "Visited: ${recentlyVisitedCarParkList[index].visitCount} times")
                     ])),
           );
         });

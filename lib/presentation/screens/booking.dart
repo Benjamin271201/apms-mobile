@@ -3,6 +3,7 @@ import 'package:apms_mobile/models/car_park_model.dart';
 import 'package:apms_mobile/presentation/screens/booking_confirmation.dart';
 import 'package:apms_mobile/themes/colors.dart';
 import 'package:datetime_picker_formfield_new/datetime_picker_formfield_new.dart';
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -17,6 +18,7 @@ class Booking extends StatefulWidget {
 }
 
 class _BookingState extends State<Booking> {
+  String plateNumber = "";
   late CarParkModel carPark = widget.carPark;
   final BookingBloc _bookingBloc = BookingBloc();
   final TextEditingController plateNumberController = TextEditingController();
@@ -117,17 +119,70 @@ class _BookingState extends State<Booking> {
   // }
 
   Widget _plateNumberField() {
-    return TextField(
-      inputFormatters: [
-        FilteringTextInputFormatter.allow(RegExp('[a-zA-Z0-9-]'))
-      ],
-      controller: plateNumberController,
-      decoration: InputDecoration(
-        enabled: true,
-        labelText: "Plate number",
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(5)),
-      ),
-    );
+    return BlocProvider(
+        create: (_) => _bookingBloc,
+        child:
+            BlocBuilder<BookingBloc, BookingState>(builder: (context, state) {
+          if (state is UsedPlateNumbersFetchedSuccessfully) {
+            return SizedBox(
+                width: 400,
+                child: Stack(children: [
+                  SizedBox(
+                      width: 400,
+                      child: TextField(
+                        inputFormatters: [
+                          FilteringTextInputFormatter.allow(
+                              RegExp('[a-zA-Z0-9-]'))
+                        ],
+                        controller: plateNumberController,
+                        decoration: InputDecoration(
+                          enabled: true,
+                          labelText: "Plate number",
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(5)),
+                        ),
+                      )),
+                  Padding(
+                      padding: EdgeInsets.only(left: 200, top: 7),
+                      child: SizedBox(
+                          width: 200,
+                          child: DropdownSearch<String>(
+                              popupProps: PopupProps.menu(
+                                showSelectedItems: false,
+                              ),
+                              items: state.plateNumbersList,
+                              dropdownDecoratorProps: DropDownDecoratorProps(
+                                dropdownSearchDecoration:
+                                    InputDecoration(border: InputBorder.none),
+                              ),
+                              onChanged: (value) => plateNumberController.text =
+                                  value.toString()))),
+                  const Padding(
+                    padding: EdgeInsets.only(left: 200, top: 15),
+                    child: SizedBox(
+                        width: 100,
+                        height: 30,
+                        child: DecoratedBox(
+                          decoration: BoxDecoration(
+                              color: Color.fromARGB(255, 250, 248, 248)),
+                        )),
+                  )
+                ]));
+          } else {
+            return TextField(
+              inputFormatters: [
+                FilteringTextInputFormatter.allow(RegExp('[a-zA-Z0-9-]'))
+              ],
+              controller: plateNumberController,
+              decoration: InputDecoration(
+                enabled: true,
+                labelText: "Plate number",
+                border:
+                    OutlineInputBorder(borderRadius: BorderRadius.circular(5)),
+              ),
+            );
+          }
+        }));
   }
 
   Widget _dateTimePickerField() {
@@ -145,12 +200,16 @@ class _BookingState extends State<Booking> {
             context: context,
             firstDate: DateTime.now(),
             initialDate: currentValue ?? DateTime.now(),
-            lastDate: DateTime(2023));
+            lastDate: DateTime.now().add(const Duration(hours: 24)));
         if (date != null) {
           final time = await showTimePicker(
             context: context,
             initialTime: TimeOfDay.fromDateTime(currentValue ?? DateTime.now()),
           );
+          if (DateTimeField.combine(date, time).compareTo(DateTime.now()) <=
+              0) {
+            return currentValue;
+          }
           return DateTimeField.combine(date, time);
         } else {
           return currentValue;
