@@ -2,7 +2,7 @@ import 'package:apms_mobile/themes/colors.dart';
 import 'package:flutter/material.dart';
 
 Widget popupModel(String title, String context) {
-  return AlertDialog();
+  return const AlertDialog();
 }
 
 void errorSnackBar(BuildContext context, String message) {

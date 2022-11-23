@@ -1,13 +1,10 @@
-import 'dart:math';
-
 import 'package:apms_mobile/bloc/car_park_bloc.dart';
 import 'package:apms_mobile/themes/icons.dart';
 import 'package:apms_mobile/themes/colors.dart';
-import 'package:apms_mobile/models/qr_model.dart';
-import 'package:apms_mobile/presentation/screens/qr_scan.dart';
+import 'package:apms_mobile/presentation/screens/qr/qr_scan.dart';
 import 'package:apms_mobile/utils/utils.dart';
 import 'package:apms_mobile/models/car_park_model.dart';
-import 'package:apms_mobile/presentation/screens/booking.dart';
+import 'package:apms_mobile/presentation/screens/booking/booking.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geocoding/geocoding.dart';
@@ -80,7 +77,7 @@ class _HomeState extends State<Home> {
                         backgroundColor: lightBlue,
                         title: Text(
                           "${placemark?.street}",
-                          style: TextStyle(fontSize: 12, color: deepBlue),
+                          style: const TextStyle(fontSize: 12, color: deepBlue),
                         ),
                         leading: locationOnIcon,
                         actions: <Widget>[_buildQrButton(context)],
@@ -126,8 +123,8 @@ class _HomeState extends State<Home> {
     return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 30),
         child: Column(children: [
-          Padding(
-              padding: const EdgeInsets.only(right: 245),
+          const Padding(
+              padding: EdgeInsets.only(right: 245),
               child: Text("Most Visited",
                   style:
                       TextStyle(color: deepBlue, fontWeight: FontWeight.w700))),
@@ -224,7 +221,7 @@ class _HomeState extends State<Home> {
                                   topRight: Radius.circular(15)),
                               color: lightBlue),
                           child: Padding(
-                              padding: EdgeInsets.fromLTRB(5, 5, 20, 5),
+                              padding: const EdgeInsets.fromLTRB(5, 5, 20, 5),
                               child: _buildSearchBar()))),
                   Scrollbar(
                       child: SizedBox(

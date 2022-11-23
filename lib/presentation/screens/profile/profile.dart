@@ -1,4 +1,4 @@
-import 'package:apms_mobile/presentation/screens/login.dart';
+import 'package:apms_mobile/presentation/screens/authen/sign_in.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -30,7 +30,7 @@ class _ProfileState extends State<Profile> {
           SharedPreferences pref = await SharedPreferences.getInstance();
           await pref.clear();
           navigator.pushAndRemoveUntil(
-              MaterialPageRoute(builder: (context) => const LoginScreen()),
+              MaterialPageRoute(builder: (context) => const Login()),
               (route) => false);
         },
         icon: const Icon(Icons.login),

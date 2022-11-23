@@ -21,7 +21,7 @@ class _BuildCardState extends State<BuildCard> {
   @override
   void initState() {
     super.initState();
-    print('---First----');
+    log('---First----');
   }
 
   @override

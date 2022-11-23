@@ -10,7 +10,7 @@ class Utils {
     String token = pref.getString('token')!;
     return {
       HttpHeaders.contentTypeHeader: 'application/json',
-      HttpHeaders.authorizationHeader: 'Bearer ${token}'
+      HttpHeaders.authorizationHeader: 'Bearer $token'
     };
   }
 }

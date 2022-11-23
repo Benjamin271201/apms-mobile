@@ -1,6 +1,6 @@
 import 'package:apms_mobile/bloc/booking_bloc.dart';
 import 'package:apms_mobile/models/car_park_model.dart';
-import 'package:apms_mobile/presentation/screens/booking_confirmation.dart';
+import 'package:apms_mobile/presentation/screens/booking/booking_confirmation.dart';
 import 'package:apms_mobile/themes/colors.dart';
 import 'package:datetime_picker_formfield_new/datetime_picker_formfield_new.dart';
 import 'package:dropdown_search/dropdown_search.dart';
@@ -34,7 +34,7 @@ class _BookingState extends State<Booking> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          iconTheme: IconThemeData(color: deepBlue),
+          iconTheme: const IconThemeData(color: deepBlue),
           title: const Text("Booking", style: TextStyle(color: deepBlue)),
           backgroundColor: lightBlue),
       body: _buildBookingScreen(),
@@ -71,7 +71,7 @@ class _BookingState extends State<Booking> {
 
   Widget _carParkBookingForm() {
     return Padding(
-        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
         child: SizedBox(
           width: 600,
           child: Column(children: [
@@ -91,7 +91,7 @@ class _BookingState extends State<Booking> {
                                 arrivalTime: DateFormat("dd-MM-yyyy HH:mm")
                                     .parse(arrivalTimeController.text))))
                     : {},
-                child: Text("Go to confirmation page"))
+                child: const Text("Go to confirmation page"))
           ]),
         ));
   }
@@ -143,15 +143,15 @@ class _BookingState extends State<Booking> {
                         ),
                       )),
                   Padding(
-                      padding: EdgeInsets.only(left: 200, top: 7),
+                      padding: const EdgeInsets.only(left: 200, top: 7),
                       child: SizedBox(
                           width: 200,
                           child: DropdownSearch<String>(
-                              popupProps: PopupProps.menu(
+                              popupProps: const PopupProps.menu(
                                 showSelectedItems: false,
                               ),
                               items: state.plateNumbersList,
-                              dropdownDecoratorProps: DropDownDecoratorProps(
+                              dropdownDecoratorProps: const DropDownDecoratorProps(
                                 dropdownSearchDecoration:
                                     InputDecoration(border: InputBorder.none),
                               ),
@@ -186,7 +186,7 @@ class _BookingState extends State<Booking> {
   }
 
   Widget _dateTimePickerField() {
-    const String _dateTimeFormat = "dd-MM-yyyy HH:mm";
+    const String dateTimeFormat = "dd-MM-yyyy HH:mm";
     return DateTimeField(
       controller: arrivalTimeController,
       decoration: InputDecoration(
@@ -194,7 +194,7 @@ class _BookingState extends State<Booking> {
         labelText: "Arrival time",
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(5)),
       ),
-      format: DateFormat(_dateTimeFormat),
+      format: DateFormat(dateTimeFormat),
       onShowPicker: (context, currentValue) async {
         final date = await showDatePicker(
             context: context,
