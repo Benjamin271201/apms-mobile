@@ -30,7 +30,7 @@ class _ProfileState extends State<Profile> {
           SharedPreferences pref = await SharedPreferences.getInstance();
           await pref.clear();
           navigator.pushAndRemoveUntil(
-              MaterialPageRoute(builder: (context) => const Login()),
+              MaterialPageRoute(builder: (context) => const SignIn()),
               (route) => false);
         },
         icon: const Icon(Icons.login),

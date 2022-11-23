@@ -1,11 +1,23 @@
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:apms_mobile/presentation/screens/authen/sign_in.dart';
+import 'package:auto_size_text/auto_size_text.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class OtpScreen extends StatefulWidget {
   final String phoneNumber;
-  const OtpScreen({Key? key, this.phoneNumber = ''}) : super(key: key);
+  final String fullName;
+  final String password;
+  final String verifyId;
+  const OtpScreen(
+      {Key? key,
+      required this.phoneNumber,
+      required this.verifyId,
+      required this.fullName,
+      required this.password})
+      : super(key: key);
 
   @override
   State<OtpScreen> createState() => _OtpScreenState();
@@ -16,8 +28,12 @@ class _OtpScreenState extends State<OtpScreen> {
   FocusNode pin2FocusNode = FocusNode();
   FocusNode pin3FocusNode = FocusNode();
   FocusNode pin4FocusNode = FocusNode();
+  FocusNode pin5FocusNode = FocusNode();
+  FocusNode pin6FocusNode = FocusNode();
+
   int timeleft = 30;
   Map otp = {};
+  String code = "";
 
   @override
   void initState() {
@@ -33,6 +49,8 @@ class _OtpScreenState extends State<OtpScreen> {
     pin2FocusNode.dispose();
     pin3FocusNode.dispose();
     pin4FocusNode.dispose();
+    pin5FocusNode.dispose();
+    pin6FocusNode.dispose();
     super.dispose();
   }
 
@@ -52,19 +70,26 @@ class _OtpScreenState extends State<OtpScreen> {
     );
   }
 
+  //Hide last 3 numbers of phone number
+  String hidePhoneNumber(String phoneNumber) {
+    String formatted = phoneNumber.substring(0, phoneNumber.length - 3);
+    return "$formatted***";
+  }
+
 // Go to next input
   void nextField(
       {required String value,
       required int index,
       required FocusNode focusNode}) {
     otp[index] = value;
-    if (otp.length < 4) {
+    if (otp.length < 6) {
       focusNode.requestFocus();
     } else {
       String value = "";
       for (var element in otp.values) {
         value = value + element;
       }
+      code = value;
       log(value);
       log(otp.toString());
       focusNode.unfocus();
@@ -78,60 +103,78 @@ class _OtpScreenState extends State<OtpScreen> {
     log(otp.toString());
   }
 
+  final FirebaseAuth auth = FirebaseAuth.instance;
+
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(40, 20, 40, 0),
-        child: Column(
-          children: [
-            const Text(
-              'OTP Verification',
-              style: TextStyle(
-                  fontWeight: FontWeight.bold,
+    final double screenWidth = MediaQuery.of(context).size.width;
+    return Scaffold(
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: Colors.white,
+        foregroundColor: Colors.blue,
+      ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.fromLTRB(
+              screenWidth * 0.06, screenWidth * 0.12, screenWidth * 0.06, 0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text(
+                'OTP Verification',
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'times',
+                    fontSize: 36),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              AutoSizeText(
+                'We sent your code to ${hidePhoneNumber(widget.phoneNumber)}',
+                style: const TextStyle(
                   fontFamily: 'times',
-                  fontSize: 36),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            Text(
-              'We sent your code to ${widget.phoneNumber}',
-              style: const TextStyle(
-                  fontFamily: 'times', fontSize: 18, color: Colors.black26),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text('Get new code in '),
-                Text('00:${timeleft.toString().length > 1 ? timeleft.toString() : "0$timeleft"}',
-                    style: const TextStyle(
-                        color: Color.fromRGBO(49, 147, 225, 1))),
-                TextButton(
-                  onPressed: () {
-                    if (timeleft == 0) {
-                      setState(() {
-                        timeleft = 30;
-                        startCountDown();
-                        log(timeleft.toString());
-                      });
-                    } else {}
-                  },
-                  child: Text(
-                    'Re-send',
-                    style: TextStyle(
-                        color: timeleft == 0
-                            ? const Color.fromRGBO(49, 147, 225, 1)
-                            : Colors.red),
-                  ),
+                  fontSize: 18,
+                  color: Colors.black26,
                 ),
-              ],
-            ),
-            const SizedBox(
-              height: 100,
-            ),
-            _buildInput(),
-          ],
+                maxLines: 1,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text('Get new code in '),
+                  Text(
+                      '00:${timeleft.toString().length > 1 ? timeleft.toString() : "0$timeleft"}',
+                      style: const TextStyle(
+                          color: Color.fromRGBO(49, 147, 225, 1))),
+                  TextButton(
+                    onPressed: () {
+                      if (timeleft == 0) {
+                        setState(() {
+                          timeleft = 16;
+                          startCountDown();
+                          log(timeleft.toString());
+                        });
+                      } else {}
+                    },
+                    child: Text(
+                      'Re-send',
+                      style: TextStyle(
+                          color: timeleft == 0
+                              ? const Color.fromRGBO(49, 147, 225, 1)
+                              : Colors.red),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: screenWidth * 0.1,
+              ),
+              _buildInput(),
+            ],
+          ),
         ),
       ),
     );
@@ -139,6 +182,8 @@ class _OtpScreenState extends State<OtpScreen> {
 
 //Input and submit button
   Form _buildInput() {
+    final double screenWidth = MediaQuery.of(context).size.width;
+    final navigator = Navigator.of(context);
     return Form(
       child: Column(
         children: [
@@ -146,11 +191,11 @@ class _OtpScreenState extends State<OtpScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               SizedBox(
-                width: 70,
+                width: screenWidth * 0.12,
                 child: TextFormField(
                   focusNode: pin1FocusNode,
                   textAlign: TextAlign.center,
-                  style: const TextStyle(fontSize: 30),
+                  style: const TextStyle(fontSize: 16),
                   keyboardType: TextInputType.number,
                   obscureText: true,
                   decoration: InputDecoration(
@@ -168,11 +213,11 @@ class _OtpScreenState extends State<OtpScreen> {
                 ),
               ),
               SizedBox(
-                width: 70,
+                width: screenWidth * 0.12,
                 child: TextFormField(
                   focusNode: pin2FocusNode,
                   textAlign: TextAlign.center,
-                  style: const TextStyle(fontSize: 30),
+                  style: const TextStyle(fontSize: 16),
                   keyboardType: TextInputType.number,
                   obscureText: true,
                   decoration: InputDecoration(
@@ -190,11 +235,11 @@ class _OtpScreenState extends State<OtpScreen> {
                 ),
               ),
               SizedBox(
-                width: 70,
+                width: screenWidth * 0.12,
                 child: TextFormField(
                   focusNode: pin3FocusNode,
                   textAlign: TextAlign.center,
-                  style: const TextStyle(fontSize: 30),
+                  style: const TextStyle(fontSize: 16),
                   keyboardType: TextInputType.number,
                   obscureText: true,
                   decoration: InputDecoration(
@@ -212,11 +257,11 @@ class _OtpScreenState extends State<OtpScreen> {
                 ),
               ),
               SizedBox(
-                width: 70,
+                width: screenWidth * 0.12,
                 child: TextFormField(
                   focusNode: pin4FocusNode,
                   textAlign: TextAlign.center,
-                  style: const TextStyle(fontSize: 30),
+                  style: const TextStyle(fontSize: 16),
                   keyboardType: TextInputType.number,
                   obscureText: true,
                   decoration: InputDecoration(
@@ -226,9 +271,53 @@ class _OtpScreenState extends State<OtpScreen> {
                   onChanged: (value) {
                     if (value.length == 1) {
                       nextField(
-                          value: value, index: 3, focusNode: pin4FocusNode);
+                          value: value, index: 3, focusNode: pin5FocusNode);
                     } else {
                       previousField(index: 3, focusNode: pin3FocusNode);
+                    }
+                  },
+                ),
+              ),
+              SizedBox(
+                width: screenWidth * 0.12,
+                child: TextFormField(
+                  focusNode: pin5FocusNode,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(fontSize: 16),
+                  keyboardType: TextInputType.number,
+                  obscureText: true,
+                  decoration: InputDecoration(
+                      contentPadding: const EdgeInsets.symmetric(vertical: 15),
+                      enabledBorder: inputDecoration(),
+                      border: inputDecoration()),
+                  onChanged: (value) {
+                    if (value.length == 1) {
+                      nextField(
+                          value: value, index: 4, focusNode: pin6FocusNode);
+                    } else {
+                      previousField(index: 4, focusNode: pin4FocusNode);
+                    }
+                  },
+                ),
+              ),
+              SizedBox(
+                width: screenWidth * 0.12,
+                child: TextFormField(
+                  focusNode: pin6FocusNode,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(fontSize: 16),
+                  keyboardType: TextInputType.number,
+                  obscureText: true,
+                  decoration: InputDecoration(
+                      contentPadding: const EdgeInsets.symmetric(vertical: 15),
+                      enabledBorder: inputDecoration(),
+                      border: inputDecoration()),
+                  onChanged: (value) {
+                    if (value.length == 1) {
+                      nextField(
+                          value: value, index: 5, focusNode: pin6FocusNode);
+                    } else {
+                      previousField(index: 5, focusNode: pin5FocusNode);
                     }
                   },
                 ),
@@ -247,7 +336,23 @@ class _OtpScreenState extends State<OtpScreen> {
                     borderRadius: BorderRadius.circular(20)),
                 backgroundColor: const Color.fromRGBO(49, 147, 225, 1),
               ),
-              onPressed: () {},
+              onPressed: () async {
+                try {
+                  // Create a PhoneAuthCredential with the code
+                  PhoneAuthCredential credential = PhoneAuthProvider.credential(
+                      verificationId: widget.verifyId, smsCode: code);
+                  // Sign the user in (or link) with the credential
+                  await auth.signInWithCredential(credential);
+                  log('Success');
+                  navigator.push(
+                    MaterialPageRoute(
+                      builder: (context) => const SignIn(),
+                    ),
+                  );
+                } catch (e) {
+                  log("wrong otp");
+                }
+              },
               child: const Text(
                 'Continue',
                 style: TextStyle(

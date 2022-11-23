@@ -5,15 +5,17 @@ import 'package:apms_mobile/presentation/screens/home/home.dart';
 import 'package:apms_mobile/presentation/screens/authen/sign_in.dart';
 import 'package:apms_mobile/presentation/screens/profile/profile.dart';
 import 'package:apms_mobile/themes/colors.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(statusBarColor: Colors.transparent));
-  runApp(const MaterialApp(
-      debugShowCheckedModeBanner: false, home: Login()));
+  runApp(const MaterialApp(debugShowCheckedModeBanner: false, home: SignIn()));
 }
 
 class MyHome extends StatefulWidget {
@@ -62,10 +64,11 @@ class _MyHomeState extends State<MyHome> {
   List<PersistentBottomNavBarItem> navBarItems() {
     return [
       PersistentBottomNavBarItem(
-          icon: const Icon(Icons.home),
-          title: "Home",
-          activeColorPrimary: Colors.blueAccent,
-          inactiveColorPrimary: systemGrey),
+        icon: const Icon(Icons.home),
+        title: "Home",
+        activeColorPrimary: Colors.blueAccent,
+        inactiveColorPrimary: systemGrey,
+      ),
       PersistentBottomNavBarItem(
         icon: const Icon(Icons.history),
         title: "History",

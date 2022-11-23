@@ -3,21 +3,24 @@
 import 'package:apms_mobile/bloc/login_bloc.dart';
 import 'package:apms_mobile/bloc/repositories/login_repo.dart';
 import 'package:apms_mobile/main.dart';
+import 'package:apms_mobile/presentation/screens/authen/component/header.dart';
 import 'package:apms_mobile/presentation/screens/authen/forgot_password.dart';
+import 'package:apms_mobile/presentation/screens/authen/otp_screen.dart';
 import 'package:apms_mobile/presentation/screens/authen/sign_up.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class Login extends StatefulWidget {
-  const Login({Key? key}) : super(key: key);
+class SignIn extends StatefulWidget {
+  const SignIn({Key? key}) : super(key: key);
 
   @override
-  State<Login> createState() => _LoginState();
+  State<SignIn> createState() => _SigninState();
 }
 
-class _LoginState extends State<Login> {
+class _SigninState extends State<SignIn> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController phoneNumberController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
@@ -65,8 +68,10 @@ class _LoginState extends State<Login> {
                 width: double.infinity,
                 child: Column(
                   children: [
-                    _buildHeader(),
-                    _loginForm(),
+                    Padding(
+                      padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.1, bottom: MediaQuery.of(context).size.height * 0.1),
+                      child: const Header(greeting: "Welcome back!")),
+                    _signinForm(),
                   ],
                 ),
               ),
@@ -77,35 +82,8 @@ class _LoginState extends State<Login> {
     );
   }
 
-// Header
-  Widget _buildHeader() {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(0, 50, 0, 60),
-      child: Column(
-        children: [
-          Image.asset(
-            './assets/images/logo.png',
-            scale: 2,
-          ),
-          const SizedBox(
-            height: 18,
-          ),
-          const Text(
-            'Welcome back!',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 30,
-              fontFamily: 'Times',
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
 //Form
-  Widget _loginForm() {
+  Widget _signinForm() {
     return Form(
       key: _formKey,
       child: Padding(
@@ -118,8 +96,8 @@ class _LoginState extends State<Login> {
               height: 26,
             ),
             _passwordField(),
-            const SizedBox(
-              height: 16,
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.06,
             ),
             _loginButton(),
           ],
@@ -138,6 +116,7 @@ class _LoginState extends State<Login> {
         labelText: "Phone Number",
         hintText: 'Enter your phone number',
         floatingLabelBehavior: FloatingLabelBehavior.always,
+        hintStyle: const TextStyle(fontSize: 12, fontStyle: FontStyle.italic),
         contentPadding:
             const EdgeInsets.symmetric(horizontal: 40, vertical: 18),
         suffixIcon: const Icon(
@@ -169,6 +148,7 @@ class _LoginState extends State<Login> {
       decoration: InputDecoration(
         labelText: "Password",
         hintText: 'Enter your password',
+        hintStyle: const TextStyle(fontSize: 12, fontStyle: FontStyle.italic),
         floatingLabelBehavior: FloatingLabelBehavior.always,
         contentPadding:
             const EdgeInsets.symmetric(horizontal: 40, vertical: 18),
@@ -196,7 +176,7 @@ class _LoginState extends State<Login> {
       },
     );
   }
-
+  //Button
   Widget _loginButton() {
     return BlocBuilder<LoginBloc, LoginState>(
       builder: (context, state) {
@@ -249,7 +229,9 @@ class _LoginState extends State<Login> {
                     ),
             ),
           ),
-          const SizedBox(height: 10,),
+          const SizedBox(
+            height: 10,
+          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -258,15 +240,34 @@ class _LoginState extends State<Login> {
                 style: TextStyle(fontSize: 14),
               ),
               GestureDetector(
-                onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const SignUp(),
-                  ),
-                ),
+                onTap: () {
+                  Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const SignUp(),
+                        ),
+                      );
+                  /*
+                  // Send otp
+                  await FirebaseAuth.instance.verifyPhoneNumber(
+                    phoneNumber: "+84932781745",
+                    verificationCompleted: (PhoneAuthCredential credential) {},
+                    verificationFailed: (FirebaseAuthException e) {},
+                    codeSent: (String verificationId, int? resendToken) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => SignUp(verifyId: verificationId,),
+                        ),
+                      );
+                    },
+                    codeAutoRetrievalTimeout: (String verificationId) {},
+                  );*/
+                },
                 child: const Text(
                   'Sign Up',
-                  style: TextStyle(fontSize: 14, color: Color.fromRGBO(49, 147, 225, 1)),
+                  style: TextStyle(
+                      fontSize: 14, color: Color.fromRGBO(49, 147, 225, 1)),
                 ),
               )
             ],
