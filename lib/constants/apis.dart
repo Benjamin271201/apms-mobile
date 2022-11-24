@@ -8,6 +8,7 @@ Map<String, String> headers = {
 
 const carPark = "$baseUrl/carparks";
 const login = "$baseUrl/Authentication/customer";
+const signup = "$baseUrl/Customers";
 const history = "$baseUrl/Tickets";
 const tickets = "$baseUrl/tickets";
 const checkIn = "$baseUrl/check-in/create-ticket";

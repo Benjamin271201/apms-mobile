@@ -24,6 +24,10 @@ class _BuildCardState extends State<BuildCard> {
     log('---First----');
   }
 
+  DateTimeRange dateRange = DateTimeRange(
+    start: DateTime.now().subtract(const Duration(days: 30)),
+    end: DateTime.now(),
+  );
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
@@ -54,22 +58,23 @@ class _BuildCardState extends State<BuildCard> {
 
   // Build list
   Widget _buildCard(BuildContext context, TicketModel model, double width) {
+    final start = dateRange.start;
+    final end = dateRange.end;
     return Column(
       children: [
         Row(
           children: [
             SizedBox(
-              width: width * 0.5,
-              height: 20,
-              child: const Text('From : 2022-01-01'),
+              width: width * 0.4,
+              child: const Text('ALL', textAlign: TextAlign.center,),
             ),
             SizedBox(
-                width: width * 0.5,
-                height: 20,
-                child: const Text(
-                  "To: 2022-11-12",
-                  textAlign: TextAlign.end,
-                )),
+              width: width * 0.6,
+              child: TextButton(
+                onPressed: pickDateRange,
+                child: Text("${DateFormat('dd/MM/yyyy').format(start)} - ${DateFormat('dd/MM/yyyy').format(end)}"),
+              ),
+            )
           ],
         ),
         Expanded(
@@ -109,6 +114,20 @@ class _BuildCardState extends State<BuildCard> {
         ),
       ],
     );
+  }
+
+  Future pickDateRange() async {
+    DateTimeRange? newDateRange = await showDateRangePicker(
+      context: context,
+      initialDateRange: dateRange,
+      firstDate: DateTime(2020),
+      lastDate: DateTime.now(),
+    );
+    if (newDateRange == null) return;
+
+    setState(() {
+      dateRange = newDateRange;
+    });
   }
 
   // Card Body

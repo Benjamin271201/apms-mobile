@@ -1,9 +1,12 @@
 import 'dart:developer';
 
+import 'package:apms_mobile/bloc/repositories/sign_up_repo.dart';
+import 'package:apms_mobile/bloc/sign_up_bloc.dart';
 import 'package:apms_mobile/presentation/screens/authen/otp_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'component/header.dart';
 
@@ -21,25 +24,28 @@ class _SignUpState extends State<SignUp> {
   final TextEditingController fullNameController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.blue,
-      ),
-      body: SingleChildScrollView(
-        child: SafeArea(
-          child: SizedBox(
-            width: double.infinity,
-            child: Column(
-              children: [
-                Padding(
-                    padding: EdgeInsets.only(
-                        top: MediaQuery.of(context).size.height * 0.02,
-                        bottom: MediaQuery.of(context).size.height * 0.04),
-                    child: const Header(greeting: "Welcome!")),
-                _signupForm(),
-              ],
+    return BlocProvider(
+      create: (context) => SignUpBloc(SignUpRepo()),
+      child: Scaffold(
+        appBar: AppBar(
+          elevation: 0,
+          backgroundColor: Colors.white,
+          foregroundColor: Colors.blue,
+        ),
+        body: SingleChildScrollView(
+          child: SafeArea(
+            child: SizedBox(
+              width: double.infinity,
+              child: Column(
+                children: [
+                  Padding(
+                      padding: EdgeInsets.only(
+                          top: MediaQuery.of(context).size.height * 0.02,
+                          bottom: MediaQuery.of(context).size.height * 0.04),
+                      child: const Header(greeting: "Welcome!")),
+                  _signupForm(),
+                ],
+              ),
             ),
           ),
         ),
@@ -249,7 +255,7 @@ class _SignUpState extends State<SignUp> {
                       verifyId: verificationId,
                       fullName: fullNameController.text,
                       password: passwordController.text,
-                      phoneNumber: '+84$phone',
+                      phoneNumber: phoneNumberController.text,
                     ),
                   ),
                 );

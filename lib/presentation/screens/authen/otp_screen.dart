@@ -1,10 +1,14 @@
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:apms_mobile/bloc/repositories/sign_up_repo.dart';
+import 'package:apms_mobile/bloc/sign_up_bloc.dart';
 import 'package:apms_mobile/presentation/screens/authen/sign_in.dart';
+import 'package:apms_mobile/presentation/screens/authen/sign_up.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class OtpScreen extends StatefulWidget {
   final String phoneNumber;
@@ -34,6 +38,7 @@ class _OtpScreenState extends State<OtpScreen> {
   int timeleft = 30;
   Map otp = {};
   String code = "";
+  late Timer _timer;
 
   @override
   void initState() {
@@ -51,12 +56,13 @@ class _OtpScreenState extends State<OtpScreen> {
     pin4FocusNode.dispose();
     pin5FocusNode.dispose();
     pin6FocusNode.dispose();
+    _timer.cancel();
     super.dispose();
   }
 
 // Timer
   void startCountDown() {
-    Timer.periodic(
+    _timer = Timer.periodic(
       const Duration(seconds: 1),
       (timer) {
         if (timeleft > 0) {
@@ -72,8 +78,9 @@ class _OtpScreenState extends State<OtpScreen> {
 
   //Hide last 3 numbers of phone number
   String hidePhoneNumber(String phoneNumber) {
-    String formatted = phoneNumber.substring(0, phoneNumber.length - 3);
-    return "$formatted***";
+    String phone = phoneNumber.replaceFirst(RegExp(r'0'), '');
+    String formatted = phone.substring(0, phoneNumber.length - 3);
+    return "+84$formatted***";
   }
 
 // Go to next input
@@ -108,74 +115,81 @@ class _OtpScreenState extends State<OtpScreen> {
   @override
   Widget build(BuildContext context) {
     final double screenWidth = MediaQuery.of(context).size.width;
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.blue,
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.fromLTRB(
-              screenWidth * 0.06, screenWidth * 0.12, screenWidth * 0.06, 0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text(
-                'OTP Verification',
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontFamily: 'times',
-                    fontSize: 36),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              AutoSizeText(
-                'We sent your code to ${hidePhoneNumber(widget.phoneNumber)}',
-                style: const TextStyle(
-                  fontFamily: 'times',
-                  fontSize: 18,
-                  color: Colors.black26,
-                ),
-                maxLines: 1,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text('Get new code in '),
-                  Text(
-                      '00:${timeleft.toString().length > 1 ? timeleft.toString() : "0$timeleft"}',
-                      style: const TextStyle(
-                          color: Color.fromRGBO(49, 147, 225, 1))),
-                  TextButton(
-                    onPressed: () {
-                      if (timeleft == 0) {
-                        setState(() {
-                          timeleft = 16;
-                          startCountDown();
-                          log(timeleft.toString());
-                        });
-                      } else {}
-                    },
-                    child: Text(
-                      'Re-send',
+    return BlocProvider(
+      create: (context) => SignUpBloc(SignUpRepo()),
+      child: BlocBuilder<SignUpBloc, SignUpState>(
+        builder: (context, state) {
+          return Scaffold(
+            appBar: AppBar(
+              elevation: 0,
+              backgroundColor: Colors.white,
+              foregroundColor: Colors.blue,
+            ),
+            body: SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.fromLTRB(screenWidth * 0.06,
+                    screenWidth * 0.12, screenWidth * 0.06, 0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text(
+                      'OTP Verification',
                       style: TextStyle(
-                          color: timeleft == 0
-                              ? const Color.fromRGBO(49, 147, 225, 1)
-                              : Colors.red),
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'times',
+                          fontSize: 36),
+                      textAlign: TextAlign.center,
                     ),
-                  ),
-                ],
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    AutoSizeText(
+                      'We sent your code to ${hidePhoneNumber(widget.phoneNumber)}',
+                      style: const TextStyle(
+                        fontFamily: 'times',
+                        fontSize: 18,
+                        color: Colors.black26,
+                      ),
+                      maxLines: 1,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text('Get new code in '),
+                        Text(
+                            '00:${timeleft.toString().length > 1 ? timeleft.toString() : "0"}',
+                            style: const TextStyle(
+                                color: Color.fromRGBO(49, 147, 225, 1))),
+                        TextButton(
+                          onPressed: () {
+                            if (timeleft == 0) {
+                              setState(() {
+                                timeleft = 16;
+                                startCountDown();
+                                log(timeleft.toString());
+                              });
+                            } else {}
+                          },
+                          child: Text(
+                            'Re-send',
+                            style: TextStyle(
+                                color: timeleft == 0
+                                    ? const Color.fromRGBO(49, 147, 225, 1)
+                                    : Colors.red),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: screenWidth * 0.1,
+                    ),
+                    _buildInput(),
+                  ],
+                ),
               ),
-              SizedBox(
-                height: screenWidth * 0.1,
-              ),
-              _buildInput(),
-            ],
-          ),
-        ),
+            ),
+          );
+        },
       ),
     );
   }
@@ -183,7 +197,6 @@ class _OtpScreenState extends State<OtpScreen> {
 //Input and submit button
   Form _buildInput() {
     final double screenWidth = MediaQuery.of(context).size.width;
-    final navigator = Navigator.of(context);
     return Form(
       child: Column(
         children: [
@@ -327,40 +340,87 @@ class _OtpScreenState extends State<OtpScreen> {
           const SizedBox(
             height: 60,
           ),
-          SizedBox(
-            width: double.infinity,
-            height: 40,
-            child: TextButton(
-              style: TextButton.styleFrom(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20)),
-                backgroundColor: const Color.fromRGBO(49, 147, 225, 1),
-              ),
-              onPressed: () async {
-                try {
-                  // Create a PhoneAuthCredential with the code
-                  PhoneAuthCredential credential = PhoneAuthProvider.credential(
-                      verificationId: widget.verifyId, smsCode: code);
-                  // Sign the user in (or link) with the credential
-                  await auth.signInWithCredential(credential);
-                  log('Success');
-                  navigator.push(
-                    MaterialPageRoute(
-                      builder: (context) => const SignIn(),
-                    ),
-                  );
-                } catch (e) {
-                  log("wrong otp");
-                }
-              },
-              child: const Text(
-                'Continue',
-                style: TextStyle(
-                    color: Colors.white, fontFamily: "times", fontSize: 18),
-              ),
-            ),
-          ),
+          continueButton(),
         ],
+      ),
+    );
+  }
+
+// Continue button
+  Widget continueButton() {
+    return BlocProvider(
+      create: (context) => SignUpBloc(SignUpRepo()),
+      child: BlocListener<SignUpBloc, SignUpState>(
+        listener: (context, state) {
+          if (state is SignUpError) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(state.message),
+              ),
+            );
+            Navigator.of(context).pop();
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(
+                builder: (context) => const SignUp(),
+              ),
+            );
+          }
+          if (state is SignedUp) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Signed up Successfully'),
+              ),
+            );
+            Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(
+                  builder: (context) => const SignIn(),
+                ),
+                (route) => false);
+          }
+        },
+        child: BlocBuilder<SignUpBloc, SignUpState>(
+          builder: (context, state) {
+            final contextBloc = context.read<SignUpBloc>();
+            return SizedBox(
+              width: double.infinity,
+              height: 40,
+              child: TextButton(
+                style: TextButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20)),
+                  backgroundColor: const Color.fromRGBO(49, 147, 225, 1),
+                ),
+                onPressed: () async {
+                  try {
+                    // Create a PhoneAuthCredential with the code
+                    PhoneAuthCredential credential =
+                        PhoneAuthProvider.credential(
+                            verificationId: widget.verifyId, smsCode: code);
+                    // Sign the user in (or link) with the credential
+                    final success = await auth.signInWithCredential(credential);
+                    if (success.user != null) {
+                      contextBloc.add(
+                        SignUpSubmiting(
+                          widget.phoneNumber,
+                          widget.password,
+                          widget.fullName,
+                        ),
+                      );
+                    }
+                    log('Success');
+                  } catch (e) {
+                    log("wrong otp");
+                  }
+                },
+                child: const Text(
+                  'Continue',
+                  style: TextStyle(
+                      color: Colors.white, fontFamily: "times", fontSize: 18),
+                ),
+              ),
+            );
+          },
+        ),
       ),
     );
   }

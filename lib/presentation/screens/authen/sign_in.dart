@@ -5,9 +5,7 @@ import 'package:apms_mobile/bloc/repositories/login_repo.dart';
 import 'package:apms_mobile/main.dart';
 import 'package:apms_mobile/presentation/screens/authen/component/header.dart';
 import 'package:apms_mobile/presentation/screens/authen/forgot_password.dart';
-import 'package:apms_mobile/presentation/screens/authen/otp_screen.dart';
 import 'package:apms_mobile/presentation/screens/authen/sign_up.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -47,8 +45,12 @@ class _SigninState extends State<SignIn> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => LoginBloc(LoginRepo()),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => LoginBloc(LoginRepo()),
+        ),
+      ],
       child: BlocListener<LoginBloc, LoginState>(
         listener: (context, state) {
           if (state is LogedIn) {
@@ -69,8 +71,10 @@ class _SigninState extends State<SignIn> {
                 child: Column(
                   children: [
                     Padding(
-                      padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.1, bottom: MediaQuery.of(context).size.height * 0.1),
-                      child: const Header(greeting: "Welcome back!")),
+                        padding: EdgeInsets.only(
+                            top: MediaQuery.of(context).size.height * 0.1,
+                            bottom: MediaQuery.of(context).size.height * 0.1),
+                        child: const Header(greeting: "Welcome back!")),
                     _signinForm(),
                   ],
                 ),
@@ -176,6 +180,7 @@ class _SigninState extends State<SignIn> {
       },
     );
   }
+
   //Button
   Widget _loginButton() {
     return BlocBuilder<LoginBloc, LoginState>(
@@ -242,11 +247,11 @@ class _SigninState extends State<SignIn> {
               GestureDetector(
                 onTap: () {
                   Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const SignUp(),
-                        ),
-                      );
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const SignUp(),
+                    ),
+                  );
                   /*
                   // Send otp
                   await FirebaseAuth.instance.verifyPhoneNumber(

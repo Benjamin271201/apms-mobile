@@ -22,7 +22,7 @@ class TicketRepo {
     // Get key of status based on value
     int status =
         statusList.keys.firstWhere((e) => statusList[e] == statusValue);
-    //Request body
+    //Request params
     var request = {
       "from": from,
       "to": to,
