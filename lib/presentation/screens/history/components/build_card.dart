@@ -4,6 +4,7 @@ import 'package:apms_mobile/bloc/repositories/ticket_repo.dart';
 import 'package:apms_mobile/bloc/ticket_bloc.dart';
 import 'package:apms_mobile/models/ticket_model.dart';
 import 'package:apms_mobile/presentation/screens/history/ticket_detail.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:getwidget/getwidget.dart';
@@ -18,34 +19,84 @@ class BuildCard extends StatefulWidget {
 }
 
 class _BuildCardState extends State<BuildCard> {
-  @override
-  void initState() {
-    super.initState();
-    log('---First----');
-  }
-
+  List items = [];
+  int currentPage = 1;
+  int maxPage = 1;
+  ScrollController scrollController = ScrollController();
+  bool loadMore = false;
+  bool dateChanged = false;
+  DateTime start = DateTime.now();
+  DateTime end = DateTime.now();
   DateTimeRange dateRange = DateTimeRange(
     start: DateTime.now().subtract(const Duration(days: 30)),
     end: DateTime.now(),
   );
+
+  @override
+  void initState() {
+    start = dateRange.start;
+    end = dateRange.end;
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
-    return MultiBlocProvider(
-      providers: [BlocProvider(create: (context) => TicketBloc(TicketRepo()))],
+
+    return BlocProvider(
+      create: (context) => TicketBloc(TicketRepo()),
       child: BlocBuilder<TicketBloc, TicketState>(
         builder: (context, state) {
+          scrollController.addListener(() {
+            if (scrollController.position.pixels ==
+                scrollController.position.maxScrollExtent) {
+              if (currentPage < maxPage) {
+                setState(() {
+                  if (mounted) {
+                    currentPage++;
+                    loadMore = true;
+                  }
+                });
+                context.read<TicketBloc>().add(GetTicketList(
+                    DateFormat('yyyy-MM-dd').format(start),
+                    DateFormat('yyyy-MM-dd').format(end),
+                    '',
+                    widget.type,
+                    currentPage,
+                    loadMore));
+                log(currentPage.toString());
+              } else {
+                log('No more page');
+              }
+            }
+          });
           if (state is TicketInitial) {
-            context
-                .read<TicketBloc>()
-                .add(GetTicketList('', '', '', widget.type, 1));
+            context.read<TicketBloc>().add(GetTicketList(
+                DateFormat('yyyy-MM-dd').format(start),
+                DateFormat('yyyy-MM-dd').format(end),
+                '',
+                widget.type,
+                currentPage,
+                loadMore));
             return _buildLoading();
           } else if (state is TicketLoading) {
             return _buildLoading();
           } else if (state is TicketLoaded) {
-            log(state.ticket.tickets.length.toString());
-            return _buildCard(context, state.ticket, width);
-          } else {
+            maxPage = state.ticket.totalPage;
+            if (items.isEmpty) {
+              items = state.ticket.tickets;
+            } else if(!listEquals(state.ticket.tickets, items)) {
+              List newList = items + state.ticket.tickets;
+              items = newList;
+              loadMore = false;
+            }
+
+            return Builder(builder: (context) {
+              return _buildCard(context, items, width);
+            });
+          }
+          else {
             return Container();
           }
         },
@@ -57,36 +108,41 @@ class _BuildCardState extends State<BuildCard> {
   Widget _buildLoading() => const Center(child: CircularProgressIndicator());
 
   // Build list
-  Widget _buildCard(BuildContext context, TicketModel model, double width) {
-    final start = dateRange.start;
-    final end = dateRange.end;
+  Widget _buildCard(BuildContext context, List items, double width) {
     return Column(
       children: [
         Row(
           children: [
             SizedBox(
               width: width * 0.4,
-              child: const Text('ALL', textAlign: TextAlign.center,),
+              child: const Text(
+                'ALL',
+                textAlign: TextAlign.center,
+              ),
             ),
             SizedBox(
               width: width * 0.6,
               child: TextButton(
-                onPressed: pickDateRange,
-                child: Text("${DateFormat('dd/MM/yyyy').format(start)} - ${DateFormat('dd/MM/yyyy').format(end)}"),
+                onPressed: () async {await pickDateRange(context);},
+                child: Text(
+                    "${DateFormat('dd/MM/yyyy').format(start)} - ${DateFormat('dd/MM/yyyy').format(end)}"),
               ),
             )
           ],
         ),
         Expanded(
           child: ListView.builder(
-            itemCount: model.tickets.length,
+            itemCount: items.length,
+            controller: scrollController,
             itemBuilder: (context, index) {
+              if (index == items.length) {
+                return _buildLoading();
+              }
               return InkWell(
                 onTap: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) =>
-                          TicketDetail(ticket: model.tickets[index]),
+                      builder: (context) => TicketDetail(ticket: items[index]),
                     ),
                   );
                 },
@@ -94,18 +150,17 @@ class _BuildCardState extends State<BuildCard> {
                   boxFit: BoxFit.cover,
                   title: GFListTile(
                     avatar: GFAvatar(
-                        backgroundImage:
-                            loadImage(model.tickets[index].picInUrl)),
+                        backgroundImage: loadImage(items[index].picInUrl)),
                     title: Text(
-                      model.tickets[index].plateNumber,
+                      items[index].plateNumber,
                       style: const TextStyle(
                           fontSize: 32, fontWeight: FontWeight.bold),
                     ),
-                    subTitle: Text(model.tickets[index].carPark.name),
+                    subTitle: Text(items[index].carPark.name),
                   ),
                   content: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: _cardBody(model.tickets[index]),
+                    children: _cardBody(items[index]),
                   ),
                 ),
               );
@@ -116,7 +171,8 @@ class _BuildCardState extends State<BuildCard> {
     );
   }
 
-  Future pickDateRange() async {
+  Future pickDateRange(BuildContext context) async {
+    TicketBloc bloc = context.read<TicketBloc>();
     DateTimeRange? newDateRange = await showDateRangePicker(
       context: context,
       initialDateRange: dateRange,
@@ -127,7 +183,13 @@ class _BuildCardState extends State<BuildCard> {
 
     setState(() {
       dateRange = newDateRange;
+      start = dateRange.start;
+      end = dateRange.end;
+      items = [];
+      currentPage = 1;
+      dateChanged = true;
     });
+    bloc.add(ChangeTicketDate());
   }
 
   // Card Body

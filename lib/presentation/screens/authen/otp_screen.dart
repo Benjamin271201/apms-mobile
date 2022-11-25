@@ -380,45 +380,50 @@ class _OtpScreenState extends State<OtpScreen> {
         },
         child: BlocBuilder<SignUpBloc, SignUpState>(
           builder: (context, state) {
-            final contextBloc = context.read<SignUpBloc>();
-            return SizedBox(
-              width: double.infinity,
-              height: 40,
-              child: TextButton(
-                style: TextButton.styleFrom(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20)),
-                  backgroundColor: const Color.fromRGBO(49, 147, 225, 1),
-                ),
-                onPressed: () async {
-                  try {
-                    // Create a PhoneAuthCredential with the code
-                    PhoneAuthCredential credential =
-                        PhoneAuthProvider.credential(
-                            verificationId: widget.verifyId, smsCode: code);
-                    // Sign the user in (or link) with the credential
-                    final success = await auth.signInWithCredential(credential);
-                    if (success.user != null) {
-                      contextBloc.add(
-                        SignUpSubmiting(
-                          widget.phoneNumber,
-                          widget.password,
-                          widget.fullName,
-                        ),
-                      );
+            if (state is SigningUp) {
+              return _buildLoading();
+            } else {
+              final contextBloc = context.read<SignUpBloc>();
+              return SizedBox(
+                width: double.infinity,
+                height: 40,
+                child: TextButton(
+                  style: TextButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20)),
+                    backgroundColor: const Color.fromRGBO(49, 147, 225, 1),
+                  ),
+                  onPressed: () async {
+                    try {
+                      // Create a PhoneAuthCredential with the code
+                      PhoneAuthCredential credential =
+                          PhoneAuthProvider.credential(
+                              verificationId: widget.verifyId, smsCode: code);
+                      // Sign the user in (or link) with the credential
+                      final success =
+                          await auth.signInWithCredential(credential);
+                      if (success.user != null) {
+                        contextBloc.add(
+                          SignUpSubmiting(
+                            widget.phoneNumber,
+                            widget.password,
+                            widget.fullName,
+                          ),
+                        );
+                      }
+                      log('Success');
+                    } catch (e) {
+                      log("wrong otp");
                     }
-                    log('Success');
-                  } catch (e) {
-                    log("wrong otp");
-                  }
-                },
-                child: const Text(
-                  'Continue',
-                  style: TextStyle(
-                      color: Colors.white, fontFamily: "times", fontSize: 18),
+                  },
+                  child: const Text(
+                    'Continue',
+                    style: TextStyle(
+                        color: Colors.white, fontFamily: "times", fontSize: 18),
+                  ),
                 ),
-              ),
-            );
+              );
+            }
           },
         ),
       ),
@@ -431,4 +436,7 @@ class _OtpScreenState extends State<OtpScreen> {
       borderSide: const BorderSide(color: Colors.black38),
     );
   }
+
+  // Loading circle
+  Widget _buildLoading() => const Center(child: CircularProgressIndicator());
 }

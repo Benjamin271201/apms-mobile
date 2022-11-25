@@ -10,12 +10,14 @@ class TicketBloc extends Bloc<TicketEvent, TicketState> {
   final TicketRepo _repo;
   TicketBloc(this._repo) : super(TicketInitial()) {
     on<GetTicketList>(_getTicketList);
+    on<ChangeTicketDate>((event, emit) => emit(TicketInitial()));
   }
 
   _getTicketList(GetTicketList event, Emitter<TicketState> emit) async {
-    emit(TicketLoading());
-    TicketModel? ticketModel = await _repo.getHistory(event.from, event.to,
-        event.plateNumber, event.statusValue, event.pageIndex);
-    emit(TicketLoaded(ticketModel!));
+    !event.loadMore ? emit(TicketLoading()) : "";
+    List ticketModel = await Future.wait([_repo.getHistory(event.from, event.to,
+        event.plateNumber, event.statusValue, event.pageIndex)]);
+
+    emit(TicketLoaded(ticketModel[0]));
   }
 }

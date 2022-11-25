@@ -28,7 +28,7 @@ class TicketRepo {
       "to": to,
       "plateNumber": plateNumber,
       "status": status.toString(),
-      "pageSize": "10",
+      "pageSize": "4",
       "pageIndex": pageIndex.toString(),
       "includeCarPark": "true",
       "includePriceTable": "false"
