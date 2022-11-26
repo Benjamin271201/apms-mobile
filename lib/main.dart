@@ -1,9 +1,7 @@
 // @dart=2.9
 
 import 'package:apms_mobile/bloc/repositories/sign_up_repo.dart';
-import 'package:apms_mobile/bloc/repositories/ticket_repo.dart';
 import 'package:apms_mobile/bloc/sign_up_bloc.dart';
-import 'package:apms_mobile/bloc/ticket_bloc.dart';
 import 'package:apms_mobile/presentation/screens/history/history_tab.dart';
 import 'package:apms_mobile/presentation/screens/home/home.dart';
 import 'package:apms_mobile/presentation/screens/authen/sign_in.dart';
