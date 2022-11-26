@@ -41,5 +41,6 @@ class BookingPreviewFetchedSuccessfully extends BookingState {
 }
 
 class BookingPreviewFetchedFailed extends BookingState {
-  final String message = "Unable to get booking preview! Please try again!";
+  final String message;
+  const BookingPreviewFetchedFailed(this.message);
 }

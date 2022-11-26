@@ -27,7 +27,7 @@ class BookingRepo {
       TicketPreview ticketPreview = TicketPreview.fromJson(body["data"]);
       return ticketPreview;
     } else {
-      throw Exception('Failed to load list');
+      throw HttpException(response.body);
     }
   }
 
