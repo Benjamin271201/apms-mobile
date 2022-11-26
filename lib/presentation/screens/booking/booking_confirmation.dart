@@ -42,7 +42,11 @@ class _BookingConfirmationState extends State<BookingConfirmation> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: const Text("Booking Confirmation")),
+        appBar: AppBar(
+            iconTheme: const IconThemeData(color: deepBlue),
+            title: const Text("Booking Confirmation",
+                style: TextStyle(color: deepBlue)),
+            backgroundColor: lightBlue),
         body: _buildBookingConfirmationScreen());
   }
 
@@ -103,34 +107,41 @@ class _BookingConfirmationState extends State<BookingConfirmation> {
               const SizedBox(height: 10),
               Text("Expected arrival time: ${ticketPreview.arriveTime}"),
               const SizedBox(height: 10),
-              const Text("Price: "),
-              const SizedBox(height: 10),
-              Table(
-                border: TableBorder.all(),
-                columnWidths: const <int, TableColumnWidth>{
-                  0: FlexColumnWidth(),
-                  1: FlexColumnWidth(),
-                  2: FlexColumnWidth()
-                },
-                defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-                children: _buildPriceList(ticketPreview.priceTable),
+              ticketPreview.feePerHour != null
+                  ? Text(
+                      "Price: ${ticketPreview.feePerHour.toString()} VND/hour")
+                  : Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                          const Text("Price: "),
+                          const SizedBox(height: 10),
+                          Table(
+                            border: TableBorder.all(),
+                            columnWidths: const <int, TableColumnWidth>{
+                              0: FlexColumnWidth(),
+                              1: FlexColumnWidth(),
+                              2: FlexColumnWidth()
+                            },
+                            defaultVerticalAlignment:
+                                TableCellVerticalAlignment.middle,
+                            children: _buildPriceList(ticketPreview.priceTable),
+                          )
+                        ]),
+              const SizedBox(height: 40),
+              Text(
+                  "Reservation fee: ${ticketPreview.reservationFee} (${ticketPreview.reservationFeePercentage}%)"),
+              const SizedBox(height: 20),
+              SizedBox(
+                width: 400,
+                child: ElevatedButton(
+                    onPressed: () => {
+                          _bookingBloc.add(SubmitBookingFormStep2(
+                              widget.plateNumber,
+                              widget.arrivalTime,
+                              widget.carPark.id))
+                        },
+                    child: const Text("Pay")),
               ),
-              const SizedBox(height: 30),
-              Row(children: [
-                Text("Reservation fee: ${ticketPreview.reservationFee}"),
-                const SizedBox(width: 50),
-                SizedBox(
-                  width: 120,
-                  child: ElevatedButton(
-                      onPressed: () => {
-                            _bookingBloc.add(SubmitBookingFormStep2(
-                                widget.plateNumber,
-                                widget.arrivalTime,
-                                widget.carPark.id))
-                          },
-                      child: const Text("Pay")),
-                )
-              ]),
               const SizedBox(height: 30),
               const Text(
                   "* Booking information once submitted cannot be changed",
