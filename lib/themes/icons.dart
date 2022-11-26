@@ -16,3 +16,7 @@ const distanceIcon = Padding(
       Icons.call_made_rounded,
       size: 14,
     ));
+const profileIcon = Icon(Icons.account_circle_rounded);
+const transactionIcon = Icon(Icons.account_balance_rounded);
+const aboutIcon = Icon(Icons.question_mark_rounded);
+const navigateIcon = Icon(Icons.arrow_forward_ios_rounded);

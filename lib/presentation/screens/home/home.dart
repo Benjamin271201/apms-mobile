@@ -124,7 +124,7 @@ class _HomeState extends State<Home> {
         padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 30),
         child: Column(children: [
           const Padding(
-              padding: EdgeInsets.only(right: 245),
+              padding: EdgeInsets.only(right: 213),
               child: Text("Most Visited",
                   style:
                       TextStyle(color: deepBlue, fontWeight: FontWeight.w700))),
