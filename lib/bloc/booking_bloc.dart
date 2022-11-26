@@ -23,7 +23,7 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
           event.plateNumber, event.arrivalTime, event.carParkId);
       emit(BookingPreviewFetchedSuccessfully(ticketPreview));
     } catch (e) {
-      emit(BookingPreviewFetchedFailed());
+      emit(BookingPreviewFetchedFailed(e.toString()));
     }
   }
 

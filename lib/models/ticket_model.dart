@@ -33,7 +33,7 @@ class TicketModel extends Equatable {
       };
 
   @override
-  List<Object?> get props => [tickets,totalPage];
+  List<Object?> get props => [tickets, totalPage];
 }
 
 class Ticket {
@@ -55,29 +55,33 @@ class Ticket {
     required this.carPark,
   });
 
-    final String id;
-    final dynamic startTime;
-    final dynamic endTime;
-    final double reservationFee;
-    final dynamic bookTime;
-    final dynamic arriveTime;
-    final double totalFee;
-    final String picInUrl;
-    final String picOutUrl;
-    final String carParkId;
-    final String plateNumber;
-    final String phoneNumber;
-    final String fullName;
-    final int status;
-    final CarPark carPark;
+  final String id;
+  final dynamic startTime;
+  final dynamic endTime;
+  final double reservationFee;
+  final dynamic bookTime;
+  final dynamic arriveTime;
+  final double totalFee;
+  final String picInUrl;
+  final String picOutUrl;
+  final String carParkId;
+  final String plateNumber;
+  final String phoneNumber;
+  final String fullName;
+  final int status;
+  final CarPark carPark;
 
   factory Ticket.fromJson(Map<String, dynamic> json) => Ticket(
         id: json["id"],
-        startTime: json["startTime"] != null ? DateTime.parse(json["startTime"])  : "",
+        startTime:
+            json["startTime"] != null ? DateTime.parse(json["startTime"]) : "",
         endTime: json["endTime"] != null ? DateTime.parse(json["endTime"]) : "",
         reservationFee: json["reservationFee"],
-        bookTime: json["bookTime"] != null ? DateTime.parse(json["bookTime"]) : "",
-        arriveTime: json["arriveTime"] != null ? DateTime.parse(json["arriveTime"]) : "",
+        bookTime:
+            json["bookTime"] != null ? DateTime.parse(json["bookTime"]) : "",
+        arriveTime: json["arriveTime"] != null
+            ? DateTime.parse(json["arriveTime"])
+            : "",
         totalFee: json["totalFee"],
         picInUrl: json["picInUrl"] ?? "",
         picOutUrl: json["picOutUrl"] ?? "",
@@ -109,15 +113,16 @@ class Ticket {
 }
 
 class TicketPreview {
-  TicketPreview({
-    required this.reservationFee,
-    required this.arriveTime,
-    required this.carParkName,
-    required this.carParkAddress,
-    required this.plateNumber,
-    required this.phoneNumber,
-    required this.priceTable,
-  });
+  TicketPreview(
+      {required this.reservationFee,
+      required this.arriveTime,
+      required this.carParkName,
+      required this.carParkAddress,
+      required this.plateNumber,
+      required this.phoneNumber,
+      required this.priceTable,
+      required this.reservationFeePercentage,
+      required this.feePerHour});
 
   final double reservationFee;
   final dynamic arriveTime;
@@ -126,6 +131,8 @@ class TicketPreview {
   final String carParkName;
   final String carParkAddress;
   final List<dynamic> priceTable;
+  final String? feePerHour;
+  final String reservationFeePercentage;
 
   factory TicketPreview.fromJson(Map<String, dynamic> json) => TicketPreview(
       reservationFee: json["reservationFee"] + .0,
@@ -135,6 +142,8 @@ class TicketPreview {
           .format(DateTime.parse(json["arriveTime"])),
       carParkAddress: json["carParkAddress"],
       carParkName: json["carParkName"],
+      feePerHour: json["feePerHour"]?.toString(),
+      reservationFeePercentage: json["reservationFeePercentage"].toString(),
       priceTable: json["priceTable"]);
 
   Map<String, dynamic> toJson() => {
@@ -145,6 +154,8 @@ class TicketPreview {
         "carParkAdress": carParkAddress,
         "carParkName": carParkName,
         "priceTable": priceTable,
+        "feePerHour": feePerHour,
+        "reservationFeePercentage": reservationFeePercentage
       };
 }
 
