@@ -13,9 +13,10 @@ class GetTicketList extends TicketEvent {
   final String plateNumber;
   final String statusValue;
   final int pageIndex;
+  final bool loadMore;
 
-  const GetTicketList(this.from, this.to, this.plateNumber, this.statusValue, this.pageIndex);
-
-  @override
-  List<Object> get props => [from, to, plateNumber, statusValue, pageIndex];
+  const GetTicketList(
+      this.from, this.to, this.plateNumber, this.statusValue, this.pageIndex, this.loadMore);
 }
+
+class ChangeTicketDate extends TicketEvent {}

@@ -2,7 +2,7 @@ import 'package:apms_mobile/bloc/booking_bloc.dart';
 import 'package:apms_mobile/models/car_park_model.dart';
 import 'package:apms_mobile/models/ticket_model.dart';
 import 'package:apms_mobile/presentation/screens/history/booking_history.dart';
-import 'package:apms_mobile/presentation/screens/history/history.dart';
+import 'package:apms_mobile/presentation/screens/history/history_tab.dart';
 import 'package:apms_mobile/themes/colors.dart';
 import 'package:apms_mobile/themes/fonts.dart';
 import 'package:apms_mobile/utils/popup.dart';

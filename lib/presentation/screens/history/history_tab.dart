@@ -18,17 +18,19 @@ class _HistoryState extends State<History> {
       length: 4,
       child: Scaffold(
         appBar: AppBar(
+          backgroundColor: Colors.white,
           centerTitle: true,
+          elevation: 0,
           bottom: PreferredSize(
               preferredSize: const Size.fromHeight(10.0),
               child: TabBar(
                 isScrollable: true,
-                unselectedLabelColor: Colors.white.withOpacity(0.4),
-                labelColor: Colors.white,
+                unselectedLabelColor: const Color.fromRGBO(49, 147, 225, 0.4),
+                labelColor: const Color.fromRGBO(49, 147, 225, 1),
                 labelPadding: const EdgeInsets.symmetric(horizontal: 30),
                 indicator: const UnderlineTabIndicator(
                   borderSide: BorderSide(
-                      color: Color.fromARGB(255, 30, 216, 129),
+                      color:  Color.fromRGBO(49, 147, 225, 1),
                       width: 2), // Indicator height
                   //insets: EdgeInsets.symmetric(horizontal: 48), // Indicator width
                 ),

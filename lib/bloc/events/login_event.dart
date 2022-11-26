@@ -17,4 +17,3 @@ class LoginSumitting extends LoginEvent {
   List<Object> get props => [phoneNumber, password];
 }
 
-class LoginSubmitted extends LoginEvent {}

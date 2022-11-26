@@ -22,13 +22,13 @@ class TicketRepo {
     // Get key of status based on value
     int status =
         statusList.keys.firstWhere((e) => statusList[e] == statusValue);
-    //Request body
+    //Request params
     var request = {
       "from": from,
       "to": to,
       "plateNumber": plateNumber,
       "status": status.toString(),
-      "pageSize": "10",
+      "pageSize": "4",
       "pageIndex": pageIndex.toString(),
       "includeCarPark": "true",
       "includePriceTable": "false"

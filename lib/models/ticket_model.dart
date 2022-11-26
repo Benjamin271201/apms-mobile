@@ -33,7 +33,7 @@ class TicketModel extends Equatable {
       };
 
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [tickets,totalPage];
 }
 
 class Ticket {
