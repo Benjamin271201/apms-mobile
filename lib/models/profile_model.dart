@@ -1,11 +1,12 @@
-class Profile {
-  String id, phoneNumber, fullName, accountBalance;
+class ProfileModel {
+  String id, phoneNumber, fullName;
+  double accountBalance;
 
-  Profile.toJson(Map<String, dynamic> json)
+  ProfileModel.fromJson(Map<String, dynamic> json)
       : id = json["id"],
         phoneNumber = json["phoneNumber"],
         fullName = json["fullName"],
-        accountBalance = json["accountBalance"];
+        accountBalance = json["accountBalance"] + .0;
 
   Map<String, dynamic> toJson() => {
         "id": id,

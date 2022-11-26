@@ -1,4 +1,5 @@
 import 'package:apms_mobile/bloc/repositories/profile_repo.dart';
+import 'package:apms_mobile/models/profile_model.dart';
 import 'package:apms_mobile/presentation/screens/profile/profile.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -18,10 +19,8 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   _fetchProfileInformation(
       ProfileEvent event, Emitter<ProfileState> emit) async {
     try {
-      print(123);
       emit(ProfileFetching());
-      print(123);
-      Profile result = await repo.getProfilePersonalInformation();
+      ProfileModel result = await repo.getProfilePersonalInformation();
       emit(ProfileFetchedSuccessfully(result));
     } catch (e) {
       emit(ProfileFetchedFailed());

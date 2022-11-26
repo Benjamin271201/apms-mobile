@@ -4,6 +4,7 @@ import 'package:apms_mobile/themes/colors.dart';
 import 'package:apms_mobile/themes/fonts.dart';
 import 'package:apms_mobile/themes/icons.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_paypal/flutter_paypal.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -50,28 +51,38 @@ class _ProfileState extends State<Profile> {
   }
 
   Widget _buildBriefAccountInformationCard() {
-    return Card(
-        child: ListTile(
-      title: Padding(
-        padding: const EdgeInsets.only(bottom: 20),
-        child: Text("Username goes here", style: titleTextStyle),
-      ),
-      subtitle: Text("Account balance: 50000"),
-      contentPadding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
-    ));
+    return BlocProvider(
+        create: (_) => _profileBloc,
+        child:
+            BlocBuilder<ProfileBloc, ProfileState>(builder: (context, state) {
+          if (state is ProfileFetchedSuccessfully) {
+            return Card(
+                child: ListTile(
+              title: Padding(
+                padding: const EdgeInsets.only(bottom: 20),
+                child: Text(state.profile.fullName, style: titleTextStyle),
+              ),
+              subtitle:
+                  Text("Account balance: ${state.profile.accountBalance} VND"),
+              contentPadding:
+                  const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
+            ));
+          } else {
+            return const Card();
+          }
+        }));
   }
 
   Widget _buildProfileOptionsList() {
     return SizedBox(
         width: 400,
         height: 220,
-        child: Expanded(
-            child: ListView(
-                children: ListTile.divideTiles(context: context, tiles: [
+        child: ListView(
+            children: ListTile.divideTiles(context: context, tiles: [
           _buildOption("Personal Information", profileIcon),
           _buildOption("Transaction History", transactionIcon),
           _buildOption("About", aboutIcon),
-        ]).toList())));
+        ]).toList()));
   }
 
   Widget _buildOption(String optionName, Icon optionIcon) {

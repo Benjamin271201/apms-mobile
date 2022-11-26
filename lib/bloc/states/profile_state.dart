@@ -14,6 +14,6 @@ class ProfileFetching extends ProfileState {}
 class ProfileFetchedFailed extends ProfileState {}
 
 class ProfileFetchedSuccessfully extends ProfileState {
-  final Profile profile;
+  final ProfileModel profile;
   const ProfileFetchedSuccessfully(this.profile);
 }
