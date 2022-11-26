@@ -143,24 +143,25 @@ class _BookingState extends State<Booking> {
                         ),
                       )),
                   Padding(
-                      padding: const EdgeInsets.only(left: 200, top: 7),
+                      padding: const EdgeInsets.only(left: 150, top: 7),
                       child: SizedBox(
-                          width: 200,
+                          width: 250,
                           child: DropdownSearch<String>(
                               popupProps: const PopupProps.menu(
                                 showSelectedItems: false,
                               ),
                               items: state.plateNumbersList,
-                              dropdownDecoratorProps: const DropDownDecoratorProps(
+                              dropdownDecoratorProps:
+                                  const DropDownDecoratorProps(
                                 dropdownSearchDecoration:
                                     InputDecoration(border: InputBorder.none),
                               ),
                               onChanged: (value) => plateNumberController.text =
                                   value.toString()))),
                   const Padding(
-                    padding: EdgeInsets.only(left: 200, top: 15),
+                    padding: EdgeInsets.only(left: 150, top: 15),
                     child: SizedBox(
-                        width: 100,
+                        width: 80,
                         height: 30,
                         child: DecoratedBox(
                           decoration: BoxDecoration(

@@ -22,7 +22,7 @@ class BookingRepo {
 
     final response =
         await http.post(getTicketPreview, headers: headers, body: body);
-    if (response.statusCode == 201) {
+    if (response.statusCode == 200) {
       Map<String, dynamic> body = jsonDecode(response.body);
       TicketPreview ticketPreview = TicketPreview.fromJson(body["data"]);
       return ticketPreview;
