@@ -1,16 +1,24 @@
+import 'dart:developer';
+
 import 'package:apms_mobile/presentation/screens/history/booking_history.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class History extends StatefulWidget {
   final int selectedTab;
-  const History({Key? key, this.selectedTab = 0}) : super(key: key);
+  const History({Key? key, this.selectedTab = 1}) : super(key: key);
 
   @override
   State<History> createState() => _HistoryState();
 }
 
 class _HistoryState extends State<History> {
+  @override
+  void initState() {
+    log('x');
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -30,7 +38,7 @@ class _HistoryState extends State<History> {
                 labelPadding: const EdgeInsets.symmetric(horizontal: 30),
                 indicator: const UnderlineTabIndicator(
                   borderSide: BorderSide(
-                      color:  Color.fromRGBO(49, 147, 225, 1),
+                      color: Color.fromRGBO(49, 147, 225, 1),
                       width: 2), // Indicator height
                   //insets: EdgeInsets.symmetric(horizontal: 48), // Indicator width
                 ),
@@ -90,5 +98,20 @@ class _HistoryState extends State<History> {
         ),
       ),
     ];
+  }
+}
+
+class RouteTab extends StatefulWidget {
+  final int tabIndex;
+  const RouteTab({Key? key, this.tabIndex = 1}) : super(key: key);
+
+  @override
+  State<RouteTab> createState() => _RouteTabState();
+}
+
+class _RouteTabState extends State<RouteTab> {
+  @override
+  Widget build(BuildContext context) {
+    return const Placeholder();
   }
 }

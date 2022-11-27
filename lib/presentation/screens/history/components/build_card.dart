@@ -43,7 +43,11 @@ class _BuildCardState extends State<BuildCard> {
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
-
+    DefaultTabController.of(context).addListener(
+      () {
+        log('listening');
+      },
+    );
     return BlocProvider(
       create: (context) => TicketBloc(TicketRepo()),
       child: BlocBuilder<TicketBloc, TicketState>(
@@ -59,8 +63,8 @@ class _BuildCardState extends State<BuildCard> {
                   }
                 });
                 context.read<TicketBloc>().add(GetTicketList(
-                    DateFormat('yyyy-MM-dd').format(start),
-                    DateFormat('yyyy-MM-dd').format(end),
+                    dateChanged ? DateFormat('yyyy-MM-dd').format(start) : "",
+                    dateChanged ? DateFormat('yyyy-MM-dd').format(end) : "",
                     '',
                     widget.type,
                     currentPage,
@@ -73,8 +77,8 @@ class _BuildCardState extends State<BuildCard> {
           });
           if (state is TicketInitial) {
             context.read<TicketBloc>().add(GetTicketList(
-                DateFormat('yyyy-MM-dd').format(start),
-                DateFormat('yyyy-MM-dd').format(end),
+                dateChanged ? DateFormat('yyyy-MM-dd').format(start) : "",
+                dateChanged ? DateFormat('yyyy-MM-dd').format(end) : "",
                 '',
                 widget.type,
                 currentPage,
@@ -86,7 +90,7 @@ class _BuildCardState extends State<BuildCard> {
             maxPage = state.ticket.totalPage;
             if (items.isEmpty) {
               items = state.ticket.tickets;
-            } else if(!listEquals(state.ticket.tickets, items)) {
+            } else if (!listEquals(state.ticket.tickets, items)) {
               List newList = items + state.ticket.tickets;
               items = newList;
               loadMore = false;
@@ -95,8 +99,7 @@ class _BuildCardState extends State<BuildCard> {
             return Builder(builder: (context) {
               return _buildCard(context, items, width);
             });
-          }
-          else {
+          } else {
             return Container();
           }
         },
@@ -111,59 +114,59 @@ class _BuildCardState extends State<BuildCard> {
   Widget _buildCard(BuildContext context, List items, double width) {
     return Column(
       children: [
-        Row(
-          children: [
-            SizedBox(
-              width: width * 0.4,
-              child: const Text(
-                'ALL',
-                textAlign: TextAlign.center,
-              ),
-            ),
-            SizedBox(
-              width: width * 0.6,
-              child: TextButton(
-                onPressed: () async {await pickDateRange(context);},
-                child: Text(
-                    "${DateFormat('dd/MM/yyyy').format(start)} - ${DateFormat('dd/MM/yyyy').format(end)}"),
-              ),
-            )
-          ],
-        ),
+        if (widget.type == "Done")
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              SizedBox(
+                width: width * 0.6,
+                child: TextButton(
+                  onPressed: () async {
+                    await pickDateRange(context);
+                  },
+                  child: Text(
+                      "${DateFormat('dd/MM/yyyy').format(start)} - ${DateFormat('dd/MM/yyyy').format(end)}"),
+                ),
+              )
+            ],
+          ),
         Expanded(
           child: ListView.builder(
-            itemCount: items.length,
+            itemCount: items.length + 1,
             controller: scrollController,
             itemBuilder: (context, index) {
-              if (index == items.length) {
+              if (index == items.length && items.isNotEmpty && currentPage < maxPage) {
                 return _buildLoading();
+              } else if (index < items.length) {
+                return InkWell(
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            TicketDetail(ticket: items[index]),
+                      ),
+                    );
+                  },
+                  child: GFCard(
+                    boxFit: BoxFit.cover,
+                    title: GFListTile(
+                      avatar: GFAvatar(
+                          backgroundImage: loadImage(items[index].picInUrl)),
+                      title: Text(
+                        items[index].plateNumber,
+                        style: const TextStyle(
+                            fontSize: 32, fontWeight: FontWeight.bold),
+                      ),
+                      subTitle: Text(items[index].carPark.name),
+                    ),
+                    content: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: _cardBody(items[index]),
+                    ),
+                  ),
+                );
               }
-              return InkWell(
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => TicketDetail(ticket: items[index]),
-                    ),
-                  );
-                },
-                child: GFCard(
-                  boxFit: BoxFit.cover,
-                  title: GFListTile(
-                    avatar: GFAvatar(
-                        backgroundImage: loadImage(items[index].picInUrl)),
-                    title: Text(
-                      items[index].plateNumber,
-                      style: const TextStyle(
-                          fontSize: 32, fontWeight: FontWeight.bold),
-                    ),
-                    subTitle: Text(items[index].carPark.name),
-                  ),
-                  content: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: _cardBody(items[index]),
-                  ),
-                ),
-              );
+              return null;
             },
           ),
         ),
