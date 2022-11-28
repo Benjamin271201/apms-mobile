@@ -13,6 +13,8 @@ class Utils {
       HttpHeaders.authorizationHeader: 'Bearer $token'
     };
   }
+
+  Widget buildLoading() => const Center(child: CircularProgressIndicator());
 }
 
 class Debouncer {
