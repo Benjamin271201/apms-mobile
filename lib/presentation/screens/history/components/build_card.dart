@@ -43,11 +43,6 @@ class _BuildCardState extends State<BuildCard> {
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
-    DefaultTabController.of(context).addListener(
-      () {
-        log('listening');
-      },
-    );
     return BlocProvider(
       create: (context) => TicketBloc(TicketRepo()),
       child: BlocBuilder<TicketBloc, TicketState>(

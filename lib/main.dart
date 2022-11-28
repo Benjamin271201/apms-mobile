@@ -72,10 +72,10 @@ class _MyHomeState extends State<MyHome> {
 
   Container buildMyNavBar(BuildContext context) {
     return Container(
-      height: MediaQuery.of(context).size.height*0.08,
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.only(
+      height: MediaQuery.of(context).size.height * 0.08,
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.8),
+        borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(20),
           topRight: Radius.circular(20),
         ),
@@ -83,62 +83,98 @@ class _MyHomeState extends State<MyHome> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          IconButton(
-            enableFeedback: false,
-            onPressed: () {
+          InkWell(
+            onTap: () {
               setState(() {
                 pageIndex = 0;
               });
             },
-            icon: pageIndex == 0
-                ? Icon(
-                    Icons.home,
-                    color: Theme.of(context).primaryColor,
-                    size: 35,
-                  )
-                : const Icon(
-                    Icons.home,
-                    color: Color.fromARGB(255, 153, 213, 255),
-                    size: 35,
-                  ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                pageIndex == 0
+                    ? Icon(
+                        Icons.home,
+                        color: Theme.of(context).primaryColor,
+                        size: 35,
+                      )
+                    : const Icon(
+                        Icons.home,
+                        color: Color.fromARGB(255, 153, 213, 255),
+                        size: 35,
+                      ),
+                Text(
+                  'Home',
+                  style: TextStyle(
+                      fontSize: 10,
+                      fontFamily: "times",
+                      fontWeight: pageIndex == 0 ? FontWeight.bold : FontWeight.normal,
+                      color: pageIndex == 0 ? Theme.of(context).primaryColor :const Color.fromARGB(255, 153, 213, 255) ),
+                )
+              ],
+            ),
           ),
-          IconButton(
-            enableFeedback: false,
-            onPressed: () {
+          InkWell(
+            onTap: () {
               setState(() {
                 pageIndex = 1;
               });
             },
-            icon: pageIndex == 1
-                ? Icon(
-                    Icons.history,
-                    color: Theme.of(context).primaryColor,
-                    size: 35,
-                  )
-                : const Icon(
-                    Icons.history,
-                    color: Color.fromARGB(255, 153, 213, 255),
-                    size: 35,
-                  ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                pageIndex == 1
+                    ? Icon(
+                        Icons.history,
+                        color: Theme.of(context).primaryColor,
+                        size: 35,
+                      )
+                    : const Icon(
+                        Icons.history,
+                        color: Color.fromARGB(255, 153, 213, 255),
+                        size: 35,
+                      ),
+                Text(
+                  'History',
+                  style: TextStyle(
+                      fontSize: 10,
+                      fontFamily: "times",
+                      fontWeight: pageIndex == 1 ? FontWeight.bold : FontWeight.normal,
+                      color: pageIndex == 1 ? Theme.of(context).primaryColor :const Color.fromARGB(255, 153, 213, 255) ),
+                )
+              ],
+            ),
           ),
-          IconButton(
-            enableFeedback: false,
-            onPressed: () {
+          InkWell(
+            onTap: () {
               setState(() {
                 pageIndex = 2;
               });
             },
-            icon: pageIndex == 2
-                ? Icon(
-                    Icons.person,
-                    color: Theme.of(context).primaryColor,
-                    size: 35,
-                  )
-                : const Icon(
-                    Icons.person,
-                    color: Color.fromARGB(255, 153, 213, 255),
-                    size: 35,
-                  ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                pageIndex == 2
+                    ? Icon(
+                        Icons.person,
+                        color: Theme.of(context).primaryColor,
+                        size: 35,
+                      )
+                    : const Icon(
+                        Icons.person,
+                        color: Color.fromARGB(255, 153, 213, 255),
+                        size: 35,
+                      ),
+                Text(
+                  'Profile',
+                  style: TextStyle(
+                      fontSize: 10,
+                      fontFamily: "times",
+                      fontWeight: pageIndex == 2 ? FontWeight.bold : FontWeight.normal,
+                      color: pageIndex == 2 ? Theme.of(context).primaryColor :const Color.fromARGB(255, 153, 213, 255) ),
+                )
+              ],
+            ),
           ),
         ],
       ),
