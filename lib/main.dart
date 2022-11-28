@@ -6,12 +6,10 @@ import 'package:apms_mobile/presentation/screens/history/history_tab.dart';
 import 'package:apms_mobile/presentation/screens/home/home.dart';
 import 'package:apms_mobile/presentation/screens/authen/sign_in.dart';
 import 'package:apms_mobile/presentation/screens/profile/profile.dart';
-import 'package:apms_mobile/themes/colors.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -38,7 +36,7 @@ void main() async {
 class MyHome extends StatefulWidget {
   final int tabIndex;
   final int headerTabIndex;
-  const MyHome({Key key, this.tabIndex, this.headerTabIndex = 0})
+  const MyHome({Key key, this.tabIndex = 0, this.headerTabIndex = 0})
       : super(key: key);
 
   @override
@@ -46,58 +44,104 @@ class MyHome extends StatefulWidget {
 }
 
 class _MyHomeState extends State<MyHome> {
-  PersistentTabController _controller;
+  int pageIndex = 0;
+  List<Widget> screens = [];
   @override
   void initState() {
     super.initState();
-    _controller = PersistentTabController(initialIndex: 0);
-    _controller.jumpToTab(widget.tabIndex);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-        theme: ThemeData(fontFamily: "Inter"),
-        home: Scaffold(
-          body: PersistentTabView(
-            context,
-            controller: _controller,
-            screens: screens(),
-            items: navBarItems(),
-          ),
-        ));
-  }
-
-  List<Widget> screens() {
-    return [
+    screens = [
       const Home(),
       History(
         selectedTab: widget.headerTabIndex,
       ),
       const Profile(),
     ];
+    pageIndex = widget.tabIndex;
   }
 
-  List<PersistentBottomNavBarItem> navBarItems() {
-    return [
-      PersistentBottomNavBarItem(
-        icon: const Icon(Icons.home),
-        title: "Home",
-        activeColorPrimary: Colors.blueAccent,
-        inactiveColorPrimary: systemGrey,
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      theme: ThemeData(fontFamily: "Inter"),
+      home: Scaffold(
+        body: screens[pageIndex],
+        bottomNavigationBar: buildMyNavBar(context),
       ),
-      PersistentBottomNavBarItem(
-        icon: const Icon(Icons.history),
-        title: "History",
-        activeColorPrimary: Colors.blueAccent,
-        inactiveColorPrimary: systemGrey,
+    );
+  }
+
+  Container buildMyNavBar(BuildContext context) {
+    return Container(
+      height: MediaQuery.of(context).size.height*0.08,
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(20),
+          topRight: Radius.circular(20),
+        ),
       ),
-      PersistentBottomNavBarItem(
-        icon: const Icon(Icons.person),
-        title: "Profile",
-        activeColorPrimary: Colors.blueAccent,
-        inactiveColorPrimary: systemGrey,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          IconButton(
+            enableFeedback: false,
+            onPressed: () {
+              setState(() {
+                pageIndex = 0;
+              });
+            },
+            icon: pageIndex == 0
+                ? Icon(
+                    Icons.home,
+                    color: Theme.of(context).primaryColor,
+                    size: 35,
+                  )
+                : const Icon(
+                    Icons.home,
+                    color: Color.fromARGB(255, 153, 213, 255),
+                    size: 35,
+                  ),
+          ),
+          IconButton(
+            enableFeedback: false,
+            onPressed: () {
+              setState(() {
+                pageIndex = 1;
+              });
+            },
+            icon: pageIndex == 1
+                ? Icon(
+                    Icons.history,
+                    color: Theme.of(context).primaryColor,
+                    size: 35,
+                  )
+                : const Icon(
+                    Icons.history,
+                    color: Color.fromARGB(255, 153, 213, 255),
+                    size: 35,
+                  ),
+          ),
+          IconButton(
+            enableFeedback: false,
+            onPressed: () {
+              setState(() {
+                pageIndex = 2;
+              });
+            },
+            icon: pageIndex == 2
+                ? Icon(
+                    Icons.person,
+                    color: Theme.of(context).primaryColor,
+                    size: 35,
+                  )
+                : const Icon(
+                    Icons.person,
+                    color: Color.fromARGB(255, 153, 213, 255),
+                    size: 35,
+                  ),
+          ),
+        ],
       ),
-    ];
+    );
   }
 }

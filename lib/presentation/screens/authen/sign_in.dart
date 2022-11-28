@@ -252,22 +252,6 @@ class _SigninState extends State<SignIn> {
                       builder: (context) => const SignUp(),
                     ),
                   );
-                  /*
-                  // Send otp
-                  await FirebaseAuth.instance.verifyPhoneNumber(
-                    phoneNumber: "+84932781745",
-                    verificationCompleted: (PhoneAuthCredential credential) {},
-                    verificationFailed: (FirebaseAuthException e) {},
-                    codeSent: (String verificationId, int? resendToken) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => SignUp(verifyId: verificationId,),
-                        ),
-                      );
-                    },
-                    codeAutoRetrievalTimeout: (String verificationId) {},
-                  );*/
                 },
                 child: const Text(
                   'Sign Up',
