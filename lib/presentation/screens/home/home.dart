@@ -39,10 +39,11 @@ class _HomeState extends State<Home> {
         appBar: PreferredSize(
             preferredSize: const Size.fromHeight(56),
             child: _buildUserLocation()),
-        body: Column(children: [
+        body: SingleChildScrollView(
+            child: Column(children: [
           _buildRecentlyVisitedCarParkList(),
           _buildCarParkList()
-        ]));
+        ])));
   }
 
   Widget _buildUserLocation() {
@@ -121,7 +122,7 @@ class _HomeState extends State<Home> {
 
   Widget _buildRecentlyVisitedCarParkList() {
     return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 30),
+        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
         child: Column(children: [
           const Padding(
               padding: EdgeInsets.only(right: 213),
@@ -197,7 +198,7 @@ class _HomeState extends State<Home> {
     return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 0),
         child: SizedBox(
-            height: 455,
+            height: 400,
             child: DecoratedBox(
                 decoration: const BoxDecoration(
                     color: lightGrey,
@@ -225,7 +226,7 @@ class _HomeState extends State<Home> {
                               child: _buildSearchBar()))),
                   Scrollbar(
                       child: SizedBox(
-                    height: 400,
+                    height: 350,
                     child: BlocProvider(
                       create: (_) => _carParkBloc,
                       child: BlocListener<CarParkBloc, CarParkState>(

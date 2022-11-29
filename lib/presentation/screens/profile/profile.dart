@@ -70,7 +70,9 @@ class _ProfileState extends State<Profile> {
                 IconButton(
                     icon: addIcon,
                     onPressed: () => Navigator.push(context,
-                        MaterialPageRoute(builder: (_) => const TopUp())))
+                            MaterialPageRoute(builder: (_) => const TopUp()))
+                        .then((value) =>
+                            {_profileBloc.add(FetchProfileInformation())}))
               ]),
               contentPadding:
                   const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
