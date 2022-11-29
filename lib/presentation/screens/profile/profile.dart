@@ -1,8 +1,10 @@
 import 'package:apms_mobile/bloc/profile_bloc.dart';
 import 'package:apms_mobile/presentation/screens/authen/sign_in.dart';
+import 'package:apms_mobile/presentation/screens/profile/topup.dart';
 import 'package:apms_mobile/themes/colors.dart';
 import 'package:apms_mobile/themes/fonts.dart';
 import 'package:apms_mobile/themes/icons.dart';
+import 'package:apms_mobile/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_paypal/flutter_paypal.dart';
@@ -59,13 +61,19 @@ class _ProfileState extends State<Profile> {
             return Card(
                 child: ListTile(
               title: Padding(
-                padding: const EdgeInsets.only(bottom: 20),
+                padding: const EdgeInsets.only(bottom: 5),
                 child: Text(state.profile.fullName, style: titleTextStyle),
               ),
-              subtitle:
-                  Text("Account balance: ${state.profile.accountBalance} VND"),
+              subtitle: Row(children: [
+                Text("Account balance: ${state.profile.accountBalance} VND"),
+                const Spacer(),
+                IconButton(
+                    icon: addIcon,
+                    onPressed: () => Navigator.push(context,
+                        MaterialPageRoute(builder: (_) => const TopUp())))
+              ]),
               contentPadding:
-                  const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
+                  const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
             ));
           } else {
             return const Card();
@@ -80,7 +88,7 @@ class _ProfileState extends State<Profile> {
         child: ListView(
             children: ListTile.divideTiles(context: context, tiles: [
           _buildOption("Personal Information", profileIcon),
-          _buildOption("Transaction History", transactionIcon),
+          _buildOption("Topup History", transactionIcon),
           _buildOption("About", aboutIcon),
         ]).toList()));
   }
@@ -94,80 +102,6 @@ class _ProfileState extends State<Profile> {
           const Spacer(),
           navigateIcon
         ]));
-  }
-
-  Widget _buildPayPalTransactionButton() {
-    return SizedBox(
-      height: 200,
-      width: 200,
-      child: TextButton(
-          onPressed: () => {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (BuildContext context) => UsePaypal(
-                        sandboxMode: true,
-                        clientId:
-                            "AW1TdvpSGbIM5iP4HJNI5TyTmwpY9Gv9dYw8_8yW5lYIbCqf326vrkrp0ce9TAqjEGMHiV3OqJM_aRT0",
-                        secretKey:
-                            "EHHtTDjnmTZATYBPiGzZC_AZUfMpMAzj2VZUeqlFUrRJA_C0pQNCxDccB5qoRQSEdcOnnKQhycuOWdP9",
-                        returnURL: "https://samplesite.com/return",
-                        cancelURL: "https://samplesite.com/cancel",
-                        transactions: const [
-                          {
-                            "amount": {
-                              "total": '10.12',
-                              "currency": "USD",
-                              "details": {
-                                "subtotal": '10.12',
-                                "shipping": '0',
-                                "shipping_discount": 0
-                              }
-                            },
-                            "description":
-                                "The payment transaction description.",
-                            // "payment_options": {
-                            //   "allowed_payment_method":
-                            //       "INSTANT_FUNDING_SOURCE"
-                            // },
-                            "item_list": {
-                              "items": [
-                                {
-                                  "name": "A demo product",
-                                  "quantity": 1,
-                                  "price": '10.12',
-                                  "currency": "USD"
-                                }
-                              ],
-
-                              // shipping address is not required though
-                              "shipping_address": {
-                                "recipient_name": "Jane Foster",
-                                "line1": "Travis County",
-                                "line2": "",
-                                "city": "Austin",
-                                "country_code": "US",
-                                "postal_code": "73301",
-                                "phone": "+00000000",
-                                "state": "Texas"
-                              },
-                            }
-                          }
-                        ],
-                        note: "Contact us for any questions on your order.",
-                        onSuccess: (Map params) async {
-                          print("onSuccess: $params");
-                        },
-                        onError: (error) {
-                          print("onError: $error");
-                        },
-                        onCancel: (params) {
-                          print('cancelled: $params');
-                        }),
-                  ),
-                )
-              },
-          child: const Text("Make Payment")),
-    );
   }
 
   Widget _logOutButton() {
