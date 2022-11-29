@@ -28,10 +28,8 @@ class TopupBloc extends Bloc<TopupEvent, TopupState> {
     try {
       emit(TopupTransactionProcessing());
       var result = await repo.makeTopupTransaction(event.amount);
-      print(result);
-      emit(TopupTransactionProcessedSuccessfully());
+      emit(TopupTransactionProcessedSuccessfully(result["message"]));
     } catch (e) {
-      print(e);
       emit(TopupTransactionProcessedFailed());
     }
   }

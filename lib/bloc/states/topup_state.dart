@@ -19,7 +19,10 @@ class ExchangeRateFetchedSuccessfully extends TopupState {
 }
 
 class TopupTransactionProcessing extends TopupState {}
+
 class TopupTransactionProcessedFailed extends TopupState {}
+
 class TopupTransactionProcessedSuccessfully extends TopupState {
-  
+  final String message;
+  const TopupTransactionProcessedSuccessfully(this.message);
 }

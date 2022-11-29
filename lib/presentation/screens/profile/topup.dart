@@ -1,15 +1,12 @@
 import 'package:apms_mobile/bloc/topup_bloc.dart';
 import 'package:apms_mobile/themes/colors.dart';
+import 'package:apms_mobile/themes/fonts.dart';
+import 'package:apms_mobile/themes/icons.dart';
 import 'package:apms_mobile/utils/appbar.dart';
-import 'package:apms_mobile/utils/popup.dart';
 import 'package:apms_mobile/utils/utils.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_paypal/flutter_paypal.dart';
-import 'package:forex_conversion/forex_conversion.dart';
 
 class TopUp extends StatefulWidget {
   const TopUp({Key? key}) : super(key: key);
@@ -19,17 +16,13 @@ class TopUp extends StatefulWidget {
 }
 
 class _TopUpState extends State<TopUp> {
-  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
       GlobalKey<ScaffoldMessengerState>();
   final TopupBloc _topupBloc = TopupBloc();
-  final TopupBloc _makeTransactionBloc = TopupBloc();
 
   int exchangeRate = 24000;
-  String selectedPrice = "";
   int selectedPriceVND = 0;
   List<int> priceList = [10000, 20000, 50000, 100000, 200000, 500000];
-  List<bool> selectedPriceCard = [false, false, false, false, false, false];
 
   @override
   void initState() {
@@ -42,124 +35,116 @@ class _TopUpState extends State<TopUp> {
     return Scaffold(
         key: scaffoldMessengerKey,
         appBar: AppBarBuilder().appBarDefaultBuilder("Topup"),
-        body: Column(children: [
-          _buildTransactionAmountList(),
-          _buildPayPalTransactionButton(),
-          _buildPriceSummary()
-        ]));
+        body: _buildTopupScreenBody());
   }
 
-  Widget _buildPriceSummary() {
+  Widget _buildTopupScreenBody() {
     return BlocProvider(
         create: (_) => _topupBloc,
         child: BlocBuilder<TopupBloc, TopupState>(builder: (context, state) {
-          if (state is ExchangeRateFetching) {
+          if (state is ExchangeRateFetching ||
+              state is TopupTransactionProcessing) {
             return Utils().buildLoading();
           } else if (state is ExchangeRateFetchedSuccessfully) {
-            exchangeRate = state.exchangeRate;
             return Column(children: [
-              Text(
-                  "Current exchange rate: 1\$ = ${state.exchangeRate.toString()}"),
-              selectedPrice.isEmpty
-                  ? const Text("")
-                  : Text("Total: $selectedPrice\$")
+              const SizedBox(
+                height: 35,
+              ),
+              _buildPriceSummary(state.exchangeRate),
+              _buildTransactionAmountList(),
             ]);
+          } else if (state is TopupTransactionProcessedSuccessfully) {
+            return Center(
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                  transactionSuccessfullyIcon,
+                  const SizedBox(height: 30),
+                  Text("Topup successfully!")
+                ]));
           } else {
-            return const Text(
-                "Unable to get exchange rate! Please check your internet connection!");
+            return Container();
           }
         }));
   }
 
+  Widget _buildPriceSummary(int exchangeRate) {
+    return Column(children: [
+      Text("Current exchange rate: 1\$ = ${exchangeRate.toString()} VND"),
+    ]);
+  }
+
   Widget _buildTransactionAmountList() {
-    return ToggleButtons(
-      direction: Axis.vertical,
-      onPressed: (int index) {
-        setState(() {
-          selectedPrice = (priceList[index] / exchangeRate).toStringAsFixed(2);
-          selectedPriceVND = priceList[index];
-          for (int i = 0; i < selectedPriceCard.length; i++) {
-            selectedPriceCard[i] = i == index;
-          }
-        });
-      },
-      borderRadius: const BorderRadius.all(Radius.circular(8)),
-      selectedBorderColor: Colors.red[700],
-      selectedColor: Colors.white,
-      fillColor: Colors.red[200],
-      color: Colors.red[400],
-      constraints: const BoxConstraints(
-        minHeight: 40.0,
-        minWidth: 80.0,
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children:
+          priceList.map((price) => _buildTransactionAmountCard(price)).toList(),
+    );
+  }
+
+  Widget _buildTransactionAmountCard(int price) {
+    return Padding(
+        padding: const EdgeInsets.fromLTRB(20, 15, 20, 0),
+        child: ElevatedButton(
+          onPressed: () => createTransaction(
+              (price / exchangeRate).toStringAsFixed(2), price),
+          child: SizedBox(
+              width: 400,
+              height: 50,
+              child: Row(children: [
+                Text(
+                    "$price VND (${(price / exchangeRate).toStringAsFixed(2)}\$)"),
+                const Spacer(),
+                paypalIcon
+              ])),
+        ));
+  }
+
+  dynamic createTransaction(String priceInUSD, int priceInVND) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (BuildContext context) => UsePaypal(
+            sandboxMode: true,
+            clientId:
+                "ATieM7Go7V7t-SULEoxgYsiuf7lHDV3XRYKiqYyjfTfvKstL0l211tmjSdUW_h2agCHnUG92Pc-Wusot",
+            secretKey:
+                "EEvIYjJFwy3GyG6cnreRKjrZTzhPmleTVDNZRzE49P-cmh_CpBFP_TPqHGaQT_n_bk1WpaO6YV_Gz6Tj",
+            returnURL: "https://samplesite.com/return",
+            cancelURL: "https://samplesite.com/cancel",
+            transactions: [
+              {
+                "amount": {
+                  "total": priceInUSD,
+                  "currency": "USD",
+                  "details": {
+                    "subtotal": priceInUSD,
+                  }
+                },
+                "description": "Topup APMS account",
+                "item_list": {
+                  "items": [
+                    {
+                      "name": "Topup package: $priceInVND VND",
+                      "quantity": 1,
+                      "price": priceInUSD,
+                      "currency": "USD"
+                    }
+                  ],
+                }
+              }
+            ],
+            note: "Contact us for any questions on your order.",
+            onSuccess: (Map params) async {
+              _topupBloc.add(MakeTopupTransaction(priceInVND));
+            },
+            onError: (error) {
+              print("onError: $error");
+            },
+            onCancel: (params) {
+              print('cancelled: $params');
+            }),
       ),
-      isSelected: selectedPriceCard,
-      children: priceList.map((e) => _buildTransactionAmountCard(e)).toList(),
-    );
-  }
-
-  Widget _buildTransactionAmountCard(int amount) {
-    return SizedBox(
-      width: 100,
-      height: 50,
-      child: DecoratedBox(
-          decoration: BoxDecoration(border: Border.all()),
-          child: Text("${amount.toString()} VND")),
-    );
-  }
-
-  Widget _buildPayPalTransactionButton() {
-    return SizedBox(
-      height: 50,
-      width: 200,
-      child: ElevatedButton(
-          onPressed: () => {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (BuildContext context) => UsePaypal(
-                        sandboxMode: true,
-                        clientId:
-                            "ATieM7Go7V7t-SULEoxgYsiuf7lHDV3XRYKiqYyjfTfvKstL0l211tmjSdUW_h2agCHnUG92Pc-Wusot",
-                        secretKey:
-                            "EEvIYjJFwy3GyG6cnreRKjrZTzhPmleTVDNZRzE49P-cmh_CpBFP_TPqHGaQT_n_bk1WpaO6YV_Gz6Tj",
-                        returnURL: "https://samplesite.com/return",
-                        cancelURL: "https://samplesite.com/cancel",
-                        transactions: [
-                          {
-                            "amount": {
-                              "total": selectedPrice,
-                              "currency": "USD",
-                              "details": {
-                                "subtotal": selectedPrice,
-                              }
-                            },
-                            "description": "Topup APMS account",
-                            "item_list": {
-                              "items": [
-                                {
-                                  "name": "Topup package: $selectedPrice VND",
-                                  "quantity": 1,
-                                  "price": selectedPrice,
-                                  "currency": "USD"
-                                }
-                              ],
-                            }
-                          }
-                        ],
-                        note: "Contact us for any questions on your order.",
-                        onSuccess: (Map params) async {
-                          _makeTransactionBloc
-                              .add(MakeTopupTransaction(selectedPriceVND));
-                        },
-                        onError: (error) {
-                          print("onError: $error");
-                        },
-                        onCancel: (params) {
-                          print('cancelled: $params');
-                        }),
-                  ),
-                )
-              },
-          child: const Text("Make Payment")),
     );
   }
 }

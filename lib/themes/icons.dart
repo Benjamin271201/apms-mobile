@@ -25,3 +25,9 @@ const addIcon = Icon(
   color: deepBlue,
   size: 35,
 );
+const paypalIcon = Icon(Icons.paypal_rounded);
+const transactionSuccessfullyIcon = Icon(
+  Icons.check_circle_outline_rounded,
+  size: 80,
+  color: green,
+);
