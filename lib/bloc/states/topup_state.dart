@@ -17,3 +17,9 @@ class ExchangeRateFetchedSuccessfully extends TopupState {
   final int exchangeRate;
   const ExchangeRateFetchedSuccessfully(this.exchangeRate);
 }
+
+class TopupTransactionProcessing extends TopupState {}
+class TopupTransactionProcessedFailed extends TopupState {}
+class TopupTransactionProcessedSuccessfully extends TopupState {
+  
+}

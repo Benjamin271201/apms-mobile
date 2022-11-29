@@ -23,9 +23,11 @@ class _TopUpState extends State<TopUp> {
   final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
       GlobalKey<ScaffoldMessengerState>();
   final TopupBloc _topupBloc = TopupBloc();
+  final TopupBloc _makeTransactionBloc = TopupBloc();
 
   int exchangeRate = 24000;
   String selectedPrice = "";
+  int selectedPriceVND = 0;
   List<int> priceList = [10000, 20000, 50000, 100000, 200000, 500000];
   List<bool> selectedPriceCard = [false, false, false, false, false, false];
 
@@ -75,6 +77,7 @@ class _TopUpState extends State<TopUp> {
       onPressed: (int index) {
         setState(() {
           selectedPrice = (priceList[index] / exchangeRate).toStringAsFixed(2);
+          selectedPriceVND = priceList[index];
           for (int i = 0; i < selectedPriceCard.length; i++) {
             selectedPriceCard[i] = i == index;
           }
@@ -144,7 +147,8 @@ class _TopUpState extends State<TopUp> {
                         ],
                         note: "Contact us for any questions on your order.",
                         onSuccess: (Map params) async {
-                          print("123123123131");
+                          _makeTransactionBloc
+                              .add(MakeTopupTransaction(selectedPriceVND));
                         },
                         onError: (error) {
                           print("onError: $error");
