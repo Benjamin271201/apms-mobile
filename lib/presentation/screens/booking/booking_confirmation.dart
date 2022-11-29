@@ -1,4 +1,5 @@
 import 'package:apms_mobile/bloc/booking_bloc.dart';
+import 'package:apms_mobile/main.dart';
 import 'package:apms_mobile/models/car_park_model.dart';
 import 'package:apms_mobile/models/ticket_model.dart';
 import 'package:apms_mobile/themes/colors.dart';
@@ -58,7 +59,7 @@ class _BookingConfirmationState extends State<BookingConfirmation> {
           else if (state is BookingSubmittedSuccessfully)
             {
               Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (context) => const Home())),
+                  MaterialPageRoute(builder: (context) => const MyHome(tabIndex: 1,))),
               successfulSnackBar(context, state.message)
             }
           else if (state is BookingSubmittedFailed)
