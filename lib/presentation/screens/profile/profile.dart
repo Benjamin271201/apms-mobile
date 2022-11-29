@@ -4,10 +4,8 @@ import 'package:apms_mobile/presentation/screens/profile/topup.dart';
 import 'package:apms_mobile/themes/colors.dart';
 import 'package:apms_mobile/themes/fonts.dart';
 import 'package:apms_mobile/themes/icons.dart';
-import 'package:apms_mobile/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_paypal/flutter_paypal.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Profile extends StatefulWidget {

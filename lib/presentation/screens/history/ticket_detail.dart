@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:apms_mobile/models/ticket_model.dart';
 import 'package:apms_mobile/presentation/screens/qr/qr_scan.dart';
@@ -17,11 +16,53 @@ class TicketDetail extends StatefulWidget {
 }
 
 class _TicketDetailState extends State<TicketDetail> {
+  Duration duration = const Duration(seconds: 0);
+  List<String> parts = [];
+  String stringDuration = "";
+  Timer _timer = Timer(
+    Duration.zero,
+    () {},
+  );
+  @override
+  void initState() {
+    switch (widget.ticket.status) {
+      case 1:
+        if (widget.ticket.startTime is DateTime) {
+          _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+            setState(() {
+              duration = DateTime.now().difference(widget.ticket.startTime);
+              parts = duration.toString().split(':');
+              stringDuration =
+                  '${parts[0].padLeft(2, '0')}:${parts[1].padLeft(2, '0')}:${parts[2].split(".")[0].padLeft(2, '0')}';
+            });
+          });
+        }
+        break;
+      case 2:
+        if (widget.ticket.startTime is DateTime &&
+            widget.ticket.endTime is DateTime) {
+          duration = DateTime.parse(widget.ticket.endTime.toString())
+              .difference(widget.ticket.startTime);
+          parts = duration.toString().split(':');
+          stringDuration =
+              '${parts[0].padLeft(2, '0')}:${parts[1].padLeft(2, '0')}:${parts[2].split(".")[0].padLeft(2, '0')}';
+        }
+        break;
+    }
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeigth = MediaQuery.of(context).size.height;
-    Duration duration = widget.ticket.startTime is DateTime ? DateTime.now().difference(widget.ticket.startTime) : const Duration(seconds: 0);
+
     final currencyFormatter = NumberFormat.currency(
       name: '₫',
       decimalDigits: 0,
@@ -99,25 +140,30 @@ class _TicketDetailState extends State<TicketDetail> {
                               ],
                             ),
                           ),
-                          InkWell(
-                            onTap: () {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => const QRScan(),
-                              ));
-                            },
-                            child: Container(
-                              padding: const EdgeInsets.only(right: 10),
-                              margin: const EdgeInsets.fromLTRB(0, 0, 0, 20),
-                              width: 60,
-                              height: 60,
-                              child: const FittedBox(
-                                child: Icon(
-                                  Icons.qr_code_scanner_rounded,
-                                  color: Color(0xff3192e1),
-                                ),
-                              ),
-                            ),
-                          ),
+                          (widget.ticket.status != 2 &&
+                                  widget.ticket.status != -1)
+                              ? InkWell(
+                                  onTap: () {
+                                    Navigator.of(context)
+                                        .push(MaterialPageRoute(
+                                      builder: (context) => const QRScan(),
+                                    ));
+                                  },
+                                  child: Container(
+                                    padding: const EdgeInsets.only(right: 10),
+                                    margin:
+                                        const EdgeInsets.fromLTRB(0, 0, 0, 20),
+                                    width: 60,
+                                    height: 60,
+                                    child: const FittedBox(
+                                      child: Icon(
+                                        Icons.qr_code_scanner_rounded,
+                                        color: Color(0xff3192e1),
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              : const SizedBox(),
                         ],
                       ),
                     ),
@@ -125,7 +171,7 @@ class _TicketDetailState extends State<TicketDetail> {
                 ),
               ],
             ),
-            Expanded(child: _buildBody(context, screenWidth, duration)),
+            Expanded(child: _buildBody(context, screenWidth)),
           ],
         ),
       ),
@@ -150,8 +196,7 @@ class _TicketDetailState extends State<TicketDetail> {
     }
   }
 
-  SingleChildScrollView _buildBody(
-      BuildContext context, double screenWidth, Duration duration) {
+  SingleChildScrollView _buildBody(BuildContext context, double screenWidth) {
     var dateFormater = DateFormat("MMM yyyy");
     var timeFormater = DateFormat("HH:mm:ss");
     final currencyFormatter = NumberFormat.currency(
@@ -177,14 +222,18 @@ class _TicketDetailState extends State<TicketDetail> {
             height: 20,
             color: Colors.blue,
           ),
-          (widget.ticket.status != -1 && widget.ticket.status != 0) ? _bodyTotal(screenWidth, currencyFormatter, duration) : const SizedBox(),
-          (widget.ticket.status != -1 && widget.ticket.status != 0) ? Divider(
-            thickness: 2,
-            indent: screenWidth * 0.12,
-            endIndent: screenWidth * 0.12,
-            height: 20,
-            color: Colors.blue,
-          ) : const SizedBox(),
+          (widget.ticket.status != -1 && widget.ticket.status != 0)
+              ? _bodyTotal(screenWidth, currencyFormatter)
+              : const SizedBox(),
+          (widget.ticket.status != -1 && widget.ticket.status != 0)
+              ? Divider(
+                  thickness: 2,
+                  indent: screenWidth * 0.12,
+                  endIndent: screenWidth * 0.12,
+                  height: 20,
+                  color: Colors.blue,
+                )
+              : const SizedBox(),
           _buildImage(screenWidth, context),
           widget.ticket.status == 0
               ? Padding(
@@ -214,13 +263,14 @@ class _TicketDetailState extends State<TicketDetail> {
                   child: ElevatedButton(
                     onPressed: () {},
                     style: const ButtonStyle(
-                        backgroundColor: MaterialStatePropertyAll(Colors.white),
-                        side: MaterialStatePropertyAll(
-                          BorderSide(
-                            width: 2,
-                            color: Colors.green,
-                          ),
-                        ),),
+                      backgroundColor: MaterialStatePropertyAll(Colors.white),
+                      side: MaterialStatePropertyAll(
+                        BorderSide(
+                          width: 2,
+                          color: Colors.green,
+                        ),
+                      ),
+                    ),
                     child: SizedBox(
                       width: screenWidth * 0.4,
                       child: Row(
@@ -241,19 +291,20 @@ class _TicketDetailState extends State<TicketDetail> {
                   ),
                 )
               : const SizedBox(),
-              widget.ticket.status == -1
+          widget.ticket.status == -1
               ? Padding(
                   padding: const EdgeInsets.only(top: 20),
                   child: ElevatedButton(
                     onPressed: () {},
                     style: const ButtonStyle(
-                        backgroundColor: MaterialStatePropertyAll(Colors.white),
-                        side: MaterialStatePropertyAll(
-                          BorderSide(
-                            width: 2,
-                            color: Colors.black54,
-                          ),
-                        ),),
+                      backgroundColor: MaterialStatePropertyAll(Colors.white),
+                      side: MaterialStatePropertyAll(
+                        BorderSide(
+                          width: 2,
+                          color: Colors.black54,
+                        ),
+                      ),
+                    ),
                     child: SizedBox(
                       width: screenWidth * 0.4,
                       child: Row(
@@ -366,8 +417,7 @@ class _TicketDetailState extends State<TicketDetail> {
     );
   }
 
-  Row _bodyTotal(
-      double screenWidth, NumberFormat currencyFormatter, Duration duration) {
+  Row _bodyTotal(double screenWidth, NumberFormat currencyFormatter) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.start,
@@ -419,7 +469,7 @@ class _TicketDetailState extends State<TicketDetail> {
                 child: SizedBox(
                   height: 25,
                   child: Text(
-                    "${duration.inHours} Hours ",
+                    stringDuration,
                     style: GoogleFonts.inter(
                       fontSize: 18,
                       fontWeight: FontWeight.w600,
@@ -619,7 +669,6 @@ class _TicketDetailState extends State<TicketDetail> {
                 ),
               )
             : const SizedBox(),
-        
       ],
     );
   }

@@ -1,6 +1,6 @@
+import 'dart:developer';
+
 import 'package:apms_mobile/bloc/topup_bloc.dart';
-import 'package:apms_mobile/themes/colors.dart';
-import 'package:apms_mobile/themes/fonts.dart';
 import 'package:apms_mobile/themes/icons.dart';
 import 'package:apms_mobile/utils/appbar.dart';
 import 'package:apms_mobile/utils/utils.dart';
@@ -58,9 +58,9 @@ class _TopUpState extends State<TopUp> {
                 child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
+                    children: const [
                   transactionSuccessfullyIcon,
-                  const SizedBox(height: 30),
+                  SizedBox(height: 30),
                   Text("Topup successfully!")
                 ]));
           } else {
@@ -139,10 +139,10 @@ class _TopUpState extends State<TopUp> {
               _topupBloc.add(MakeTopupTransaction(priceInVND));
             },
             onError: (error) {
-              print("onError: $error");
+              log("onError: $error");
             },
             onCancel: (params) {
-              print('cancelled: $params');
+              log('cancelled: $params');
             }),
       ),
     );

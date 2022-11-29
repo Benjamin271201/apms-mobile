@@ -1,6 +1,5 @@
 import 'package:apms_mobile/bloc/repositories/profile_repo.dart';
 import 'package:apms_mobile/models/profile_model.dart';
-import 'package:apms_mobile/presentation/screens/profile/profile.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:shared_preferences/shared_preferences.dart';
