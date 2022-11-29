@@ -23,6 +23,7 @@ class _BookingState extends State<Booking> {
   final BookingBloc _bookingBloc = BookingBloc();
   final TextEditingController plateNumberController = TextEditingController();
   final TextEditingController arrivalTimeController = TextEditingController();
+  final TextEditingController arrivalDateController = TextEditingController();
 
   @override
   void initState() {
@@ -77,7 +78,9 @@ class _BookingState extends State<Booking> {
           child: Column(children: [
             _plateNumberField(),
             const SizedBox(height: 10),
-            _dateTimePickerField(),
+            _datePickerField(),
+            const SizedBox(height: 10),
+            _timePickerField(),
             const SizedBox(height: 10),
             ElevatedButton(
                 onPressed: () => plateNumberController.text != "" &&
@@ -95,28 +98,6 @@ class _BookingState extends State<Booking> {
           ]),
         ));
   }
-
-  // Widget _plateNumberField() {
-  //   return TypeAheadField(
-  //     textFieldConfiguration: TextFieldConfiguration(
-  //         autofocus: true,
-  //         style: DefaultTextStyle.of(context)
-  //             .style
-  //             .copyWith(fontStyle: FontStyle.italic),
-  //         decoration: InputDecoration(border: OutlineInputBorder())),
-  //     suggestionsCallback: (pattern) => {},
-  //     itemBuilder: (context, suggestion) {
-  //       return ListTile(
-  //         leading: Icon(Icons.shopping_cart),
-  //         title: Text(suggestion['name']),
-  //       );
-  //     },
-  //     onSuggestionSelected: (suggestion) {
-  //       Navigator.of(context).push(MaterialPageRoute(
-  //           builder: (context) => ProductPage(product: suggestion)));
-  //     },
-  //   );
-  // }
 
   Widget _plateNumberField() {
     return BlocProvider(
@@ -184,6 +165,44 @@ class _BookingState extends State<Booking> {
             );
           }
         }));
+  }
+
+  Widget _datePickerField() {
+    const String dateFormat = "dd-MM-yyyy";
+    return DateTimeField(
+        controller: arrivalDateController,
+        decoration: InputDecoration(
+          enabled: true,
+          labelText: "Arrival date",
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(5)),
+        ),
+        format: DateFormat(dateFormat),
+        onShowPicker: (context, currentValue) async {
+          final date = await showDatePicker(
+              context: context,
+              firstDate: DateTime.now(),
+              initialDate: currentValue ?? DateTime.now(),
+              lastDate: DateTime.now().add(const Duration(hours: 24)));
+          return date;
+        });
+  }
+
+  Widget _timePickerField() {
+    const String timeFormat = "HH:mm";
+    return DateTimeField(
+        controller: arrivalTimeController,
+        decoration: InputDecoration(
+          enabled: true,
+          labelText: "Arrival time",
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(5)),
+        ),
+        format: DateFormat(timeFormat),
+        onShowPicker: (context, currentValue) async {
+          final date = await showTimePicker(
+            context: context,
+            initialTime: TimeOfDay.fromDateTime(currentValue ?? DateTime.now()),
+          );
+        });
   }
 
   Widget _dateTimePickerField() {
