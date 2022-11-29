@@ -43,11 +43,6 @@ class _BuildCardState extends State<BuildCard> {
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
-    DefaultTabController.of(context).addListener(
-      () {
-        log('listening');
-      },
-    );
     return BlocProvider(
       create: (context) => TicketBloc(TicketRepo()),
       child: BlocBuilder<TicketBloc, TicketState>(
@@ -135,7 +130,9 @@ class _BuildCardState extends State<BuildCard> {
             itemCount: items.length + 1,
             controller: scrollController,
             itemBuilder: (context, index) {
-              if (index == items.length && items.isNotEmpty && currentPage < maxPage) {
+              if (index == items.length &&
+                  items.isNotEmpty &&
+                  currentPage < maxPage) {
                 return _buildLoading();
               } else if (index < items.length) {
                 return InkWell(
@@ -166,7 +163,7 @@ class _BuildCardState extends State<BuildCard> {
                   ),
                 );
               }
-              return null;
+              return Container();
             },
           ),
         ),
