@@ -1,6 +1,9 @@
 import 'package:apms_mobile/bloc/profile_bloc.dart';
 import 'package:apms_mobile/presentation/screens/authen/sign_in.dart';
+import 'package:apms_mobile/presentation/screens/profile/about.dart';
+import 'package:apms_mobile/presentation/screens/profile/personal_information.dart';
 import 'package:apms_mobile/presentation/screens/profile/topup.dart';
+import 'package:apms_mobile/presentation/screens/profile/transaction_history.dart';
 import 'package:apms_mobile/themes/colors.dart';
 import 'package:apms_mobile/themes/fonts.dart';
 import 'package:apms_mobile/themes/icons.dart';
@@ -89,20 +92,22 @@ class _ProfileState extends State<Profile> {
         height: 220,
         child: ListView(
             children: ListTile.divideTiles(context: context, tiles: [
-          _buildOption("Personal Information", profileIcon),
-          _buildOption("Topup History", transactionIcon),
-          _buildOption("About", aboutIcon),
+          _buildOption(
+              "Personal Information", profileIcon, const PersonalInformation()),
+          _buildOption("Transaction History", transactionIcon,
+              const TransactionHistory()),
+          _buildOption("About", aboutIcon, const About()),
         ]).toList()));
   }
 
-  Widget _buildOption(String optionName, Icon optionIcon) {
+  Widget _buildOption(String optionName, Icon optionIcon, dynamic route) {
     return Padding(
         padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
         child: Row(mainAxisSize: MainAxisSize.min, children: [
           Padding(padding: const EdgeInsets.only(right: 10), child: optionIcon),
           Text(optionName),
           const Spacer(),
-          navigateIcon
+          _buildNavigateButton(route)
         ]));
   }
 
@@ -118,5 +123,13 @@ class _ProfileState extends State<Profile> {
         },
         icon: const Icon(Icons.login),
         label: const Text('Log out'));
+  }
+
+  Widget _buildNavigateButton(dynamic route) {
+    return InkWell(
+      onTap: () =>
+          Navigator.push(context, MaterialPageRoute(builder: (_) => route)),
+      child: navigateIcon,
+    );
   }
 }

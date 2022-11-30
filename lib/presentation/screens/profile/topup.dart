@@ -1,6 +1,4 @@
 import 'package:apms_mobile/bloc/topup_bloc.dart';
-import 'package:apms_mobile/themes/colors.dart';
-import 'package:apms_mobile/themes/fonts.dart';
 import 'package:apms_mobile/themes/icons.dart';
 import 'package:apms_mobile/utils/appbar.dart';
 import 'package:apms_mobile/utils/utils.dart';
