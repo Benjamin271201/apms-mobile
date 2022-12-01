@@ -1,8 +1,10 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:apms_mobile/bloc/repositories/ticket_repo.dart';
 import 'package:apms_mobile/bloc/ticket_bloc.dart';
 import 'package:apms_mobile/models/ticket_model.dart';
+import 'package:apms_mobile/presentation/screens/history/components/card_duration.dart';
 import 'package:apms_mobile/presentation/screens/history/ticket_detail.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -147,10 +149,8 @@ class _BuildCardState extends State<BuildCard> {
                   child: GFCard(
                     boxFit: BoxFit.cover,
                     title: GFListTile(
-                      avatar: GFAvatar(
-                          backgroundImage: loadImage(items[index].picInUrl)),
                       title: Text(
-                        items[index].plateNumber,
+                        items[index].plateNumber.toString().toUpperCase(),
                         style: const TextStyle(
                             fontSize: 32, fontWeight: FontWeight.bold),
                       ),
@@ -194,7 +194,9 @@ class _BuildCardState extends State<BuildCard> {
 
   // Card Body
   List<Widget> _cardBody(Ticket ticket) {
+    double screenWidth = MediaQuery.of(context).size.width;
     var dateFormater = DateFormat("dd-MM-yyyy HH:mm:ss");
+
     String checkinTime = ticket.startTime is DateTime
         ? dateFormater.format(ticket.startTime!)
         : "";
@@ -212,31 +214,83 @@ class _BuildCardState extends State<BuildCard> {
           : "";
       return [
         Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Flexible(
-              child: Text("Book time: $bookTime"),
+              child: Padding(
+                  padding: EdgeInsets.only(left: screenWidth * 0.04),
+                  child: const Text("Book Time")),
             ),
             Flexible(
-              child: Text("Arrive time: $arriveTime"),
+              child: Padding(
+                  padding: EdgeInsets.only(right: screenWidth * 0.04),
+                  child: const Text("Reservation fee")),
             ),
           ],
         ),
-        const Divider(
-          color: Colors.blue,
-          //height: 25,
-          thickness: 2,
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Flexible(
+              child: Padding(
+                padding: EdgeInsets.only(top: 4, left: screenWidth * 0.04),
+                child: Text(bookTime, style: const TextStyle(fontWeight: FontWeight.bold),)),
+            ),
+            Flexible(
+              child: Padding(
+                padding: EdgeInsets.only(top: 4, right: screenWidth * 0.04),
+                child: Text(currencyFormatter.format(ticket.reservationFee),style: const TextStyle(fontWeight: FontWeight.bold),),),
+            ),
+          ],
         ),
-        SizedBox(
-          child: Text(
-              "Reservation fee: ${currencyFormatter.format(ticket.reservationFee)}"),
+        Row(
+          children: [
+            Flexible(
+              child: Padding(
+                  padding: EdgeInsets.only(top: 2, left: screenWidth * 0.04),
+                  child: const Text("Arrive Time")),
+            ),
+          ],
+        ),
+        Row(
+          children: [
+            Flexible(
+              child: Padding(
+                  padding: EdgeInsets.only(top:4, left: screenWidth * 0.04),
+                  child: Text(arriveTime, style: const TextStyle(fontWeight: FontWeight.bold),)),
+            ),
+          ],
         ),
       ];
     } else if (ticket.status == 1) {
       return [
         Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Flexible(
-              child: Text("Check-in Time: $checkinTime"),
+              child: Padding(
+                  padding: EdgeInsets.only(left: screenWidth * 0.06),
+                  child: const Text("Check-in date")),
+            ),
+            Flexible(
+              child: Padding(
+                  padding: EdgeInsets.only(right: screenWidth * 0.08),
+                  child: const Text("Check-in time")),
+            ),
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Flexible(
+              child: Padding(
+                  padding: EdgeInsets.only(left: screenWidth * 0.06),
+                  child: Text(checkinTime.split(" ")[0], style: const TextStyle(fontWeight: FontWeight.bold),),),
+            ),
+            Flexible(
+              child: Padding(
+                  padding: EdgeInsets.only(right: screenWidth * 0.08),
+                  child: Text(checkinTime.split(" ")[1], style: const TextStyle(fontWeight: FontWeight.bold),)),
             ),
           ],
         ),
@@ -245,8 +299,15 @@ class _BuildCardState extends State<BuildCard> {
           //height: 25,
           thickness: 2,
         ),
-        const SizedBox(
-          child: Text("Duration: 0s"),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Flexible(
+              child: Padding(
+                  padding: EdgeInsets.only(right: screenWidth * 0.08),
+                  child: CardDuration(checkInTime: ticket.startTime)),
+            ),
+          ],
         ),
       ];
     } else {
@@ -256,45 +317,54 @@ class _BuildCardState extends State<BuildCard> {
 
       return [
         Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Flexible(
-              child: Text("Check-in Time: $checkinTime"),
+              child: Padding(
+                  padding: EdgeInsets.only(left: screenWidth * 0.04),
+                  child: const Text("Check-in Time")),
             ),
             Flexible(
-              child: Text("Check-out Time: $checkoutTime"),
+              child: Padding(
+                  padding: EdgeInsets.only(right: screenWidth * 0.04),
+                  child: const Text("Total fee")),
             ),
           ],
         ),
-        const Divider(
-          color: Colors.blue,
-          //height: 25,
-          thickness: 2,
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Flexible(
+              child: Padding(
+                padding: EdgeInsets.only(top: 4, left: screenWidth * 0.04),
+                child: Text(checkinTime, style: const TextStyle(fontWeight: FontWeight.bold),)),
+            ),
+            Flexible(
+              child: Padding(
+                padding: EdgeInsets.only(top: 4, right: screenWidth * 0.04),
+                child: Text(currencyFormatter.format(ticket.totalFee),style: const TextStyle(fontWeight: FontWeight.bold),),),
+            ),
+          ],
         ),
-        SizedBox(
-          child:
-              Text("Total fee: ${currencyFormatter.format(ticket.totalFee)}"),
+        Row(
+          children: [
+            Flexible(
+              child: Padding(
+                  padding: EdgeInsets.only(top: 2, left: screenWidth * 0.04),
+                  child: const Text("Check-out Time")),
+            ),
+          ],
+        ),
+        Row(
+          children: [
+            Flexible(
+              child: Padding(
+                  padding: EdgeInsets.only(top:4, left: screenWidth * 0.04),
+                  child: Text(checkoutTime, style: const TextStyle(fontWeight: FontWeight.bold),)),
+            ),
+          ],
         ),
       ];
     }
-  }
-
-  // Get images from firebase
-  ImageProvider loadImage(String url) {
-    var check = RegExp(r'^(https:\/\/firebasestorage\.googleapis\.com\/v0)')
-        .hasMatch(url);
-
-    Image img = (url.isEmpty || !check)
-        ? Image.asset("assets/images/default.jpg")
-        : Image.network(
-            url,
-            loadingBuilder: (context, child, loadingProgress) =>
-                (loadingProgress == null)
-                    ? child
-                    : const CircularProgressIndicator(),
-            errorBuilder: (context, error, stackTrace) {
-              return Image.asset("assets/images/default.jpg");
-            },
-          );
-    return img.image;
   }
 }
