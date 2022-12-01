@@ -23,7 +23,7 @@ class _CardDurationState extends State<CardDuration> {
         Duration duration = DateTime.now().difference(widget.checkInTime);
         List parts = duration.toString().split(':');
         stringDuration =
-            '${parts[0].padLeft(2, '0')}:${parts[1].padLeft(2, '0')}:${parts[2].split(".")[0].padLeft(2, '0')}';
+            '${parts[0].padLeft(2, '0')}:${parts[1].padLeft(2, '0')}';
       });
     });
     super.initState();

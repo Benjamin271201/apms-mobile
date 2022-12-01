@@ -195,13 +195,13 @@ class _BuildCardState extends State<BuildCard> {
   // Card Body
   List<Widget> _cardBody(Ticket ticket) {
     double screenWidth = MediaQuery.of(context).size.width;
-    var dateFormater = DateFormat("dd-MM-yyyy HH:mm:ss");
+    var dateFormater = DateFormat("dd-MM-yyyy HH:mm");
 
     String checkinTime = ticket.startTime is DateTime
         ? dateFormater.format(ticket.startTime!)
         : "";
     final currencyFormatter = NumberFormat.currency(
-      name: 'VND',
+      name: '₫',
       decimalDigits: 0,
       customPattern: '#,##0 \u00A4',
     );
@@ -232,6 +232,7 @@ class _BuildCardState extends State<BuildCard> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Flexible(
+              flex: 0,
               child: Padding(
                 padding: EdgeInsets.only(top: 4, left: screenWidth * 0.04),
                 child: Text(bookTime, style: const TextStyle(fontWeight: FontWeight.bold),)),
@@ -335,6 +336,7 @@ class _BuildCardState extends State<BuildCard> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Flexible(
+              flex: 0,
               child: Padding(
                 padding: EdgeInsets.only(top: 4, left: screenWidth * 0.04),
                 child: Text(checkinTime, style: const TextStyle(fontWeight: FontWeight.bold),)),
