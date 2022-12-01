@@ -108,9 +108,11 @@ class _MyHomeState extends State<MyHome> {
                   'Home',
                   style: TextStyle(
                       fontSize: 10,
-                      fontFamily: "times",
-                      fontWeight: pageIndex == 0 ? FontWeight.bold : FontWeight.normal,
-                      color: pageIndex == 0 ? Theme.of(context).primaryColor :const Color.fromARGB(255, 153, 213, 255) ),
+                      fontWeight:
+                          pageIndex == 0 ? FontWeight.bold : FontWeight.normal,
+                      color: pageIndex == 0
+                          ? Theme.of(context).primaryColor
+                          : const Color.fromARGB(255, 153, 213, 255)),
                 )
               ],
             ),
@@ -139,9 +141,11 @@ class _MyHomeState extends State<MyHome> {
                   'History',
                   style: TextStyle(
                       fontSize: 10,
-                      fontFamily: "times",
-                      fontWeight: pageIndex == 1 ? FontWeight.bold : FontWeight.normal,
-                      color: pageIndex == 1 ? Theme.of(context).primaryColor :const Color.fromARGB(255, 153, 213, 255) ),
+                      fontWeight:
+                          pageIndex == 1 ? FontWeight.bold : FontWeight.normal,
+                      color: pageIndex == 1
+                          ? Theme.of(context).primaryColor
+                          : const Color.fromARGB(255, 153, 213, 255)),
                 )
               ],
             ),
@@ -170,9 +174,11 @@ class _MyHomeState extends State<MyHome> {
                   'Profile',
                   style: TextStyle(
                       fontSize: 10,
-                      fontFamily: "times",
-                      fontWeight: pageIndex == 2 ? FontWeight.bold : FontWeight.normal,
-                      color: pageIndex == 2 ? Theme.of(context).primaryColor :const Color.fromARGB(255, 153, 213, 255) ),
+                      fontWeight:
+                          pageIndex == 2 ? FontWeight.bold : FontWeight.normal,
+                      color: pageIndex == 2
+                          ? Theme.of(context).primaryColor
+                          : const Color.fromARGB(255, 153, 213, 255)),
                 )
               ],
             ),

@@ -66,7 +66,8 @@ class _ProfileState extends State<Profile> {
                 child: Text(state.profile.fullName, style: titleTextStyle),
               ),
               subtitle: Row(children: [
-                Text("Account balance: ${state.profile.accountBalance} VND"),
+                Text(
+                    "Account balance: ${state.profile.accountBalance.toStringAsFixed(0)} VND"),
                 const Spacer(),
                 IconButton(
                     icon: addIcon,
