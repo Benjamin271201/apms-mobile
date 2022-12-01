@@ -31,3 +31,4 @@ const transactionSuccessfullyIcon = Icon(
   size: 80,
   color: green,
 );
+const feedbackIcon = Icon(Icons.comment_rounded);
