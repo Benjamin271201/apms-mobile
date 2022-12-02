@@ -1,6 +1,7 @@
 import 'package:apms_mobile/bloc/profile_bloc.dart';
 import 'package:apms_mobile/presentation/screens/authen/sign_in.dart';
 import 'package:apms_mobile/presentation/screens/profile/about.dart';
+import 'package:apms_mobile/presentation/screens/profile/feedback.dart';
 import 'package:apms_mobile/presentation/screens/profile/personal_information.dart';
 import 'package:apms_mobile/presentation/screens/profile/topup.dart';
 import 'package:apms_mobile/presentation/screens/profile/transaction_history.dart';
@@ -66,7 +67,8 @@ class _ProfileState extends State<Profile> {
                 child: Text(state.profile.fullName, style: titleTextStyle),
               ),
               subtitle: Row(children: [
-                Text("Account balance: ${state.profile.accountBalance} VND"),
+                Text(
+                    "Account balance: ${state.profile.accountBalance.toStringAsFixed(0)} VND"),
                 const Spacer(),
                 IconButton(
                     icon: addIcon,
@@ -87,13 +89,14 @@ class _ProfileState extends State<Profile> {
   Widget _buildProfileOptionsList() {
     return SizedBox(
         width: 400,
-        height: 220,
+        height: 300,
         child: ListView(
             children: ListTile.divideTiles(context: context, tiles: [
           _buildOption(
               "Personal Information", profileIcon, const PersonalInformation()),
           _buildOption("Transaction History", transactionIcon,
               const TransactionHistory()),
+          _buildOption("Send Feedback", feedbackIcon, const SendFeedback()),
           _buildOption("About", aboutIcon, const About()),
         ]).toList()));
   }

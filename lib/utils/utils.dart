@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Utils {
@@ -15,6 +16,11 @@ class Utils {
   }
 
   Widget buildLoading() => const Center(child: CircularProgressIndicator());
+
+  String convertPriceValueToThousandPattern(dynamic value) {
+    NumberFormat numberFormat = NumberFormat("#.###");
+    return numberFormat.format(value);
+  }
 }
 
 class Debouncer {
