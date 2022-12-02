@@ -105,7 +105,8 @@ class _BookingState extends State<Booking> {
         child:
             BlocBuilder<BookingBloc, BookingState>(builder: (context, state) {
           if (state is UsedPlateNumbersFetchedSuccessfully) {
-            return SizedBox(
+            return SingleChildScrollView(
+              child: SizedBox(
               width: 400,
               child: TypeAheadFormField(
                   textFieldConfiguration: TextFieldConfiguration(
@@ -138,7 +139,7 @@ class _BookingState extends State<Booking> {
                     plateNumberController.text =
                         suggestion.toString().toUpperCase();
                   }),
-            );
+            ));
           } else {
             return TextField(
               inputFormatters: [
