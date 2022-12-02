@@ -15,8 +15,21 @@ class GetTicketList extends TicketEvent {
   final int pageIndex;
   final bool loadMore;
 
-  const GetTicketList(
-      this.from, this.to, this.plateNumber, this.statusValue, this.pageIndex, this.loadMore);
+  const GetTicketList(this.from, this.to, this.plateNumber, this.statusValue,
+      this.pageIndex, this.loadMore);
+
+  @override
+  List<Object> get props => [from, to, plateNumber, statusValue,
+      pageIndex, loadMore];
 }
 
 class ChangeTicketDate extends TicketEvent {}
+
+class CancelBooking extends TicketEvent {
+  final String ticketId;
+
+  const CancelBooking(this.ticketId);
+
+  @override
+  List<Object> get props => [ticketId];
+}

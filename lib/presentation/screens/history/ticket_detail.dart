@@ -1,9 +1,16 @@
 import 'dart:async';
+import 'dart:developer';
 
+import 'package:apms_mobile/bloc/repositories/ticket_repo.dart';
+import 'package:apms_mobile/bloc/ticket_bloc.dart';
+import 'package:apms_mobile/main.dart';
 import 'package:apms_mobile/models/ticket_model.dart';
+import 'package:apms_mobile/presentation/components/alert_dialog.dart';
 import 'package:apms_mobile/presentation/screens/qr/qr_scan.dart';
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:easy_image_viewer/easy_image_viewer.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
@@ -68,111 +75,177 @@ class _TicketDetailState extends State<TicketDetail> {
       decimalDigits: 0,
       customPattern: '#,##0 \u00A4',
     );
-    return Scaffold(
-      body: SizedBox(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            // Fee header
-            Stack(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(top: 18),
-                  child: FittedBox(
-                    child: IconButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        icon: const Icon(
-                          Icons.arrow_back,
-                          color: Color(0xff3192e1),
-                        )),
-                  ),
+    return BlocProvider(
+      create: (context) => TicketBloc(TicketRepo()),
+      child: BlocListener<TicketBloc, TicketState>(
+        listener: (context, state) async {
+          if (state is TicketCanceled) {
+            Navigator.of(context).pop();
+            bool result =
+                await Navigator.of(context).pushReplacement(MaterialPageRoute(
+              builder: (context) =>
+                  const MyHome(tabIndex: 1, headerTabIndex: 3),
+            ));
+            if (result == true) {
+              final snackBar = SnackBar(
+                /// need to set following properties for best effect of awesome_snackbar_content
+                elevation: 0,
+                behavior: SnackBarBehavior.floating,
+                backgroundColor: Colors.transparent,
+                content: AwesomeSnackbarContent(
+                  title: 'Canceled Successfully',
+                  message: 'Your booking has been canceled',
+
+                  /// change contentType to ContentType.success, ContentType.warning or ContentType.help for variants
+                  contentType: ContentType.warning,
                 ),
-                FittedBox(
-                  child: Padding(
-                    padding: EdgeInsets.fromLTRB(screenWidth * 0.1,
-                        screenHeigth * 0.1, screenWidth * 0.1, 0),
-                    child: Container(
-                      width: MediaQuery.of(context).size.width * 0.8,
-                      height: screenHeigth * 0.16,
-                      padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
-                      decoration: BoxDecoration(
-                        color: const Color(0xffe3f2fd),
-                        borderRadius: BorderRadius.circular(21),
-                        boxShadow: const [
-                          BoxShadow(
-                            color: Color(0x19000000),
-                            offset: Offset(2, 4),
-                            blurRadius: 3.5,
-                          ),
-                        ],
-                      ),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              );
+
+              // ignore: use_build_context_synchronously
+              ScaffoldMessenger.of(context)
+                ..hideCurrentSnackBar()
+                ..showSnackBar(snackBar);
+            }
+          }
+        },
+        child: BlocBuilder<TicketBloc, TicketState>(
+          builder: (context, state) {
+            if (state is TicketCanceling) {
+              return _buildLoading();
+            } else {
+              return Scaffold(
+                body: SizedBox(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      // Fee header
+                      Stack(
                         children: [
-                          Container(
-                            margin: const EdgeInsets.fromLTRB(10, 0, 0, 20),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Container(
-                                  margin: const EdgeInsets.fromLTRB(0, 0, 0, 4),
-                                  child: Text(
-                                    'Total fee:',
-                                    style: GoogleFonts.inter(
-                                      fontSize: 16,
-                                      color: const Color(0xff3192e1),
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ),
-                                Text(
-                                  currencyFormatter
-                                      .format(widget.ticket.totalFee),
-                                  style: GoogleFonts.inter(
-                                    fontSize: 30,
-                                    fontWeight: FontWeight.w800,
-                                    color: const Color(0xff3192e1),
-                                  ),
-                                ),
-                              ],
+                          Padding(
+                            padding: const EdgeInsets.only(top: 18),
+                            child: FittedBox(
+                              child: IconButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  icon: const Icon(
+                                    Icons.arrow_back,
+                                    color: Color(0xff3192e1),
+                                  )),
                             ),
                           ),
-                          (widget.ticket.status != 2 &&
-                                  widget.ticket.status != -1)
-                              ? InkWell(
-                                  onTap: () {
-                                    Navigator.of(context)
-                                        .push(MaterialPageRoute(
-                                      builder: (context) => const QRScan(),
-                                    ));
-                                  },
-                                  child: Container(
-                                    padding: const EdgeInsets.only(right: 10),
-                                    margin:
-                                        const EdgeInsets.fromLTRB(0, 0, 0, 20),
-                                    width: 60,
-                                    height: 60,
-                                    child: const FittedBox(
-                                      child: Icon(
-                                        Icons.qr_code_scanner_rounded,
-                                        color: Color(0xff3192e1),
+                          FittedBox(
+                            child: Padding(
+                              padding: EdgeInsets.fromLTRB(screenWidth * 0.1,
+                                  screenHeigth * 0.1, screenWidth * 0.1, 0),
+                              child: Container(
+                                width: MediaQuery.of(context).size.width * 0.8,
+                                height: screenHeigth * 0.16,
+                                padding:
+                                    const EdgeInsets.fromLTRB(20, 20, 20, 0),
+                                decoration: BoxDecoration(
+                                  color: const Color(0xffe3f2fd),
+                                  borderRadius: BorderRadius.circular(21),
+                                  boxShadow: const [
+                                    BoxShadow(
+                                      color: Color(0x19000000),
+                                      offset: Offset(2, 4),
+                                      blurRadius: 3.5,
+                                    ),
+                                  ],
+                                ),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Container(
+                                      margin: const EdgeInsets.fromLTRB(
+                                          10, 0, 0, 20),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Container(
+                                            margin: const EdgeInsets.fromLTRB(
+                                                0, 0, 0, 4),
+                                            child: Text(
+                                              'Total fee:',
+                                              style: GoogleFonts.inter(
+                                                fontSize: 16,
+                                                color: const Color(0xff3192e1),
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ),
+                                          widget.ticket.status == 2
+                                              ? Text(
+                                                  currencyFormatter.format(
+                                                      widget.ticket.totalFee),
+                                                  style: GoogleFonts.inter(
+                                                    fontSize: 30,
+                                                    fontWeight: FontWeight.w800,
+                                                    color:
+                                                        const Color(0xff3192e1),
+                                                  ),
+                                                )
+                                              : Text(
+                                                  currencyFormatter.format(
+                                                      widget.ticket
+                                                          .reservationFee),
+                                                  style: GoogleFonts.inter(
+                                                    fontSize: 30,
+                                                    fontWeight: FontWeight.w800,
+                                                    color:
+                                                        const Color(0xff3192e1),
+                                                  ),
+                                                ),
+                                        ],
                                       ),
                                     ),
-                                  ),
-                                )
-                              : const SizedBox(),
+                                    (widget.ticket.status != 2 &&
+                                            widget.ticket.status != -1)
+                                        ? InkWell(
+                                            onTap: () {
+                                              Navigator.of(context)
+                                                  .push(MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const QRScan(),
+                                              ));
+                                            },
+                                            child: Container(
+                                              padding: const EdgeInsets.only(
+                                                  right: 10),
+                                              margin: const EdgeInsets.fromLTRB(
+                                                  0, 0, 0, 20),
+                                              width: 60,
+                                              height: 60,
+                                              child: const FittedBox(
+                                                child: Icon(
+                                                  Icons.qr_code_scanner_rounded,
+                                                  color: Color(0xff3192e1),
+                                                ),
+                                              ),
+                                            ),
+                                          )
+                                        : const SizedBox(),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
                         ],
                       ),
-                    ),
+                      Builder(builder: (context) {
+                        return Expanded(
+                            child: _buildBody(context, screenWidth));
+                      }),
+                    ],
                   ),
                 ),
-              ],
-            ),
-            Expanded(child: _buildBody(context, screenWidth)),
-          ],
+              );
+            }
+          },
         ),
       ),
     );
@@ -196,6 +269,9 @@ class _TicketDetailState extends State<TicketDetail> {
     }
   }
 
+  // Loading circle
+  Widget _buildLoading() => const Center(child: CircularProgressIndicator());
+
   SingleChildScrollView _buildBody(BuildContext context, double screenWidth) {
     var dateFormater = DateFormat("MMM yyyy");
     var timeFormater = DateFormat("HH:mm:ss");
@@ -204,6 +280,7 @@ class _TicketDetailState extends State<TicketDetail> {
       decimalDigits: 0,
       customPattern: '#,##0 \u00A4',
     );
+    final bloc = context.read<TicketBloc>();
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -239,7 +316,15 @@ class _TicketDetailState extends State<TicketDetail> {
               ? Padding(
                   padding: const EdgeInsets.only(top: 20),
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () async {
+                      final action = await AlertDialogs.confirmCancelDiaglog(
+                          context,
+                          "Cancel Booking",
+                          "Are you sure ? Once you canceled booking, you will lose all of your reservation fee");
+                      if (action == DialogsAction.confirm) {
+                        bloc.add(CancelBooking(widget.ticket.id));
+                      }
+                    },
                     style: const ButtonStyle(
                         backgroundColor: MaterialStatePropertyAll(Colors.red)),
                     child: Row(

@@ -44,3 +44,7 @@ class TicketError extends TicketState {
 }
 
 class TicketDateChanged extends TicketState{}
+
+class TicketCanceled extends TicketState{}
+
+class TicketCanceling extends TicketState{}

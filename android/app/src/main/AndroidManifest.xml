@@ -7,7 +7,7 @@
     <uses-feature android:name="android.hardware.camera" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
    <application
-        android:label="apms_mobile"
+        android:label="APMS"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

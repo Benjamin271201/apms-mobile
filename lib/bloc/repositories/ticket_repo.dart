@@ -44,4 +44,19 @@ class TicketRepo {
     }
     return null;
   }
+
+  Future<bool> cancelBooking(String ticketId) async {
+    final Uri url = Uri.parse("${apis.tickets}/$ticketId");
+    //Get token
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    String token = pref.getString('token')!;
+    Map<String, String> headers = apis.headers;
+    headers[HttpHeaders.authorizationHeader] = 'Bearer $token';
+    Response res = await delete(url, headers: headers);
+    if (res.statusCode == 204) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 }
