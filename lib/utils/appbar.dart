@@ -10,6 +10,7 @@ class AppBarBuilder {
   AppBar _buildAppBar(String title) {
     return AppBar(
       iconTheme: const IconThemeData(color: deepBlue),
+      centerTitle: true,
       title: Text(title, style: const TextStyle(color: deepBlue)),
       backgroundColor: lightBlue,
     );
