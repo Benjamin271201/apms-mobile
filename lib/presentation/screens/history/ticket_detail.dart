@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:apms_mobile/bloc/repositories/ticket_repo.dart';
 import 'package:apms_mobile/bloc/ticket_bloc.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:apms_mobile/main.dart';
 import 'package:apms_mobile/models/ticket_model.dart';
 import 'package:apms_mobile/presentation/components/alert_dialog.dart';
@@ -78,34 +79,33 @@ class _TicketDetailState extends State<TicketDetail> {
     return BlocProvider(
       create: (context) => TicketBloc(TicketRepo()),
       child: BlocListener<TicketBloc, TicketState>(
-        listener: (context, state) async {
+        listener: (context, state) {
           if (state is TicketCanceled) {
+            final snackBar = SnackBar(
+              /// need to set following properties for best effect of awesome_snackbar_content
+              elevation: 0,
+              behavior: SnackBarBehavior.floating,
+              backgroundColor: Colors.transparent,
+              content: AwesomeSnackbarContent(
+                title: 'Canceled Successfully',
+                message: 'Your booking has been canceled',
+
+                /// change contentType to ContentType.success, ContentType.warning or ContentType.help for variants
+                contentType: ContentType.warning,
+              ),
+            );
+
+            // ignore: use_build_context_synchronously
+            ScaffoldMessenger.of(context)
+              ..hideCurrentSnackBar()
+              ..showSnackBar(snackBar);
             Navigator.of(context).pop();
-            bool result =
-                await Navigator.of(context).pushReplacement(MaterialPageRoute(
-              builder: (context) =>
-                  const MyHome(tabIndex: 1, headerTabIndex: 3),
-            ));
-            if (result == true) {
-              final snackBar = SnackBar(
-                /// need to set following properties for best effect of awesome_snackbar_content
-                elevation: 0,
-                behavior: SnackBarBehavior.floating,
-                backgroundColor: Colors.transparent,
-                content: AwesomeSnackbarContent(
-                  title: 'Canceled Successfully',
-                  message: 'Your booking has been canceled',
-
-                  /// change contentType to ContentType.success, ContentType.warning or ContentType.help for variants
-                  contentType: ContentType.warning,
-                ),
-              );
-
-              // ignore: use_build_context_synchronously
-              ScaffoldMessenger.of(context)
-                ..hideCurrentSnackBar()
-                ..showSnackBar(snackBar);
-            }
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(
+                builder: (context) =>
+                    const MyHome(tabIndex: 1, headerTabIndex: 3),
+              ),
+            );
           }
         },
         child: BlocBuilder<TicketBloc, TicketState>(
@@ -178,28 +178,16 @@ class _TicketDetailState extends State<TicketDetail> {
                                               ),
                                             ),
                                           ),
-                                          widget.ticket.status == 2
-                                              ? Text(
-                                                  currencyFormatter.format(
-                                                      widget.ticket.totalFee),
-                                                  style: GoogleFonts.inter(
-                                                    fontSize: 30,
-                                                    fontWeight: FontWeight.w800,
-                                                    color:
-                                                        const Color(0xff3192e1),
-                                                  ),
-                                                )
-                                              : Text(
-                                                  currencyFormatter.format(
-                                                      widget.ticket
-                                                          .reservationFee),
-                                                  style: GoogleFonts.inter(
-                                                    fontSize: 30,
-                                                    fontWeight: FontWeight.w800,
-                                                    color:
-                                                        const Color(0xff3192e1),
-                                                  ),
-                                                ),
+                                          Text(
+                                            currencyFormatter.format(widget
+                                                    .ticket.totalFee +
+                                                widget.ticket.reservationFee),
+                                            style: GoogleFonts.inter(
+                                              fontSize: 30,
+                                              fontWeight: FontWeight.w800,
+                                              color: const Color(0xff3192e1),
+                                            ),
+                                          )
                                         ],
                                       ),
                                     ),
@@ -216,6 +204,7 @@ class _TicketDetailState extends State<TicketDetail> {
                                             child: Container(
                                               padding: const EdgeInsets.only(
                                                   right: 10),
+                                                  
                                               margin: const EdgeInsets.fromLTRB(
                                                   0, 0, 0, 20),
                                               width: 60,
@@ -491,7 +480,7 @@ class _TicketDetailState extends State<TicketDetail> {
                           ),
                           onTap: () {
                             showImageViewer(
-                                context, NetworkImage(widget.ticket.picInUrl));
+                                context, NetworkImage(widget.ticket.picOutUrl));
                           }),
                     ),
                   ),

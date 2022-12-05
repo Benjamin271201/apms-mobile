@@ -344,7 +344,7 @@ class _BuildCardState extends State<BuildCard> {
             Flexible(
               child: Padding(
                 padding: EdgeInsets.only(top: 4, right: screenWidth * 0.04),
-                child: Text(currencyFormatter.format(ticket.totalFee),style: const TextStyle(fontWeight: FontWeight.bold),),),
+                child: Text(currencyFormatter.format(ticket.totalFee + ticket.reservationFee),style: const TextStyle(fontWeight: FontWeight.bold),),),
             ),
           ],
         ),

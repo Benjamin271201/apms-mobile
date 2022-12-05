@@ -1,8 +1,8 @@
 import 'package:apms_mobile/bloc/profile_bloc.dart';
+import 'package:apms_mobile/presentation/screens/authen/change_password.dart';
 import 'package:apms_mobile/presentation/screens/authen/sign_in.dart';
 import 'package:apms_mobile/presentation/screens/profile/about.dart';
 import 'package:apms_mobile/presentation/screens/profile/feedback.dart';
-import 'package:apms_mobile/presentation/screens/profile/personal_information.dart';
 import 'package:apms_mobile/presentation/screens/profile/topup.dart';
 import 'package:apms_mobile/presentation/screens/profile/transaction_history.dart';
 import 'package:apms_mobile/themes/colors.dart';
@@ -39,6 +39,9 @@ class _ProfileState extends State<Profile> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             _buildBriefAccountInformationCard(),
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.06,
+            ),
             _buildProfileOptionsList(),
             _logOutButton()
           ],
@@ -87,50 +90,120 @@ class _ProfileState extends State<Profile> {
   }
 
   Widget _buildProfileOptionsList() {
-    return SizedBox(
-        width: 400,
-        height: 300,
-        child: ListView(
-            children: ListTile.divideTiles(context: context, tiles: [
-          _buildOption(
-              "Personal Information", profileIcon, const PersonalInformation()),
-          _buildOption("Transaction History", transactionIcon,
-              const TransactionHistory()),
-          _buildOption("Send Feedback", feedbackIcon, const SendFeedback()),
-          _buildOption("About", aboutIcon, const About()),
-        ]).toList()));
-  }
-
-  Widget _buildOption(String optionName, Icon optionIcon, dynamic route) {
-    return Padding(
-        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
-        child: Row(mainAxisSize: MainAxisSize.min, children: [
-          Padding(padding: const EdgeInsets.only(right: 10), child: optionIcon),
-          Text(optionName),
-          const Spacer(),
-          _buildNavigateButton(route)
-        ]));
+    // return SizedBox(
+    //   width: 400,
+    //   height: 300,
+    //   child: ListView(
+    //     children: ListTile.divideTiles(context: context, tiles: [
+    //       _buildOption("Transaction History", transactionIcon,
+    //           const TransactionHistory()),
+    //       _buildOption("Send Feedback", feedbackIcon, const SendFeedback()),
+    //       _buildOption("About", aboutIcon, const About()),
+    //     ]).toList(),
+    //   ),
+    // );
+    double screenWidth = MediaQuery.of(context).size.width;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            InkWell(
+              onTap: () => Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => const TransactionHistory(),)
+          ),
+              child: SizedBox(
+                width: screenWidth,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Padding(
+                        padding: EdgeInsets.only(left: screenWidth * 0.1),
+                        child: const Icon(Icons.account_balance_outlined)),
+                    Padding(
+                        padding: EdgeInsets.only(left: screenWidth * 0.04),
+                        child: const Text('Transaction History')),
+                    Padding(
+                        padding: EdgeInsets.only(right: screenWidth * 0.1),
+                        child: const Icon(Icons.arrow_forward_ios_rounded))
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+        const Divider(
+          height: 40,
+          thickness: 1,
+        ),
+        InkWell(
+          onTap: () => Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => const SendFeedback(),)
+          ),
+          child: SizedBox(
+            width: screenWidth,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Padding(
+                    padding: EdgeInsets.only(left: screenWidth * 0.1),
+                    child: const Icon(Icons.comment_bank_rounded)),
+                Padding(
+                    padding: EdgeInsets.only(left: screenWidth * 0.04),
+                    child: const Text('Feedback')),
+                Padding(
+                    padding: EdgeInsets.only(right: screenWidth * 0.1),
+                    child: const Icon(Icons.arrow_forward_ios_rounded))
+              ],
+            ),
+          ),
+        ),
+        const Divider(
+          height: 40,
+          thickness: 1,
+        ),
+        InkWell(
+          onTap: () => Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => const ChangePassword(),)
+          ),
+          child: SizedBox(
+            width: screenWidth,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Padding(
+                    padding: EdgeInsets.only(left: screenWidth * 0.1),
+                    child: const Icon(Icons.password_rounded)),
+                Padding(
+                    padding: EdgeInsets.only(left: screenWidth * 0.04),
+                    child: const Text('Change password')),
+                Padding(
+                    padding: EdgeInsets.only(right: screenWidth * 0.1),
+                    child: const Icon(Icons.arrow_forward_ios_rounded))
+              ],
+            ),
+          ),
+        ),
+        const Divider(
+          height: 40,
+        ),
+      ],
+    );
   }
 
   Widget _logOutButton() {
     final navigator = Navigator.of(context, rootNavigator: true);
     return OutlinedButton.icon(
-        onPressed: () async {
-          SharedPreferences pref = await SharedPreferences.getInstance();
-          await pref.clear();
-          navigator.pushAndRemoveUntil(
-              MaterialPageRoute(builder: (context) => const SignIn()),
-              (route) => false);
-        },
-        icon: const Icon(Icons.login),
-        label: const Text('Log out'));
-  }
-
-  Widget _buildNavigateButton(dynamic route) {
-    return InkWell(
-      onTap: () =>
-          Navigator.push(context, MaterialPageRoute(builder: (_) => route)),
-      child: navigateIcon,
+      onPressed: () async {
+        SharedPreferences pref = await SharedPreferences.getInstance();
+        await pref.clear();
+        navigator.pushAndRemoveUntil(
+            MaterialPageRoute(builder: (context) => const SignIn()),
+            (route) => false);
+      },
+      icon: const Icon(Icons.login),
+      label: const Text('Log out'),
     );
   }
 }

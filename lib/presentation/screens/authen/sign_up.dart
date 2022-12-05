@@ -181,8 +181,8 @@ class _SignUpState extends State<SignUp> {
         errorStyle: const TextStyle(fontStyle: FontStyle.italic),
       ),
       validator: (value) {
-        if (value!.length < 3) {
-          return 'Password needs to be from 3 to 6 characters';
+        if (value!.length < 6 || value.length > 10) {
+          return 'Password needs to be from 6 to 10 characters';
         }
         return null;
       },

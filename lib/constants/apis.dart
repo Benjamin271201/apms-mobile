@@ -13,3 +13,4 @@ const history = "$baseUrl/Tickets";
 const tickets = "$baseUrl/tickets";
 const checkIn = "$baseUrl/check-in/create-ticket";
 const checkOut = "$baseUrl/check-out";
+const changePassword = "$baseUrl/Accounts/update-password";
