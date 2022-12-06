@@ -4,7 +4,7 @@ import 'package:apms_mobile/bloc/login_bloc.dart';
 import 'package:apms_mobile/bloc/repositories/login_repo.dart';
 import 'package:apms_mobile/main.dart';
 import 'package:apms_mobile/presentation/screens/authen/component/header.dart';
-import 'package:apms_mobile/presentation/screens/authen/forgot_password.dart';
+import 'package:apms_mobile/presentation/screens/authen/forgot_password/check_phone.dart';
 import 'package:apms_mobile/presentation/screens/authen/sign_up.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -22,6 +22,7 @@ class _SigninState extends State<SignIn> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController phoneNumberController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  String error = "";
 
   void checkLogin() async {
     final navigator = Navigator.of(context);
@@ -62,6 +63,11 @@ class _SigninState extends State<SignIn> {
                 ),
                 (route) => false);
           }
+          if (state is LoginError) {
+            setState(() {
+              error = 'Incorrect phone number or password!';
+            });
+          }
         },
         child: Scaffold(
           body: SingleChildScrollView(
@@ -100,8 +106,12 @@ class _SigninState extends State<SignIn> {
               height: 26,
             ),
             _passwordField(),
+            Text(
+              error,
+              style: const TextStyle(color: Colors.redAccent),
+            ),
             SizedBox(
-              height: MediaQuery.of(context).size.height * 0.06,
+              height: MediaQuery.of(context).size.height * 0.04,
             ),
             _loginButton(),
           ],
@@ -190,7 +200,7 @@ class _SigninState extends State<SignIn> {
             onTap: () => Navigator.push(
               context,
               MaterialPageRoute(
-                builder: ((context) => const ForgotPassword()),
+                builder: ((context) => const CheckPhone()),
               ),
             ),
             child: const SizedBox(
@@ -206,7 +216,7 @@ class _SigninState extends State<SignIn> {
             ),
           ),
           const SizedBox(
-            height: 10,
+            height: 4,
           ),
           SizedBox(
             width: double.infinity,

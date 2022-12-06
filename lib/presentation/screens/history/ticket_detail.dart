@@ -41,7 +41,7 @@ class _TicketDetailState extends State<TicketDetail> {
               duration = DateTime.now().difference(widget.ticket.startTime);
               parts = duration.toString().split(':');
               stringDuration =
-                  '${parts[0].padLeft(2, '0')}:${parts[1].padLeft(2, '0')}:${parts[2].split(".")[0].padLeft(2, '0')}';
+                  '${parts[0].padLeft(2, '0')}:${parts[1].padLeft(2, '0')}';
             });
           });
         }
@@ -53,7 +53,7 @@ class _TicketDetailState extends State<TicketDetail> {
               .difference(widget.ticket.startTime);
           parts = duration.toString().split(':');
           stringDuration =
-              '${parts[0].padLeft(2, '0')}:${parts[1].padLeft(2, '0')}:${parts[2].split(".")[0].padLeft(2, '0')}';
+              '${parts[0].padLeft(2, '0')}:${parts[1].padLeft(2, '0')}';
         }
         break;
     }
@@ -301,6 +301,7 @@ class _TicketDetailState extends State<TicketDetail> {
                 )
               : const SizedBox(),
           _buildImage(screenWidth, context),
+          const SizedBox(height: 10,),
           widget.ticket.status == 0
               ? Padding(
                   padding: const EdgeInsets.only(top: 20),
@@ -522,7 +523,7 @@ class _TicketDetailState extends State<TicketDetail> {
                 child: SizedBox(
                   height: 25,
                   child: Text(
-                    'Total Fee',
+                    'Parking Fee',
                     style: GoogleFonts.inter(
                       fontSize: 16,
                       fontWeight: FontWeight.w400,

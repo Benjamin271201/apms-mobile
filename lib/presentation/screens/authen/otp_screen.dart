@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:apms_mobile/bloc/repositories/sign_up_repo.dart';
 import 'package:apms_mobile/bloc/sign_up_bloc.dart';
+import 'package:apms_mobile/presentation/screens/authen/forgot_password/create_new_password.dart';
 import 'package:apms_mobile/presentation/screens/authen/sign_in.dart';
 import 'package:apms_mobile/presentation/screens/authen/sign_up.dart';
 import 'package:auto_size_text/auto_size_text.dart';
@@ -15,12 +16,14 @@ class OtpScreen extends StatefulWidget {
   final String fullName;
   final String password;
   final String verifyId;
+  final String type;
   const OtpScreen(
       {Key? key,
       required this.phoneNumber,
       required this.verifyId,
-      required this.fullName,
-      required this.password})
+      this.fullName = '',
+      this.password = '',
+      required this.type})
       : super(key: key);
 
   @override
@@ -340,14 +343,14 @@ class _OtpScreenState extends State<OtpScreen> {
           const SizedBox(
             height: 60,
           ),
-          continueButton(),
+          widget.type == "SignUp" ? signUpContinueButton() : forgotPasswordContinueButton(),
         ],
       ),
     );
   }
 
 // Continue button
-  Widget continueButton() {
+  Widget signUpContinueButton() {
     return BlocProvider(
       create: (context) => SignUpBloc(SignUpRepo()),
       child: BlocListener<SignUpBloc, SignUpState>(
@@ -425,6 +428,44 @@ class _OtpScreenState extends State<OtpScreen> {
               );
             }
           },
+        ),
+      ),
+    );
+  }
+
+//Continue button for forgot password
+  Widget forgotPasswordContinueButton() {
+    final navigator = Navigator.of(context);
+    return SizedBox(
+      width: double.infinity,
+      height: 40,
+      child: TextButton(
+        style: TextButton.styleFrom(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          backgroundColor: const Color.fromRGBO(49, 147, 225, 1),
+        ),
+        onPressed: () async {
+          try {
+            // Create a PhoneAuthCredential with the code
+            PhoneAuthCredential credential = PhoneAuthProvider.credential(
+                verificationId: widget.verifyId, smsCode: code);
+            // Sign the user in (or link) with the credential
+            final success = await auth.signInWithCredential(credential);
+            if (success.user != null) {
+              navigator.pushReplacement(MaterialPageRoute(
+                builder: (context) => CreatePassword(phone: widget.phoneNumber),
+              ));
+            }
+            log('Success');
+          } catch (e) {
+            log("wrong otp");
+          }
+        },
+        child: const Text(
+          'Continue',
+          style:
+              TextStyle(color: Colors.white, fontFamily: "times", fontSize: 18),
         ),
       ),
     );

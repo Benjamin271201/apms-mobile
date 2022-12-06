@@ -256,6 +256,7 @@ class _SignUpState extends State<SignUp> {
                       fullName: fullNameController.text,
                       password: passwordController.text,
                       phoneNumber: phoneNumberController.text,
+                      type: "SignUp",
                     ),
                   ),
                 );
