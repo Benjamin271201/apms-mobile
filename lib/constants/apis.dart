@@ -17,3 +17,4 @@ const changePassword = "$baseUrl/Accounts/update-password";
 const feedback = "$baseUrl/Feedbacks";
 const forgotPassword = "$baseUrl/Accounts/forgot-password";
 const createNewPassword = "$baseUrl/Accounts/forgot-password/update-password";
+const transactionHistory = "$baseUrl/Transactions";
