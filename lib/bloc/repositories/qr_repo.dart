@@ -15,7 +15,7 @@ class QrRepo {
     return pref.getString('token')!;
   }
 
-  Future<bool> checkIn(Qr qr) async {
+  Future<String> checkIn(Qr qr) async {
     String token = await getToken();
     Object body = {
       "plateNumber": qr.plate,
@@ -27,12 +27,14 @@ class QrRepo {
     Uri uri = Uri.parse(apis.checkIn);
     Response result = await post(uri, headers: headers, body: jsonString);
     if (result.statusCode == 201) {
-      return true;
+      Map body = json.decode(result.body);
+      return body['message'];
+    } else {
+      return result.body.toString();
     }
-    return false;
   }
 
-  Future<bool> checkOut(Qr qr) async {
+  Future<String> checkOut(Qr qr) async {
     String token = await getToken();
     headers[HttpHeaders.authorizationHeader] = 'Bearer $token';
     Map<String, String> body = {
@@ -44,8 +46,10 @@ class QrRepo {
     Uri uri = Uri.parse(apis.checkOut);
     Response result = await put(uri, headers: headers, body: jsonString);
     if (result.statusCode == 200) {
-      return true;
+      Map body = json.decode(result.body);
+      return body['message'];
+    } else {
+      return result.body.toString();
     }
-    return false;
   }
 }

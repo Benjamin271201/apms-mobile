@@ -6,9 +6,12 @@ import 'dart:io';
 import 'package:apms_mobile/bloc/repositories/qr_repo.dart';
 import 'package:apms_mobile/main.dart';
 import 'package:apms_mobile/models/qr_model.dart';
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
+
+import '../../components/alert_dialog.dart';
 
 class QRScan extends StatefulWidget {
   const QRScan({Key? key}) : super(key: key);
@@ -23,7 +26,6 @@ class _QRScan extends State<QRScan> {
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   String? code;
   Qr? qr;
-
   // In order to get hot reload to work we need to pause the camera if the platform
   // is android, or resume the camera if the platform is iOS.
   @override
@@ -38,25 +40,14 @@ class _QRScan extends State<QRScan> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+      ),
       body: Column(
         children: <Widget>[
           Expanded(flex: 4, child: _buildQrView(context)),
-          Expanded(
-            flex: 1,
-            child: FittedBox(
-              fit: BoxFit.contain,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  if (result != null)
-                    Text(
-                        'Barcode Type: ${describeEnum(result!.format)}   Data: ${result!.code}')
-                  else
-                    const Text('Scan a code'),
-                ],
-              ),
-            ),
-          )
         ],
       ),
     );
@@ -64,10 +55,7 @@ class _QRScan extends State<QRScan> {
 
   Widget _buildQrView(BuildContext context) {
     // For this example we check how width or tall the device is and change the scanArea and overlay accordingly.
-    var scanArea = (MediaQuery.of(context).size.width < 400 ||
-            MediaQuery.of(context).size.height < 400)
-        ? 150.0
-        : 300.0;
+    var scanArea = MediaQuery.of(context).size.width;
     // To ensure the Scanner view is properly sizes after rotation
     // we need to listen for Flutter SizeChanged notification and update controller
     return QRView(
@@ -90,43 +78,90 @@ class _QRScan extends State<QRScan> {
     var navigate = Navigator.of(context);
     var messenger = ScaffoldMessenger.of(context);
     controller.scannedDataStream.listen((scanData) async {
-      controller.pauseCamera();
       result = scanData;
+      controller.pauseCamera();
       code = result!.code!.replaceAll("True", "true");
       qr = qrModelFromJson(code!.replaceAll("False", "false"));
       final QrRepo repo = QrRepo();
       if (!qr!.checkin!) {
-        bool res = await repo.checkIn(qr!);
-        if (res) {
-          navigate.pushAndRemoveUntil(
-              MaterialPageRoute(
-                builder: (context) => const MyHome(
-                  tabIndex: 1,
-                  headerTabIndex: 1,
-                ),
+        final action = await AlertDialogs.confirmCancelDiaglog(
+            context,
+            "Check In",
+            "Is this the lincense plate you want to check-in : ${qr!.plate} ?");
+        if (action == DialogsAction.confirm) {
+          String res = await repo.checkIn(qr!);
+          if (res.contains('successfully')) {
+            navigate.pushReplacement(
+                MaterialPageRoute(
+                  builder: (context) => const MyHome(
+                    tabIndex: 1,
+                    headerTabIndex: 1,
+                  ),
+                ),);
+          } else {
+            final snackBar = SnackBar(
+              /// need to set following properties for best effect of awesome_snackbar_content
+              elevation: 0,
+              behavior: SnackBarBehavior.floating,
+              backgroundColor: Colors.transparent,
+              content: AwesomeSnackbarContent(
+                title: 'Check-in Failed',
+                message: res,
+
+                /// change contentType to ContentType.success, ContentType.warning or ContentType.help for variants
+                contentType: ContentType.failure,
               ),
-              (route) => false);
-        } else {
-          messenger.showSnackBar(const SnackBar(
-            content: Text('Checkin failed!'),
-          ));
+            );
+
+            // ignore: use_build_context_synchronously
+            ScaffoldMessenger.of(context)
+              ..hideCurrentSnackBar()
+              ..showSnackBar(snackBar);
+            controller.resumeCamera();
+          }
+        }
+        if (action == DialogsAction.cancel) {
           controller.resumeCamera();
         }
       } else {
-        bool res = await repo.checkOut(qr!);
-        if (res) {
-          navigate.pushAndRemoveUntil(
+        final action = await AlertDialogs.confirmCancelDiaglog(
+            context,
+            "Check Out",
+            "Is this the lincense plate you want to check-out : ${qr!.plate}");
+        if (action == DialogsAction.confirm) {
+          String res = await repo.checkOut(qr!);
+          if (res.contains('successfully')) {
+            navigate.pushReplacement(
               MaterialPageRoute(
                 builder: (context) => const MyHome(
                   tabIndex: 1,
                   headerTabIndex: 2,
                 ),
               ),
-              (route) => false);
-        } else {
-          messenger.showSnackBar(const SnackBar(
-            content: Text('Checkout failed!'),
-          ));
+            );
+          } else {
+            final snackBar = SnackBar(
+              /// need to set following properties for best effect of awesome_snackbar_content
+              elevation: 0,
+              behavior: SnackBarBehavior.floating,
+              backgroundColor: Colors.transparent,
+              content: AwesomeSnackbarContent(
+                title: 'Check-out Failed',
+                message: res,
+
+                /// change contentType to ContentType.success, ContentType.warning or ContentType.help for variants
+                contentType: ContentType.failure,
+              ),
+            );
+
+            // ignore: use_build_context_synchronously
+            ScaffoldMessenger.of(context)
+              ..hideCurrentSnackBar()
+              ..showSnackBar(snackBar);
+            controller.resumeCamera();
+          }
+        }
+        if (action == DialogsAction.cancel) {
           controller.resumeCamera();
         }
       }

@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:apms_mobile/bloc/repositories/ticket_repo.dart';
 import 'package:apms_mobile/bloc/ticket_bloc.dart';
