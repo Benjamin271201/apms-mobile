@@ -181,8 +181,8 @@ class _SignUpState extends State<SignUp> {
         errorStyle: const TextStyle(fontStyle: FontStyle.italic),
       ),
       validator: (value) {
-        if (value!.length < 6 || value.length > 10) {
-          return 'Password needs to be from 6 to 10 characters';
+        if (value!.length < 8 || value.length > 10) {
+          return 'Password needs to be from 8 to 10 characters';
         }
         return null;
       },
@@ -219,7 +219,7 @@ class _SignUpState extends State<SignUp> {
       ),
       validator: (value) {
         if (value.toString() != passwordController.text) {
-          return 'Password not match';
+          return 'Confirm password does not match';
         }
         return null;
       },

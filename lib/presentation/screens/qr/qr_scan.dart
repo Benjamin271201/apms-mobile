@@ -87,7 +87,7 @@ class _QRScan extends State<QRScan> {
         final action = await AlertDialogs.confirmCancelDiaglog(
             context,
             "Check In",
-            "Is this the lincense plate you want to check-in : ${qr!.plate} ?");
+            "Is this the license plate you want to check-in : ${qr!.plate} ?");
         if (action == DialogsAction.confirm) {
           String res = await repo.checkIn(qr!);
           if (res.contains('successfully')) {
@@ -127,7 +127,7 @@ class _QRScan extends State<QRScan> {
         final action = await AlertDialogs.confirmCancelDiaglog(
             context,
             "Check Out",
-            "Is this the lincense plate you want to check-out : ${qr!.plate}");
+            "Is this the license plate you want to check-out : ${qr!.plate}");
         if (action == DialogsAction.confirm) {
           String res = await repo.checkOut(qr!);
           if (res.contains('successfully')) {

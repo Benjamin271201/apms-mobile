@@ -61,7 +61,7 @@ class Ticket {
   final double reservationFee;
   final dynamic bookTime;
   final dynamic arriveTime;
-  final double totalFee;
+  final int totalFee;
   final String picInUrl;
   final String picOutUrl;
   final String carParkId;

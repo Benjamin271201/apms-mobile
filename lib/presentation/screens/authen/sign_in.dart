@@ -183,8 +183,8 @@ class _SigninState extends State<SignIn> {
         errorStyle: const TextStyle(fontStyle: FontStyle.italic),
       ),
       validator: (value) {
-        if (value!.length < 6 || value.length > 10) {
-          return 'Password needs to be from 6 to 10 characters';
+        if (value!.length < 8 || value.length > 10) {
+          return 'Password needs to be from 8 to 10 characters';
         }
         return null;
       },
