@@ -6,11 +6,13 @@ import 'package:apms_mobile/bloc/ticket_bloc.dart';
 import 'package:apms_mobile/main.dart';
 import 'package:apms_mobile/models/ticket_model.dart';
 import 'package:apms_mobile/presentation/components/alert_dialog.dart';
+import 'package:apms_mobile/presentation/components/local_noti.dart';
 import 'package:apms_mobile/presentation/screens/qr/qr_scan.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:easy_image_viewer/easy_image_viewer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
@@ -26,12 +28,16 @@ class _TicketDetailState extends State<TicketDetail> {
   Duration duration = const Duration(seconds: 0);
   List<String> parts = [];
   String stringDuration = "";
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
   Timer _timer = Timer(
     Duration.zero,
     () {},
   );
   @override
   void initState() {
+    super.initState();
+    LocalNoti.initialize(flutterLocalNotificationsPlugin);
     switch (widget.ticket.status) {
       case 1:
         if (widget.ticket.startTime is DateTime) {
@@ -56,7 +62,6 @@ class _TicketDetailState extends State<TicketDetail> {
         }
         break;
     }
-    super.initState();
   }
 
   @override
@@ -203,7 +208,6 @@ class _TicketDetailState extends State<TicketDetail> {
                                             child: Container(
                                               padding: const EdgeInsets.only(
                                                   right: 10),
-                                                  
                                               margin: const EdgeInsets.fromLTRB(
                                                   0, 0, 0, 20),
                                               width: 60,
@@ -300,7 +304,9 @@ class _TicketDetailState extends State<TicketDetail> {
                 )
               : const SizedBox(),
           _buildImage(screenWidth, context),
-          const SizedBox(height: 10,),
+          const SizedBox(
+            height: 10,
+          ),
           widget.ticket.status == 0
               ? Padding(
                   padding: const EdgeInsets.only(top: 20),

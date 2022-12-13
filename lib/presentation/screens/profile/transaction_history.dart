@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:apms_mobile/bloc/repositories/transaction_repo.dart';
 import 'package:apms_mobile/bloc/transaction_bloc.dart';
-import 'package:apms_mobile/constants/paths.dart';
 import 'package:apms_mobile/models/transaction_model.dart';
 import 'package:apms_mobile/utils/appbar.dart';
 import 'package:flutter/foundation.dart';
@@ -157,7 +156,7 @@ class _TransactionHistoryState extends State<TransactionHistory> {
               }).toList(),
             ),
             Padding(
-              padding: EdgeInsets.only(left: screenWidth * 0.16),
+              padding: EdgeInsets.only(left: screenWidth * 0.1),
               child: SizedBox(
                 child: TextButton(
                   onPressed: () async {

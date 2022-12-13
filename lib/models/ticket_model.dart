@@ -42,6 +42,7 @@ class Ticket {
     required this.startTime,
     required this.endTime,
     required this.reservationFee,
+    required this.overdueFee,
     required this.bookTime,
     required this.arriveTime,
     required this.totalFee,
@@ -58,7 +59,8 @@ class Ticket {
   final String id;
   final dynamic startTime;
   final dynamic endTime;
-  final double reservationFee;
+  final int reservationFee;
+  final int overdueFee;
   final dynamic bookTime;
   final dynamic arriveTime;
   final int totalFee;
@@ -76,13 +78,14 @@ class Ticket {
         startTime:
             json["startTime"] != null ? DateTime.parse(json["startTime"]) : "",
         endTime: json["endTime"] != null ? DateTime.parse(json["endTime"]) : "",
-        reservationFee: json["reservationFee"],
+        reservationFee: double.parse(json["reservationFee"].toString()).toInt(),
+        overdueFee: double.parse(json["overdueFee"].toString()).toInt(),
         bookTime:
             json["bookTime"] != null ? DateTime.parse(json["bookTime"]) : "",
         arriveTime: json["arriveTime"] != null
             ? DateTime.parse(json["arriveTime"])
             : "",
-        totalFee: json["totalFee"],
+        totalFee: double.parse(json["totalFee"].toString()).toInt(),
         picInUrl: json["picInUrl"] ?? "",
         picOutUrl: json["picOutUrl"] ?? "",
         carParkId: json["carParkId"],

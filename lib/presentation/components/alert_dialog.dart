@@ -15,7 +15,7 @@ class AlertDialogs {
         return AlertDialog(
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
           title: Text(title),
-          content: Text(body, style: TextStyle(fontSize: 14),),
+          content: Text(body, style: const TextStyle(fontSize: 14),),
           actions: <Widget>[
             TextButton(
               onPressed: () => Navigator.of(context).pop(DialogsAction.cancel),

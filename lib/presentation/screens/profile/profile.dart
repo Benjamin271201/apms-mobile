@@ -1,7 +1,6 @@
 import 'package:apms_mobile/bloc/profile_bloc.dart';
 import 'package:apms_mobile/presentation/screens/authen/change_password.dart';
 import 'package:apms_mobile/presentation/screens/authen/sign_in.dart';
-import 'package:apms_mobile/presentation/screens/profile/about.dart';
 import 'package:apms_mobile/presentation/screens/profile/feedback.dart';
 import 'package:apms_mobile/presentation/screens/profile/topup.dart';
 import 'package:apms_mobile/presentation/screens/profile/transaction_history.dart';
@@ -59,49 +58,43 @@ class _ProfileState extends State<Profile> {
 
   Widget _buildBriefAccountInformationCard() {
     return BlocProvider(
-        create: (_) => _profileBloc,
-        child:
-            BlocBuilder<ProfileBloc, ProfileState>(builder: (context, state) {
+      create: (_) => _profileBloc,
+      child: BlocBuilder<ProfileBloc, ProfileState>(
+        builder: (context, state) {
           if (state is ProfileFetchedSuccessfully) {
             return Card(
-                child: ListTile(
-              title: Padding(
-                padding: const EdgeInsets.only(bottom: 5),
-                child: Text(state.profile.fullName, style: titleTextStyle),
-              ),
-              subtitle: Row(children: [
-                Text(
-                    "Account balance: ${state.profile.accountBalance.toStringAsFixed(0)} VND"),
-                const Spacer(),
-                IconButton(
-                    icon: addIcon,
-                    onPressed: () => Navigator.push(context,
-                            MaterialPageRoute(builder: (_) => const TopUp()))
-                        .then((value) =>
+              child: ListTile(
+                title: Padding(
+                  padding: const EdgeInsets.only(bottom: 5),
+                  child: Text(state.profile.fullName, style: titleTextStyle),
+                ),
+                subtitle: Row(
+                  children: [
+                    Text(
+                        "Account balance: ${state.profile.accountBalance.toStringAsFixed(0)} VND"),
+                    const Spacer(),
+                    IconButton(
+                        icon: addIcon,
+                        onPressed: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => const TopUp())).then((value) =>
                             {_profileBloc.add(FetchProfileInformation())}))
-              ]),
-              contentPadding:
-                  const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
-            ));
+                  ],
+                ),
+                contentPadding:
+                    const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
+              ),
+            );
           } else {
             return const Card();
           }
-        }));
+        },
+      ),
+    );
   }
 
   Widget _buildProfileOptionsList() {
-    // return SizedBox(
-    //   width: 400,
-    //   height: 300,
-    //   child: ListView(
-    //     children: ListTile.divideTiles(context: context, tiles: [
-    //       _buildOption("Transaction History", transactionIcon,
-    //           const TransactionHistory()),
-    //       _buildOption("Send Feedback", feedbackIcon, const SendFeedback()),
-    //       _buildOption("About", aboutIcon, const About()),
-    //     ]).toList(),
-    //   ),
-    // );
     double screenWidth = MediaQuery.of(context).size.width;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -110,11 +103,12 @@ class _ProfileState extends State<Profile> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             InkWell(
-              onTap: () => Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) => const TransactionHistory(),)
-          ),
+              onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => const TransactionHistory(),
+              )),
               child: SizedBox(
                 width: screenWidth,
+                height: 40,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -134,14 +128,15 @@ class _ProfileState extends State<Profile> {
           ],
         ),
         const Divider(
-          height: 40,
+          height: 20,
           thickness: 1,
         ),
         InkWell(
-          onTap: () => Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) => const SendFeedback(),)
-          ),
+          onTap: () => Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => const SendFeedback(),
+          )),
           child: SizedBox(
+            height: 40,
             width: screenWidth,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -160,14 +155,15 @@ class _ProfileState extends State<Profile> {
           ),
         ),
         const Divider(
-          height: 40,
+          height: 20,
           thickness: 1,
         ),
         InkWell(
-          onTap: () => Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) => const ChangePassword(),)
-          ),
+          onTap: () => Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => const ChangePassword(),
+          )),
           child: SizedBox(
+            height: 40,
             width: screenWidth,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -31,7 +31,7 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
       SubmitBookingFormStep2 event, Emitter<BookingState> emit) async {
     try {
       emit(BookingSubmitting());
-      Map<String, dynamic> result = await repo.bookParkingSlot(
+      await repo.bookParkingSlot(
           event.plateNumber, event.arrivalTime, event.carParkId);
       emit(BookingSubmittedSuccessfully());
     } catch (e) {
