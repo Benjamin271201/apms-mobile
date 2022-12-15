@@ -32,3 +32,18 @@ void successfulSnackBar(BuildContext context, String message) {
   //       ScaffoldMessenger.removeCurrentSnackBar();
   //     });
 }
+
+void errorSnackBarWithDismiss(BuildContext context, String message) {
+  ScaffoldMessenger.of(context).clearSnackBars();
+  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      behavior: SnackBarBehavior.floating,
+      duration: const Duration(seconds: 5),
+      backgroundColor: red,
+      content: Text(message),
+      action: SnackBarAction(
+          label: "Dismiss",
+          textColor: white,
+          onPressed: () {
+            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+          })));
+}
