@@ -37,13 +37,13 @@ class Transaction {
     });
 
     final String id;
-    final double amount;
+    final int amount;
     final DateTime time;
     final int transactionType;
 
     factory Transaction.fromJson(Map<String, dynamic> json) => Transaction(
         id: json["id"],
-        amount: json["amount"],
+        amount: double.parse(json["amount"].toString()).toInt(),
         time: DateTime.parse(json["time"]),
         transactionType: json["transactionType"],
     );

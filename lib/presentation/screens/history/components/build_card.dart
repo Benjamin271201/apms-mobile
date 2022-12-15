@@ -51,7 +51,7 @@ class _BuildCardState extends State<BuildCard> {
         builder: (context, state) {
           scrollController.addListener(() {
             if (scrollController.position.pixels ==
-                scrollController.position.maxScrollExtent) {
+                scrollController.position.maxScrollExtent && loadMore == false) {
               if (currentPage < maxPage) {
                 setState(() {
                   if (mounted) {
@@ -84,6 +84,7 @@ class _BuildCardState extends State<BuildCard> {
           } else if (state is TicketLoading) {
             return _buildLoading();
           } else if (state is TicketLoaded) {
+            loadMore = false;
             maxPage = state.ticket.totalPage;
             if (items.isEmpty) {
               items = state.ticket.tickets;
@@ -234,13 +235,20 @@ class _BuildCardState extends State<BuildCard> {
             Flexible(
               flex: 0,
               child: Padding(
-                padding: EdgeInsets.only(top: 4, left: screenWidth * 0.04),
-                child: Text(bookTime, style: const TextStyle(fontWeight: FontWeight.bold),)),
+                  padding: EdgeInsets.only(top: 4, left: screenWidth * 0.04),
+                  child: Text(
+                    bookTime,
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  )),
             ),
             Flexible(
               child: Padding(
                 padding: EdgeInsets.only(top: 4, right: screenWidth * 0.04),
-                child: Text(currencyFormatter.format(ticket.reservationFee),style: const TextStyle(fontWeight: FontWeight.bold),),),
+                child: Text(
+                  currencyFormatter.format(ticket.reservationFee),
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ),
             ),
           ],
         ),
@@ -257,8 +265,11 @@ class _BuildCardState extends State<BuildCard> {
           children: [
             Flexible(
               child: Padding(
-                  padding: EdgeInsets.only(top:4, left: screenWidth * 0.04),
-                  child: Text(arriveTime, style: const TextStyle(fontWeight: FontWeight.bold),)),
+                  padding: EdgeInsets.only(top: 4, left: screenWidth * 0.04),
+                  child: Text(
+                    arriveTime,
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  )),
             ),
           ],
         ),
@@ -285,13 +296,20 @@ class _BuildCardState extends State<BuildCard> {
           children: [
             Flexible(
               child: Padding(
-                  padding: EdgeInsets.only(left: screenWidth * 0.06),
-                  child: Text(checkinTime.split(" ")[0], style: const TextStyle(fontWeight: FontWeight.bold),),),
+                padding: EdgeInsets.only(left: screenWidth * 0.06),
+                child: Text(
+                  checkinTime.split(" ")[0],
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ),
             ),
             Flexible(
               child: Padding(
                   padding: EdgeInsets.only(right: screenWidth * 0.08),
-                  child: Text(checkinTime.split(" ")[1], style: const TextStyle(fontWeight: FontWeight.bold),)),
+                  child: Text(
+                    checkinTime.split(" ")[1],
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  )),
             ),
           ],
         ),
@@ -338,13 +356,21 @@ class _BuildCardState extends State<BuildCard> {
             Flexible(
               flex: 0,
               child: Padding(
-                padding: EdgeInsets.only(top: 4, left: screenWidth * 0.04),
-                child: Text(checkinTime, style: const TextStyle(fontWeight: FontWeight.bold),)),
+                  padding: EdgeInsets.only(top: 4, left: screenWidth * 0.04),
+                  child: Text(
+                    checkinTime,
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  )),
             ),
             Flexible(
               child: Padding(
                 padding: EdgeInsets.only(top: 4, right: screenWidth * 0.04),
-                child: Text(currencyFormatter.format(ticket.totalFee + ticket.reservationFee),style: const TextStyle(fontWeight: FontWeight.bold),),),
+                child: Text(
+                  currencyFormatter
+                      .format(ticket.totalFee + ticket.reservationFee),
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ),
             ),
           ],
         ),
@@ -361,8 +387,11 @@ class _BuildCardState extends State<BuildCard> {
           children: [
             Flexible(
               child: Padding(
-                  padding: EdgeInsets.only(top:4, left: screenWidth * 0.04),
-                  child: Text(checkoutTime, style: const TextStyle(fontWeight: FontWeight.bold),)),
+                  padding: EdgeInsets.only(top: 4, left: screenWidth * 0.04),
+                  child: Text(
+                    checkoutTime,
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  )),
             ),
           ],
         ),

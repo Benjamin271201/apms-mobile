@@ -53,7 +53,7 @@ class _TransactionHistoryState extends State<TransactionHistory> {
             builder: (context, state) {
               scrollController.addListener(() {
                 if (scrollController.position.pixels ==
-                    scrollController.position.maxScrollExtent) {
+                    scrollController.position.maxScrollExtent && loadMore == false) {
                   if (currentPage < maxPage) {
                     setState(() {
                       if (mounted) {
@@ -97,6 +97,7 @@ class _TransactionHistoryState extends State<TransactionHistory> {
               } else if (state is GettingTransactionList) {
                 return _buildLoading();
               } else if (state is GotTransactionList) {
+                loadMore = false;
                 maxPage = state.model.totalPage;
                 if (items.isEmpty) {
                   items = state.model.transactions;
@@ -195,8 +196,12 @@ class _TransactionHistoryState extends State<TransactionHistory> {
                 ),
               )
             : Padding(
-              padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.1),
-              child: const Text("No transaction found", style: TextStyle(fontSize: 20, fontFamily: "times"),)),
+                padding: EdgeInsets.only(
+                    top: MediaQuery.of(context).size.height * 0.1),
+                child: const Text(
+                  "No transaction found",
+                  style: TextStyle(fontSize: 20, fontFamily: "times"),
+                )),
       ],
     );
   }
@@ -255,7 +260,9 @@ class _TransactionHistoryState extends State<TransactionHistory> {
           Padding(
             padding: const EdgeInsets.only(top: 10),
             child: Text(
-              transaction.transactionType != 0 ? "-${currencyFormatter.format(transaction.amount)}" : "+${currencyFormatter.format(transaction.amount)}" ,
+              transaction.transactionType != 0
+                  ? "-${currencyFormatter.format(transaction.amount)}"
+                  : "+${currencyFormatter.format(transaction.amount)}",
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
           ),
