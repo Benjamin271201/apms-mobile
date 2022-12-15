@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:apms_mobile/bloc/repositories/ticket_repo.dart';
 import 'package:apms_mobile/bloc/ticket_bloc.dart';
@@ -22,6 +21,7 @@ class BuildCard extends StatefulWidget {
 
 class _BuildCardState extends State<BuildCard> {
   List items = [];
+  List prevItems = [];
   int currentPage = 1;
   int maxPage = 1;
   ScrollController scrollController = ScrollController();
@@ -51,7 +51,8 @@ class _BuildCardState extends State<BuildCard> {
         builder: (context, state) {
           scrollController.addListener(() {
             if (scrollController.position.pixels ==
-                scrollController.position.maxScrollExtent && loadMore == false) {
+                    scrollController.position.maxScrollExtent &&
+                loadMore == false) {
               if (currentPage < maxPage) {
                 setState(() {
                   if (mounted) {
@@ -66,9 +67,6 @@ class _BuildCardState extends State<BuildCard> {
                     widget.type,
                     currentPage,
                     loadMore));
-                log(currentPage.toString());
-              } else {
-                log('No more page');
               }
             }
           });
@@ -88,7 +86,9 @@ class _BuildCardState extends State<BuildCard> {
             maxPage = state.ticket.totalPage;
             if (items.isEmpty) {
               items = state.ticket.tickets;
-            } else if (!listEquals(state.ticket.tickets, items)) {
+              prevItems = items;
+            } else if (!listEquals(state.ticket.tickets, prevItems)) {
+              prevItems = state.ticket.tickets;
               List newList = items + state.ticket.tickets;
               items = newList;
               loadMore = false;

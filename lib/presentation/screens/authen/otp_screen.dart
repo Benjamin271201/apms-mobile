@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:apms_mobile/bloc/repositories/sign_up_repo.dart';
 import 'package:apms_mobile/bloc/sign_up_bloc.dart';
@@ -100,8 +99,6 @@ class _OtpScreenState extends State<OtpScreen> {
         value = value + element;
       }
       code = value;
-      log(value);
-      log(otp.toString());
       focusNode.unfocus();
     }
   }
@@ -110,7 +107,6 @@ class _OtpScreenState extends State<OtpScreen> {
   void previousField({required int index, required FocusNode focusNode}) {
     otp.remove(index);
     focusNode.requestFocus();
-    log(otp.toString());
   }
 
   final FirebaseAuth auth = FirebaseAuth.instance;
@@ -169,7 +165,6 @@ class _OtpScreenState extends State<OtpScreen> {
                               setState(() {
                                 timeleft = 16;
                                 startCountDown();
-                                log(timeleft.toString());
                               });
                             } else {}
                           },
@@ -414,9 +409,8 @@ class _OtpScreenState extends State<OtpScreen> {
                           ),
                         );
                       }
-                      log('Success');
+                    // ignore: empty_catches
                     } catch (e) {
-                      log("wrong otp");
                     }
                   },
                   child: const Text(
@@ -457,9 +451,8 @@ class _OtpScreenState extends State<OtpScreen> {
                 builder: (context) => CreatePassword(phone: widget.phoneNumber),
               ));
             }
-            log('Success');
+          // ignore: empty_catches
           } catch (e) {
-            log("wrong otp");
           }
         },
         child: const Text(

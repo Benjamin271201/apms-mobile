@@ -1,12 +1,9 @@
 // ignore_for_file: import_of_legacy_library_into_null_safe
-
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:apms_mobile/bloc/repositories/qr_repo.dart';
 import 'package:apms_mobile/main.dart';
 import 'package:apms_mobile/models/qr_model.dart';
-import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
@@ -157,7 +154,6 @@ class _QRScan extends State<QRScan> {
     );
   }
   void _onPermissionSet(BuildContext context, QRViewController ctrl, bool p) {
-    log('${DateTime.now().toIso8601String()}_onPermissionSet $p');
     if (!p) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('no Permission')),

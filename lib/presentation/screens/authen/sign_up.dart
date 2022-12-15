@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:apms_mobile/bloc/repositories/sign_up_repo.dart';
 import 'package:apms_mobile/bloc/sign_up_bloc.dart';
 import 'package:apms_mobile/presentation/screens/authen/otp_screen.dart';
@@ -245,7 +243,6 @@ class _SignUpState extends State<SignUp> {
               phoneNumber: "+84$phone",
               verificationCompleted: (PhoneAuthCredential credential) {},
               verificationFailed: (FirebaseAuthException e) {
-                log(e.message!);
               },
               codeSent: (String verificationId, int? resendToken) {
                 Navigator.push(

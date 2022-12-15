@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:apms_mobile/bloc/repositories/transaction_repo.dart';
 import 'package:apms_mobile/bloc/transaction_bloc.dart';
 import 'package:apms_mobile/models/transaction_model.dart';
@@ -20,6 +18,7 @@ class TransactionHistory extends StatefulWidget {
 
 class _TransactionHistoryState extends State<TransactionHistory> {
   List<Transaction> items = [];
+  List prevItems = [];
   int currentPage = 1;
   String type = 'All';
   int maxPage = 1;
@@ -53,7 +52,8 @@ class _TransactionHistoryState extends State<TransactionHistory> {
             builder: (context, state) {
               scrollController.addListener(() {
                 if (scrollController.position.pixels ==
-                    scrollController.position.maxScrollExtent && loadMore == false) {
+                        scrollController.position.maxScrollExtent &&
+                    loadMore == false) {
                   if (currentPage < maxPage) {
                     setState(() {
                       if (mounted) {
@@ -73,9 +73,6 @@ class _TransactionHistoryState extends State<TransactionHistory> {
                               currentPage,
                               loadMore),
                         );
-                    log(currentPage.toString());
-                  } else {
-                    log('No more page');
                   }
                 }
               });
@@ -101,7 +98,9 @@ class _TransactionHistoryState extends State<TransactionHistory> {
                 maxPage = state.model.totalPage;
                 if (items.isEmpty) {
                   items = state.model.transactions;
-                } else if (!listEquals(state.model.transactions, items)) {
+                  prevItems = items;
+                } else if (!listEquals(state.model.transactions, prevItems)) {
+                  prevItems = state.model.transactions;
                   List<Transaction> newList = items + state.model.transactions;
                   items = newList;
                   loadMore = false;

@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:apms_mobile/bloc/feedback_bloc.dart';
 import 'package:apms_mobile/bloc/repositories/feedback_repo.dart';
 import 'package:apms_mobile/utils/appbar.dart';
@@ -48,7 +46,24 @@ class _SendFeedbackState extends State<SendFeedback> {
               Navigator.of(context).pop();
             }
             if (state is FeedbackError) {
-              log(state.error);
+              final snackBar = SnackBar(
+                /// need to set following properties for best effect of awesome_snackbar_content
+                elevation: 0,
+                behavior: SnackBarBehavior.floating,
+                backgroundColor: Colors.transparent,
+                content: AwesomeSnackbarContent(
+                  title: 'Feedback error',
+                  message: state.error,
+
+                  /// change contentType to ContentType.success, ContentType.warning or ContentType.help for variants
+                  contentType: ContentType.failure,
+                ),
+              );
+
+              // ignore: use_build_context_synchronously
+              ScaffoldMessenger.of(context)
+                ..hideCurrentSnackBar()
+                ..showSnackBar(snackBar);
             }
           },
           child: BlocBuilder<FeedbackBloc, FeedbackState>(

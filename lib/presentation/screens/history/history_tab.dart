@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:apms_mobile/presentation/screens/history/booking_history.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +13,6 @@ class History extends StatefulWidget {
 class _HistoryState extends State<History> {
   @override
   void initState() {
-    log('x');
     super.initState();
   }
 
