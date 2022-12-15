@@ -97,25 +97,7 @@ class _QRScan extends State<QRScan> {
                   ),
                 ),);
           } else {
-            final snackBar = SnackBar(
-              /// need to set following properties for best effect of awesome_snackbar_content
-              elevation: 0,
-              behavior: SnackBarBehavior.floating,
-              backgroundColor: Colors.transparent,
-              content: AwesomeSnackbarContent(
-                title: 'Check-in Failed',
-                message: res,
-
-                /// change contentType to ContentType.success, ContentType.warning or ContentType.help for variants
-                contentType: ContentType.failure,
-              ),
-            );
-
-            // ignore: use_build_context_synchronously
-            ScaffoldMessenger.of(context)
-              ..hideCurrentSnackBar()
-              ..showSnackBar(snackBar);
-            controller.resumeCamera();
+            alert(controller, "Check-in Failed", res);
           }
         }
         if (action == DialogsAction.cancel) {
@@ -138,25 +120,7 @@ class _QRScan extends State<QRScan> {
               ),
             );
           } else {
-            final snackBar = SnackBar(
-              /// need to set following properties for best effect of awesome_snackbar_content
-              elevation: 0,
-              behavior: SnackBarBehavior.floating,
-              backgroundColor: Colors.transparent,
-              content: AwesomeSnackbarContent(
-                title: 'Check-out Failed',
-                message: res,
-
-                /// change contentType to ContentType.success, ContentType.warning or ContentType.help for variants
-                contentType: ContentType.failure,
-              ),
-            );
-
-            // ignore: use_build_context_synchronously
-            ScaffoldMessenger.of(context)
-              ..hideCurrentSnackBar()
-              ..showSnackBar(snackBar);
-            controller.resumeCamera();
+            alert(controller, "Check-out Failed", res);
           }
         }
         if (action == DialogsAction.cancel) {
@@ -166,6 +130,32 @@ class _QRScan extends State<QRScan> {
     });
   }
 
+// alert dialog
+  Future<dynamic> alert(
+      QRViewController controller, String title, String body) {
+    return showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(
+          title,
+          style: const TextStyle(color: Colors.redAccent),
+        ),
+        content: Text(body),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () {
+              Navigator.of(ctx).pop();
+              controller.resumeCamera();
+            },
+            child: Container(
+              padding: const EdgeInsets.all(14),
+              child: const Text("Confirm", style: TextStyle(fontWeight: FontWeight.bold),),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
   void _onPermissionSet(BuildContext context, QRViewController ctrl, bool p) {
     log('${DateTime.now().toIso8601String()}_onPermissionSet $p');
     if (!p) {
