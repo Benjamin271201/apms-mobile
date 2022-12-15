@@ -12,7 +12,7 @@ class CarParkModel {
         phoneNumber = json["phoneNumber"],
         availableSlotsCount = json["availableSlotsCount"] as int,
         provinceId = json["provinceId"] as int,
-        status = json["status"] == 1 ? true : false,
+        status = json["status"] == 0 ? true : false,
         street = json["street"],
         ward = json["ward"],
         district = json["district"],

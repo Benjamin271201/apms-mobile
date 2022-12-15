@@ -266,39 +266,69 @@ class _HomeState extends State<Home> {
       scrollDirection: Axis.vertical,
       itemCount: carParkList.length,
       itemBuilder: (context, index) {
-        return InkWell(
-            onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) =>
-                        Booking(carPark: carParkList[index]))),
-            child: Container(
-              padding: const EdgeInsets.all(15),
-              decoration: const BoxDecoration(
-                  color: Colors.white,
-                  border: Border(bottom: BorderSide(color: grey))),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    carParkList[index].name.toUpperCase(),
-                    style: const TextStyle(
-                        fontSize: 16, fontWeight: FontWeight.w700),
-                  ),
-                  const SizedBox(height: 10),
-                  Text(
-                      "Address: ${carParkList[index].addressNumber}, ${carParkList[index].street}, ${carParkList[index].district}, ${carParkList[index].city} "),
-                  const SizedBox(height: 10),
-                  if (carParkList[index].distance != null)
-                    Row(children: [
-                      distanceIcon,
-                      Text(
-                          "${carParkList[index].distance!.toStringAsFixed(1)} km")
-                    ])
-                ],
-              ),
-            ));
+        CarParkModel carPark = carParkList[index];
+        if (carPark.status) {
+          return InkWell(
+              onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => Booking(carPark: carPark))),
+              child: Container(
+                padding: const EdgeInsets.all(15),
+                decoration: const BoxDecoration(
+                    color: Colors.white,
+                    border: Border(bottom: BorderSide(color: grey))),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      carPark.name.toUpperCase(),
+                      style: const TextStyle(
+                          fontSize: 16, fontWeight: FontWeight.w700),
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
+                        "Address: ${carPark.addressNumber}, ${carPark.street}, ${carPark.district}, ${carPark.city} "),
+                    Text("Available slots: ${carPark.availableSlotsCount}"),
+                    const SizedBox(height: 10),
+                    if (carPark.distance != null)
+                      Row(children: [
+                        distanceIcon,
+                        Text("${carPark.distance!.toStringAsFixed(1)} km")
+                      ])
+                  ],
+                ),
+              ));
+        } else {
+          return Container(
+            padding: const EdgeInsets.all(15),
+            decoration: const BoxDecoration(
+                color: slightlyLightGrey,
+                border: Border(bottom: BorderSide(color: grey))),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  carPark.name.toUpperCase(),
+                  style: const TextStyle(
+                      fontSize: 16, fontWeight: FontWeight.w700),
+                ),
+                const SizedBox(height: 10),
+                Text(
+                    "Address: ${carPark.addressNumber}, ${carPark.street}, ${carPark.district}, ${carPark.city} "),
+                const SizedBox(height: 10),
+                if (carPark.distance != null)
+                  Row(children: [
+                    
+                    distanceIcon,
+                    Text("${carPark.distance!.toStringAsFixed(1)} km")
+                  ])
+              ],
+            ),
+          );
+        }
       },
     );
   }
