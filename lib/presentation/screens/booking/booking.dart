@@ -1,7 +1,9 @@
 import 'package:apms_mobile/bloc/booking_bloc.dart';
+import 'package:apms_mobile/exceptions/exception.dart';
 import 'package:apms_mobile/models/car_park_model.dart';
 import 'package:apms_mobile/presentation/screens/booking/booking_confirmation.dart';
 import 'package:apms_mobile/themes/colors.dart';
+import 'package:apms_mobile/utils/popup.dart';
 import 'package:datetime_picker_formfield_new/datetime_picker_formfield_new.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -84,16 +86,20 @@ class _BookingState extends State<Booking> {
             _timePickerField(),
             const SizedBox(height: 10),
             ElevatedButton(
-                onPressed: () => plateNumberController.text != "" &&
-                        validatePlateNumberField()
-                    ? Navigator.push(
+                onPressed: () async {
+                  try {
+                    validateBookingForm();
+                    Navigator.push(
                         context,
                         MaterialPageRoute(
                             builder: (context) => BookingConfirmation(
                                 carPark: widget.carPark,
                                 plateNumber: plateNumberController.text,
-                                arrivalTime: arrivalDateTime)))
-                    : {},
+                                arrivalTime: arrivalDateTime)));
+                  } catch (e) {
+                    errorSnackBarWithDismiss(context, e.toString());
+                  }
+                },
                 child: const Text("Go to confirmation page"))
           ]),
         ));
@@ -106,7 +112,7 @@ class _BookingState extends State<Booking> {
             BlocBuilder<BookingBloc, BookingState>(builder: (context, state) {
           if (state is UsedPlateNumbersFetchedSuccessfully) {
             return SingleChildScrollView(
-              child: SizedBox(
+                child: SizedBox(
               width: 400,
               child: TypeAheadFormField(
                   textFieldConfiguration: TextFieldConfiguration(
@@ -196,10 +202,19 @@ class _BookingState extends State<Booking> {
         });
   }
 
-  bool validatePlateNumberField() {
+  void validateBookingForm() {
     const dateTimeFormat = "dd-MM-yyyy HH:mm";
-    if (arrivalDateController.text == "" || arrivalTimeController.text == "") {
-      return false;
+
+    if (plateNumberController.text == "") {
+      throw HttpException("Please enter your vehicle plate number!");
+    }
+
+    if (arrivalDateController.text == "") {
+      throw HttpException("Please pick an arrival date");
+    }
+
+    if (arrivalTimeController.text == "") {
+      throw HttpException("Please pick an arrival time");
     }
 
     DateTime selectedDateTime = DateFormat(dateTimeFormat)
@@ -208,12 +223,11 @@ class _BookingState extends State<Booking> {
         selectedDateTime
                 .compareTo(DateTime.now().add(const Duration(hours: 24))) >
             0) {
-      return false;
+      throw HttpException("Date time must be within 24 hours!");
     }
 
     setState(() {
       arrivalDateTime = selectedDateTime;
     });
-    return true;
   }
 }

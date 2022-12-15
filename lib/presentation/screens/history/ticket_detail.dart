@@ -315,7 +315,7 @@ class _TicketDetailState extends State<TicketDetail> {
                       final action = await AlertDialogs.confirmCancelDiaglog(
                           context,
                           "Cancel Booking",
-                          "Are you sure ? Once you canceled booking, you will lose all of your reservation fee");
+                          "Are you sure? Your booking ticket will be terminated, and this action cannot be reverted");
                       if (action == DialogsAction.confirm) {
                         bloc.add(CancelBooking(widget.ticket.id));
                       }

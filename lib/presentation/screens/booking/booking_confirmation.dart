@@ -58,8 +58,12 @@ class _BookingConfirmationState extends State<BookingConfirmation> {
             {errorSnackBar(context, state.message)}
           else if (state is BookingSubmittedSuccessfully)
             {
-              Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (context) => const MyHome(tabIndex: 1,))),
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const MyHome(
+                            tabIndex: 1,
+                          ))),
               successfulSnackBar(context, state.message)
             }
           else if (state is BookingSubmittedFailed)
@@ -88,8 +92,7 @@ class _BookingConfirmationState extends State<BookingConfirmation> {
   Widget _buildConfirmationCard(
       BuildContext context, TicketPreview ticketPreview) {
     return Card(
-      child: SizedBox(
-        height: 500,
+      child: SizedBox.expand(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
           child: Column(
@@ -106,7 +109,7 @@ class _BookingConfirmationState extends State<BookingConfirmation> {
               const SizedBox(height: 10),
               Text("Expected arrival time: ${ticketPreview.arriveTime}"),
               const SizedBox(height: 10),
-              ticketPreview.feePerHour != null
+              ticketPreview.priceTable == []
                   ? Text(
                       "Price: ${ticketPreview.feePerHour.toString()} VND/hour")
                   : Column(
@@ -128,7 +131,7 @@ class _BookingConfirmationState extends State<BookingConfirmation> {
                         ]),
               const SizedBox(height: 40),
               Text(
-                  "Reservation fee: ${ticketPreview.reservationFee} (${ticketPreview.reservationFeePercentage}%)"),
+                  "Reservation fee: ${ticketPreview.reservationFee.toStringAsFixed(0)} VND (${ticketPreview.reservationFeePercentage}%)"),
               const SizedBox(height: 20),
               SizedBox(
                 width: 400,
@@ -146,10 +149,13 @@ class _BookingConfirmationState extends State<BookingConfirmation> {
                   "* Booking information once submitted cannot be changed",
                   style: cautionTextStyle),
               const Text(
-                  "** Failed to arrive at booked time will result in booking cancellation",
+                  "** A one hour overdue fee will be charged if your arrival is less than 30 minutes late",
                   style: cautionTextStyle),
               const Text(
-                  "*** The parking fee will be calculated separately, starting from your actual arrival time",
+                  "*** Ticket will be automatically canceled after 30 minutes from your registered arrival time if no check-in request is recorded",
+                  style: cautionTextStyle),
+              const Text(
+                  "**** The parking fee will be calculated separately, starting from your actual arrival time",
                   style: cautionTextStyle),
             ],
           ),
