@@ -93,7 +93,7 @@ class _HistoryState extends State<History> {
           mainAxisSize: MainAxisSize.min,
           children: const [
             Icon(CupertinoIcons.xmark_seal),
-            Text('CANCEL'),
+            Text('CANCELLED'),
           ],
         ),
       ),
