@@ -26,26 +26,32 @@ This mobile application is a part of the project, provided for the customers usi
 ## Screenshots
 <p align="center">
   <img src="https://user-images.githubusercontent.com/77088395/215063737-ab8aba75-d486-47e7-bbb5-35104a7c5bd6.png" />
+  <br>
   <em>Home Screen</em>
   <br>
   <img src="https://user-images.githubusercontent.com/77088395/215063611-0c4cf5a2-7c82-40b2-8a17-f709fb748bf0.png" />
+  <br>
   <em>Booking Screen</em>
   <br>
   <img src="https://user-images.githubusercontent.com/77088395/215063620-cbcde59e-a43a-43c0-990f-5a09be9635fb.png" />
+  <br>
   <em>Booking Confirmation Screen</em>
   <br>
   <img src="https://user-images.githubusercontent.com/77088395/215063630-c0e3a0eb-a134-48ec-a8b3-075e057777a2.png" />
+  <br>
   <em>Ticket List Screen</em>
   <br>
   <img src="https://user-images.githubusercontent.com/77088395/215063641-b00117f7-1a04-4878-9131-549a5e0bd996.png" />
+  <br>
   <em>Ticket Detail Screen</em>
   <br>
   <img src="https://user-images.githubusercontent.com/77088395/215063655-19faf009-6ada-4ec8-ab57-93cc43e22266.png" />
+  <br>
   <em>Profile Screen</em>
   <br>
   <img src="https://user-images.githubusercontent.com/77088395/215063650-38c6e02b-aced-4df1-bd50-1cf9dd04dae3.png" />
-  <em>Transaction History Screen</em>
   <br>
+  <em>Transaction History Screen</em>
 </p>
 
 ## Setup
