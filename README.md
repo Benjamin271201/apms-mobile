@@ -24,6 +24,9 @@ This mobile application is a part of the project, provided for the customers usi
 - Personal wallet top-up using Paypal
 
 ## Screenshots
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/77088395/215063737-ab8aba75-d486-47e7-bbb5-35104a7c5bd6.png" />
+</p>
 ![Home Screen](https://user-images.githubusercontent.com/77088395/215063737-ab8aba75-d486-47e7-bbb5-35104a7c5bd6.png)
 ![Booking Screen](https://user-images.githubusercontent.com/77088395/215063611-0c4cf5a2-7c82-40b2-8a17-f709fb748bf0.png)
 ![Booking Confirmation Screen](https://user-images.githubusercontent.com/77088395/215063620-cbcde59e-a43a-43c0-990f-5a09be9635fb.png)
