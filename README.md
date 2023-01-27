@@ -5,7 +5,7 @@ A mobile car booking and check-in/out of parking lot application, written using 
 ## Table of Contents
 - [Getting Started](#getting-started)
 - [Main Features](#main-features)
-- [Screenshots](#)
+- [Screenshots](#screenshots)
 - [Setup](#setup)
 - [Technologies](#technologies)
 - [Team Members](#team-members)
@@ -31,13 +31,16 @@ WIP
 - Clone this repository
 - Cd to the project path
 ```
-    $ cd <your_path>/apms_mobile```
+    $ cd <your_path>/apms_mobile
+```
 - Install the required libraries
 ```
-    $ flutter pub get```
+    $ flutter pub get
+```
 - Build apk
 ```
-    $ flutter build apk --release```
+    $ flutter build apk --release
+```
 - Install the apk using an emulator or your own device (Android preferably)
 
 ## Technologies
