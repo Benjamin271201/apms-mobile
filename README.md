@@ -5,6 +5,7 @@ A mobile car booking and check-in/out of parking lot application, written using 
 ## Table of Contents
 - [Getting Started](#getting-started)
 - [Main Features](#main-features)
+- [Demo Video](#demo)
 - [Screenshots](#screenshots)
 - [Setup](#setup)
 - [Technologies](#technologies)
@@ -22,6 +23,9 @@ This mobile application is a part of the project, provided for the customers usi
 - Track past, current and upcoming parking tickets
 - Search and display nearby parking lots, with an approximate distance calculated using GPS
 - Personal wallet top-up using Paypal
+
+## Demo Video
+[Google Drive](https://drive.google.com/file/d/1jyESUxwvDzqlbFS6RfKB3lHVdsrdocrl/view?usp=share_link)
 
 ## Screenshots
 <p align="center">
